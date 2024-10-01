@@ -1,3 +1,19 @@
 * {
   box-sizing: border-box;
 }
+
+header {
+  background-color: #20B0FE;
+}
+
+.navigation {
+  width: 870px;
+  height: 32px;
+  z-index: 10;
+  background-color: #FFF;
+  color: #000;
+}
+
+footer {
+  background-color: #FED702;
+}
