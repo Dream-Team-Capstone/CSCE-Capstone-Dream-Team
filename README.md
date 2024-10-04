@@ -1,6 +1,6 @@
 # CSCE-Capstone-Dream-Team
 
-##For sprint 1:
+## For sprint 1:
   - begin starting and implementing the design of the website
   - design website (complete)
   - start on code for block to python
