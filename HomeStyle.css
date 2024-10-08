@@ -34,7 +34,7 @@ header {
 }
 
 /* Ensure navbar buttons are flex items */
-.navbar_buttons {
+.navbar_buttons_list {
   display: flex; /* Display items in a row */
   list-style: none;
   margin:0;
@@ -42,15 +42,42 @@ header {
 }
 
 /* To adjust the list items. Specifically, the spacing */
-.navbar_buttons li {
+.navbar_buttons_list li {
   margin: 0 20px;
   position: relative;
 }
 
 /* Style the links */
-.navbar_buttons li a {
+.navbar_buttons_list li a {
   text-decoration: none;
   color: black;
+}
+
+/**/
+.Nav_buttons{
+  color: black;
+  width: 110px;
+  padding: 15px;
+  text-align: center;
+  margin: 0px 0px;
+  border-radius: 15px;
+  font-weight: bold;
+  border: 1px solid white;
+  background-color: white; 
+  cursor: pointer;
+}
+
+.SignInRegister_Nav_Button{
+  color: black;
+  width: 110px;
+  padding: 15px;
+  text-align: center;
+  margin: 0px 0px;
+  border-radius: 15px;
+  font-weight: bold;
+  border: 2.5px solid #fd3636;
+  background-color: #FFC6C6; 
+  cursor: pointer;
 }
 
 /* Main part of the page with the picture*/
@@ -126,6 +153,7 @@ h2{
 .footer_buttons li {
   margin-left: 20px; 
   padding: 8px;
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
 }
 
 footer {

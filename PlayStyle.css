@@ -1,3 +1,121 @@
-* {
- box-sizing: border-box;
+/* Removes white space around the elements */
+body {
+    margin: 0;
+    padding: 0;
 }
+  
+* {
+    box-sizing: border-box;
+}
+  
+/* Background of the navigation bar */
+header {
+    background-color: #21b0fe;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+  
+/* list style for the logo */
+.navbar_logo{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+  
+/* Style the logo */
+.logo{
+    display: block;
+    height: auto;
+    width: 200px; 
+}
+  
+/* Ensure navbar buttons are flex items */
+.navbar_buttons_list {
+    display: flex; /* Display items in a row */
+    list-style: none;
+    margin:0;
+    padding: 50px;
+}
+  
+/* To adjust the list items. Specifically, the spacing */
+.navbar_buttons_list li {
+    margin: 0 20px;
+    position: relative;
+}
+  
+/* Style the links */
+.navbar_buttons_list li a {
+    text-decoration: none;
+    color: black;
+}
+  
+/* Styling for the buttons on the nav bar */
+.Nav_buttons{
+    color: black;
+    width: 110px;
+    padding: 15px;
+    text-align: center;
+    margin: 0px 0px;
+    border-radius: 15px;
+    font-weight: bold;
+    border: 1px solid white;
+    background-color: white; 
+    cursor: pointer;
+}
+  
+.SignInRegister_Nav_Button{
+    color: black;
+    width: 110px;
+    padding: 15px;
+    text-align: center;
+    margin: 0px 0px;
+    border-radius: 15px;
+    font-weight: bold;
+    border: 2.5px solid #fd3636;
+    background-color: #FFC6C6; 
+    cursor: pointer;
+}
+  
+/* Main part of the page */
+.PlayPage_Body{
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+    font-size: xx-large;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.footer_buttons {
+    display: inline; 
+    list-style: none; 
+    margin: 0;
+    padding: 0; 
+}
+  
+.footer_buttons li {
+    margin-left: 20px; 
+    padding: 8px;
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+}
+  
+footer {
+    background-color: #FED702;
+    padding: 20px;
+    width: 100%;
+    height: 20%;
+    text-align: right;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+  
