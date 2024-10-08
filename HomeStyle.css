@@ -1,19 +1,140 @@
+/* Removes white space around the elements */
+body {
+  margin: 0;
+  padding: 0;
+}
+
 * {
   box-sizing: border-box;
 }
 
+/* Background of the navigation bar */
 header {
-  background-color: #20B0FE;
+  background-color: #21b0fe;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
-.navigation {
-  width: 870px;
-  height: 32px;
-  z-index: 10;
-  background-color: #FFF;
-  color: #000;
+/* list style for the logo */
+.navbar_logo{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Style the logo */
+.logo{
+  display: block;
+  height: auto;
+  width: 200px; 
+}
+
+/* Ensure navbar buttons are flex items */
+.navbar_buttons {
+  display: flex; /* Display items in a row */
+  list-style: none;
+  margin:0;
+  padding: 50px;
+}
+
+/* To adjust the list items. Specifically, the spacing */
+.navbar_buttons li {
+  margin: 0 20px;
+  position: relative;
+}
+
+/* Style the links */
+.navbar_buttons li a {
+  text-decoration: none;
+  color: black;
+}
+
+/* Main part of the page with the picture*/
+.homepage_body{
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  font-size: xx-large;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/*To ensure that the picute is transparent*/
+.homepage_body::before{
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('homepage_backgroud.jpg');
+  display: inline-block;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.25;
+  z-index: -1;
+}
+
+/* Styling for the text on the homepage */
+h1, h2, p {
+  margin: 0; 
+}
+
+h1 {
+  margin-bottom: 10px; 
+}
+h2{
+  margin-bottom: 30px;
+}
+
+.subheading{
+  font-size: .8em;
+  margin-bottom: 40px;
+  color: #757575;
+}
+
+/* Play Button Styling */
+.play_button{
+  color: black;
+  width: 250px;
+  padding: 15px;
+  text-align: center;
+  margin: 0px 0px;
+  border-radius: 15px;
+  font-weight: bold;
+  border: 2.5px solid #fd3636;
+  background-color: #FFC6C6; 
+  cursor: pointer;
+}
+
+.footer_buttons {
+  display: inline; 
+  list-style: none; 
+  margin: 0;
+  padding: 0; 
+}
+
+.footer_buttons li {
+  margin-left: 20px; 
+  padding: 8px;
 }
 
 footer {
   background-color: #FED702;
+  padding: 20px;
+  width: 100%;
+  height: 20%;
+  text-align: right;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
