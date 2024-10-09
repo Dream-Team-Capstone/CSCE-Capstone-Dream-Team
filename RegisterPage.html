@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>pyBlock</title>
-    <link href='StylesPages/HomeStyle.css' rel='stylesheet'>
+    <link href='StylesPages/RegisterStyles.css' rel='stylesheet'>
 </head>    
 <body>
 <!-- NAV BAR START -->
       <header class="navigation">
+
+        <!-- List for the logo on the page -->
         <ul class="navbar_logo">
           <li>
             <a href="HomePage.html">
@@ -16,15 +18,17 @@
             </a>
           </li>
         </ul>
+
+        <!-- List for the Buttons on the navigation pane -->
         <ul class="navbar_buttons_list">
           <li>
             <a>
-              <button class="Nav_Buttons">Contact Us</button>
+              <button class="Nav_Buttons">Contact Us</button> <!-- TBC in another sprint -->
             </a>
           </li>
           <li>
             <a>
-              <button class="Nav_Buttons">Tutorials</button>
+              <button class="Nav_Buttons">Tutorials</button> <!-- TBC in another sprint -->
             </a>
           </li>
           <li>
@@ -34,12 +38,12 @@
           </li>
           <li>
             <a>
-              <button class="Nav_Buttons">Courses</button>
+              <button class="Nav_Buttons">Courses</button> <!-- TBC in another sprint -->
             </a>
           </li>
           <li>
             <a>
-              <button class="Nav_Buttons">Resources</button>
+              <button class="Nav_Buttons">Resources</button> <!-- TBC in another sprint -->
             </a>
           </li>
           <li>
@@ -57,13 +61,48 @@
 <!-- NAV BAR END -->
 
 <!-- BODY START -->
-      <div class="homepage_body">
-        <!-- !!INSERT MAIN BODY!! -->
+      <div class="page_body">
+        <h1 class="page_title">Welcome to PyBlocks!</h1>
+        
+        <form class="Register_Form">
+
+          <!-- FIRST NAME INPUT -->
+          <div class="Form_Group">
+            <label for="First Name">First Name:</label>
+            <input type="text" name="firstName" id="FName" placeholder="First Name">
+          </div>
+
+          <!-- LAST NAME INPUT -->
+          <div class="Form_Group">
+            <label for="Last Name">Last Name:</label>
+            <input type="text" name="lastName" id="LName" placeholder="Last Name"> 
+          </div>
+
+          <!-- EMAIL INPUT -->
+          <div class="Form_Group">
+            <label for="Email">Email:</label>
+            <input type="email" name="email" id="Email" placeholder="Email">
+          </div>
+
+          <!-- PASSWORD INPUT -->
+          <div class="Form_Group">
+            <label for="Password">Password:</label>
+            <input type="password" name="password" id="Password" placeholder="Password"> 
+          </div>
+
+          <!-- REGISTER BUTTON -->
+          <div class="Form_Group Button_Center">
+            <button type="submit" class="Register_Button">Register</button>
+          </div>
+        </form>
       </div>
-<!-- BODY END -->
     </body>
+<!-- BODY END -->
+
 <!-- FOOTER START -->
     <footer>
+
+      <!-- List for the logo on the page -->
       <ul class="navbar_logo">
         <li>
           <a href="HomePage.html">
@@ -71,13 +110,13 @@
           </a>
         </li>
       </ul>
+
+       <!-- List for the links in the footer -->
       <ul class="footer_buttons">
         <li>Resources</li>
         <li>Tutorials</li>
         <li>Open Blank Editors</li>
       </ul>
-      <!-- holds links and some navigation, may add more later -->
     </footer>
 <!-- FOOTER END -->
-
-  </html>
+</html>
