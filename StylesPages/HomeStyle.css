@@ -18,7 +18,13 @@ header {
   align-items: center; /* Vertically centers content */
   width: 100%; /* Full width of the screen */
   margin: 0;
-  padding: 0;
+  padding: 0 20px;
+}
+
+/* Styles the <nav> to align correctly within the header */
+nav {
+  display: flex;
+  align-items: center; /* Vertically aligns the navigation buttons with the logo */
 }
 
 /* Removes the default list styling from the logo list */
@@ -39,8 +45,9 @@ width: 200px; /* Sets a fixed width for the logo */
 .navbar_buttons_list {
 display: flex; /* Display items in a row */
 list-style: none; /* Removes bullets */
-margin: 0;
-padding: 50px; /* Adds padding inside the button list */
+margin-left: 130px; /* keeps the navigation list right aligned */
+padding: 20px; /* Adds padding inside the button list */
+align-items: right; 
 }
 
 /* Styles the individual navigation buttons */
@@ -175,6 +182,7 @@ h2{
   list-style: none; /* Removes bullets from the list */
   margin: 0;
   padding: 0; 
+  color: black;
 }
 
 /* Styles the individual footer buttons */
@@ -182,6 +190,13 @@ h2{
   margin-left: 20px; /* Adds space between footer buttons */
   padding: 8px; /* Adds padding inside the buttons */
   font-family: 'Trebuchet MS', Helvetica, sans-serif;
+}
+
+/* Styles the links inside the footer buttons */
+.footer_buttons li a {
+  text-decoration: none; /* Removes underline from links */
+  color: black; /* Set the desired text color */
+  font-weight: bold; /* Optionally make the text bold */
 }
 
 
