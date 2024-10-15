@@ -3,18 +3,19 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>pyBlock</title>
-        <link href='StylesPages/RegisterStyles.css' rel='stylesheet'>
+        <title>PyBlock</title>
+        <link href='StylesPages/LoginStyles.css' rel='stylesheet'>
     </head>    
     <body>
     <!-- NAV BAR START -->
-          <header class="navigation">
+          <header class="navigation" role="banner">
     
             <!-- List for the logo on the page -->
+            <nav aria-label="Main Navigation">
             <ul class="navbar_logo">
               <li>
                 <a href="HomePage.html">
-                  <img class = logo src = "ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo">
+                  <img class = logo src = "ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo, linking back to home page">
                 </a>
               </li>
             </ul>
@@ -22,28 +23,28 @@
             <!-- List for the Buttons on the navigation pane -->
             <ul class="navbar_buttons_list">
               <li>
-                <a>
-                  <button class="Nav_Buttons">Contact Us</button> <!-- TBC in another sprint -->
+                <a href ="#contact" aria-label="Contact Us page (Coming soon)">
+                  <button class="Nav_Buttons" aria-disabled="true">Contact Us</button> <!-- TBC in another sprint -->
                 </a>
               </li>
               <li>
-                <a>
-                  <button class="Nav_Buttons">Tutorials</button> <!-- TBC in another sprint -->
+                <a href="#tutorials" aria-label="Tutorials page (Coming soon)">
+                  <button class="Nav_Buttons" aria-disabled="true">Tutorials</button> <!-- TBC in another sprint -->
                 </a>
               </li>
               <li>
                 <a href = "PlayPage.html">
-                  <button class="Nav_Buttons">Play</button>
+                  <button class="Nav_Buttons" aria-label="Start coding by going to the Play page">Play</button>
                 </a>
               </li>
               <li>
-                <a>
-                  <button class="Nav_Buttons">Courses</button> <!-- TBC in another sprint -->
+                <a href="#courses" aria-label="Courses page (Coming soon)">
+                  <button class="Nav_Buttons" aria-disabled="true">Courses</button> <!-- TBC in another sprint -->
                 </a>
               </li>
               <li>
-                <a>
-                  <button class="Nav_Buttons">Resources</button> <!-- TBC in another sprint -->
+                <a href="#resources" aria-label="Resources page (Coming soon)">
+                  <button class="Nav_Buttons" aria-disabled="true">Resources</button> <!-- TBC in another sprint -->
                 </a>
               </li>
               <li>
@@ -57,52 +58,60 @@
                 </a>
               </li>
             </ul>
+          </nav>
           </header>
     <!-- NAV BAR END -->
     
     <!-- BODY START -->
-          <div class="page_body">
+          <main class="page_body">
             <h1 class="page_title">Sign In to PyBlocks!</h1>
             
-            <form class="SignIn_Form">
+            <form class="SignIn_Form" aria-labelledby="signInForm">
     
-              <!-- EMAIL INPUT -->
-              <div class="Form_Group">
-                <label for="Email">Email:</label>
-                <input type="email" name="email" id="Email" placeholder="Email">
-              </div>
+              <fieldset>
+                <legend id="signInForm" class="visually-hidden">Sign In Form</legend>
     
-              <!-- PASSWORD INPUT -->
-              <div class="Form_Group">
-                <label for="Password">Password:</label>
-                <input type="password" name="password" id="Password" placeholder="Password"> 
-              </div>
+                <!-- EMAIL INPUT -->
+                <div class="Form_Group">
+                    <label for="Email">Email:</label>
+                    <input type="email" name="email" id="Email" placeholder="Enter your email" aria-required="true" required>
+                </div>
     
-              <!-- REGISTER BUTTON -->
-              <div class="Form_Group Button_Center">
-                <button type="submit" class="Register_Button">Sign In</button>
-              </div>
+                <!-- PASSWORD INPUT -->
+                <div class="Form_Group">
+                    <label for="Password">Password:</label>
+                    <input type="password" name="password" id="Password" placeholder="Enter your password" aria-required="true" required>
+                </div>
+    
+                <!-- REGISTER BUTTON -->
+                <div class="Form_Group Button_Center">
+                    <button type="submit" class="Register_Button" aria-label="Sign in to your account">Sign In</button>
+                </div>
+              </fieldset>
             </form>
-          </div>
-        </body>
+          </main>
     <!-- BODY END -->
     
     <!-- FOOTER START -->
-        <footer>
-       <!-- List for the logo on the page -->
-       <ul class="navbar_logo">
+    <footer role="contentinfo">
+
+      <!-- List for the logo on the page -->
+      <ul class="navbar_logo">
         <li>
           <a href="HomePage.html">
-            <img class = logo src = "ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo">
+            <img class = logo src = "ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo, linking back to home page">
           </a>
         </li>
       </ul>
- <!-- List for the links in the footer -->
-       <ul class="footer_buttons">
-        <li>Resources</li>
-        <li>Tutorials</li>
-        <li>Open Blank Editors</li>
+
+      <!-- List for the links in the footer -->
+      <ul class="footer_buttons">
+        <li><a href="#resources" aria-label="Resources section (Coming soon)">Resources</a></li>
+        <li><a href="#tutorials" aria-label="Tutorials section (Coming soon)">Tutorials</a></li>
+        <li><a href="#editors" aria-label="Open blank editors (Coming soon)">Open Blank Editors</a></li>
       </ul>
+      <!-- holds links and some navigation, may add more later -->
     </footer>
 <!-- FOOTER END -->
+</body>
 </html>
