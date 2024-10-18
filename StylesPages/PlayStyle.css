@@ -120,7 +120,39 @@ font-weight: bolder;
     align-items: center;
     text-align: center;
 }
+/* Styling for the Blockly and code container */
+.container {
+  display: flex;
+  height: 100vh;
+}
 
+/* Left pane for the generated code */
+.code-pane {
+  width: 40%;
+  padding: 10px;
+  background-color: #f5f5dc;
+  overflow-y: scroll;
+  border-right: 2px solid #ccc;
+}
+
+/* Code output display */
+#output {
+  height: 100%;
+  width: 100%;
+  font-family: "Courier New", monospace;
+  white-space: pre;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border: none;
+  box-sizing: border-box;
+  background-color: #f5f5dc;
+}
+
+/* Right pane for Blockly */
+#blocklyDiv {
+  width: 60%;
+  height: 100%;
+}
 /* !!FOOTER START!! */
 .footer_buttons {
     display: inline; /* Inline display for footer buttons */
