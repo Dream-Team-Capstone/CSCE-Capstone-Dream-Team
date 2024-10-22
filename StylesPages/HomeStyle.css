@@ -45,7 +45,7 @@ width: 200px; /* Sets a fixed width for the logo */
 .navbar_buttons_list {
 display: flex; /* Display items in a row */
 list-style: none; /* Removes bullets */
-margin-left: 130px; /* keeps the navigation list right aligned */
+margin-left: 20px; /* keeps the navigation list right aligned */
 padding: 20px; /* Adds padding inside the button list */
 align-items: right; 
 }
