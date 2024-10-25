@@ -63,3 +63,17 @@ ws.addChangeListener((e) => {
   }
   runCode();
 });
+
+// Switch for going from Block to Python and vice versa
+document.getElementById('toggleSwitch').addEventListener('change', function() {
+  const outputPane = document.getElementById('outputPane');
+  const blocklyDiv = document.getElementById('blocklyDiv');
+  
+  if (this.checked) {
+    outputPane.style.display = 'none';
+    blocklyDiv.style.display = 'block';
+  } else {
+    outputPane.style.display = 'block';
+    blocklyDiv.style.display = 'none';
+  }
+});
