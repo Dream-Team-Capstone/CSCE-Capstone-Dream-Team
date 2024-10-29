@@ -1,110 +1,77 @@
-/* Removes white space around the elements */
+/* General reset for body and elements */
 body {
   margin: 0;
   padding: 0;
 }
 
-/* Ensures that padding and borders are included within the element's total width and height */  
 * {
   box-sizing: border-box;
 }
 
-/* !!NAV BAR START!! */
-/* Styles the header (navigation bar) */
+/* NAVIGATION BAR STYLES */
 header {
   background-color: #21b0fe;
-  display: flex; /* Flexbox to arrange the elements horizontally */
-  justify-content: space-between; /* Spaces out content within the header */
-  align-items: center; /* Vertically centers content */
-  width: 100%; /* Full width of the screen */
-  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 0 20px;
+  width: 100%;
 }
 
-/* Styles the <nav> to align correctly within the header */
 nav {
   display: flex;
-  align-items: center; /* Vertically aligns the navigation buttons with the logo */
+  align-items: center;
 }
 
-/* Removes the default list styling from the logo list */
-.navbar_logo{
-  list-style: none; /* Removes bullets */
+/* Logo styles */
+.navbar_logo {
+  list-style: none;
   margin: 0;
   padding: 0;
 }
-
-/* Styles the logo in the navigation bar */
-.logo{
-display: block; /* Ensures the logo takes up its own block of space */
-height: auto; /* Keeps the original height-to-width ratio */
-width: 200px; /* Sets a fixed width for the logo */
+.Settings_logo {
+  list-style: none;
+  margin: 10px;
+  padding: 0;
+  width: 50px; /* Adjust width as needed */
+  height: auto; /* Keeps aspect ratio */
+}
+.logo {
+  display: block;
+  width: 200px;
+  height: auto;
 }
 
-/* Styles the navigation buttons as a flexbox container */
+/* Navbar buttons list */
 .navbar_buttons_list {
-display: flex; /* Display items in a row */
-list-style: none; /* Removes bullets */
-margin-left: 20px; /* keeps the navigation list right aligned */
-padding: 0; /* Adds padding inside the button list */
-align-items: center; 
+  display: flex;
+  list-style: none;
+  margin-left: 20px;
+  padding: 0;
+  align-items: center;
 }
 
-/* Styles the individual navigation buttons */
-.navbar_buttons_list li {
-margin: 0 20px; /* Adds space around each button */
-position: relative; /* Allows for custom positioning of list elements */
+/* Common style for all navigation buttons */
+.Nav_Buttons, .SignInRegister_Nav_Button {
+  color: black;
+  width: 110px;
+  padding: 15px;
+  text-align: center;
+  margin: 0 20px;
+  border-radius: 15px;
+  font-weight: bold;
+  border: 2.5px solid #fd3636;
+  background-color: #FFC6C6;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-decoration: none;
 }
 
-/* Styles the links inside the navigation buttons */
-.navbar_buttons_list li a {
-text-decoration: none; /* Removes underlines from links */
-color: black; /* Text color */
+/* Hover effect for all buttons */
+.Nav_Buttons:hover, .SignInRegister_Nav_Button:hover {
+  background-color: #fd3636;
+  color: white;
 }
-
-/* Styles general navigation buttons */
-.Nav_buttons{
-color: black; /* Text color */
-width: 110px;
-padding: 15px; /* Padding inside buttons */
-text-align: center; /* Centers text inside the buttons */
-margin: 0px 0px; /* Removes margin */
-border-radius: 15px; /* Rounds the button corners */
-font-weight: bold; /* Bolds text */
-border: 2.5px solid #fd3636;
-background-color: #FFC6C6;
-cursor: pointer; /* Changes cursor to pointer on hover */
-}
-
-/* Makes the buttons change appearance when hovered over */
-.Nav_Buttons:hover{
-  background-color: #fd3636; /* New background */
-  color: white; /* New text color */
-  font-weight: bolder;
-}
-
-/* Styles for the "Sign In" and "Register" buttons */
-.SignInRegister_Nav_Button{
-color: black; /* Text color */
-width: 110px;
-padding: 15px; /* Padding inside buttons */
-text-align: center; /* Centers the text */
-margin: 0px 0px; /* Removes margin */
-border-radius: 15px; /* Rounds button corners */
-font-weight: bold;
-border: 2.5px solid #fd3636;
-background-color: #FFC6C6; 
-cursor: pointer; /* Changes cursor to pointer on hover */
-}
-
-/* Makes the buttons in the navigation change color
-when hovered over */
-.SignInRegister_Nav_Button:hover{
-background-color: #fd3636; /* New background */
-color: white; /* New text color */
-font-weight: bolder;
-}
-
 /* !! BODY OF PAGE START!! */
 /* Styles the main content area of the respective page */
 .page_body{
