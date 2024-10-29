@@ -17,6 +17,7 @@ const path = require('path'); // to work with file and directory paths
 const sessionConfig = require('./src/Config/config_session'); // imported from config_session file
 const { connectToDatabase } = require('./src/Config/dbh'); // imported from dbh file
 const registerRoutes = require('./src/Routes/registerRoutes'); // routes for user registration functionality
+const loginRoutes = require('./src/Routes/loginRoutes'); // routes for user login functionality
 const PORT = process.env.PORT || 4000; 
 const ejs = require('ejs'); // ejs is a templating engine for rendering HTML
 
@@ -30,10 +31,13 @@ app.use(express.static(path.join(__dirname, 'src', 'public')));
 // Serve static HTML files from the Views folder
 app.use(express.static(path.join(__dirname, 'src', 'Views')));
 
+
 // Middleware for parsing request bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+// Serve static files from the build directory (where Webpack outputs)
+app.use(express.static(path.join(__dirname, 'custom-generator-codelab', 'build')));
 
 // Set up session configuration
 sessionConfig(app);
@@ -48,7 +52,7 @@ app.get('/api/home', (req, res) => {
 
 // Define the login route
 app.get('/api/login', (req, res) => {
-    res.render('LoginPage.ejs'); // Renders LoginPage
+    res.render('LoginPage'); // Renders LoginPage
 });
 
 // Define the play route
@@ -56,9 +60,20 @@ app.get('/api/play', (req, res) => {
     res.sendFile(path.join(__dirname, 'custom-generator-codelab', 'src', 'index.html')); // Renders index.html
 });
 
+// Serve static files from custom generator codelab
+app.use('/api/play', express.static(path.join(__dirname, 'custom-generator-codelab', 'src')));
+
 // Define the settings route
 app.get('/api/settings', (req, res) => {
     res.sendFile(path.join(__dirname, 'src', 'Views', 'SettingsPage.html')); // Renders index.html
+});
+
+// Define the dashboard route
+app.get('/api/dashboard', (req, res) => {
+    if (!req.session.id) {
+        return res.redirect('/api/login'); // Redirect to login if not authenticated
+    }
+    res.send('<h1>Dashboard Under Construction</h1><p>This page will be available soon.</p>');
 });
 
 
@@ -76,6 +91,7 @@ app.get('/api/register', async (req, res) => {
 
 // API routes
 app.use('/api', registerRoutes);
+app.use('/api', loginRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -85,7 +101,7 @@ app.use((err, req, res, next) => {
 
 const startServer = () => {
     app.listen(PORT, () => {
-        console.log(`Server is running on http://localhost:${PORT}`); 
+        console.log(`Server is running on http://localhost:${PORT}/api/home`); 
     });
 };
 

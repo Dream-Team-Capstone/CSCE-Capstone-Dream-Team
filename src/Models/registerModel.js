@@ -34,6 +34,7 @@ exports.getUserByEmail = async (email) => {
 exports.createUser = async (first_name, last_name, email, password) => {
     try {
         const hashedPassword = await bcrypt.hash(password, 12);
+        console.log("Hashed Password:", hashedPassword); // debug
         await pool.query("INSERT INTO user_info (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)", [first_name, last_name, email, hashedPassword]);
     } catch (error) {
         console.error("Error creating user:", error);
