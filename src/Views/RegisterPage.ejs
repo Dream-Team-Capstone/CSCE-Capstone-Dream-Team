@@ -1,10 +1,10 @@
-<DOCTYPE! html>
+<!DOCTYPE html>
 <html lang="en-us">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PyBlock</title>
-    <link href='StylesPages/RegisterStyles.css' rel='stylesheet'>
+    <link href='/StylesPages/RegisterStyles.css' rel='stylesheet'>
 </head>    
 <body>
     <!-- NAV BAR START -->
@@ -14,8 +14,8 @@
       <nav aria-label="Main Navigation">
       <ul class="navbar_logo">
         <li>
-          <a href="HomePage.html">
-            <img class = logo src = "ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo, linking back to home page">
+          <a href="/api/home">
+            <img class = logo src = "/ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo, linking back to home page">
           </a>
         </li>
       </ul>
@@ -33,7 +33,7 @@
           </a>
         </li>
         <li>
-          <a href = "PlayPage.html">
+          <a href = "/api/play">
             <button class="Nav_Buttons" aria-label="Start coding by going to the Play page">Play</button>
           </a>
         </li>
@@ -48,17 +48,17 @@
           </a>
         </li>
         <li>
-          <a href = "LoginPage.html">
-            <button class="SignInRegister_Nav_Button">Sign In</button>
+          <a href = "/api/login">
+            <button class="Nav_Buttons">Sign In</button>
           </a>
         </li>
         <li>
-          <a href="RegisterPage.html">
-            <button class="SignInRegister_Nav_Button">Register</button>
+          <a href="/api/register">
+            <button class="Nav_Buttons">Register</button>
           </a>
         </li>
         <li>
-          <a href = "SettingsPage.html">
+          <a href = "/api/settings">
             <button class="Nav_Buttons">Settings</button>
           </a>
         </li>
@@ -71,20 +71,20 @@
       <main class="page_body">
         <h1 class="page_title">Welcome to PyBlocks!</h1>
         
-        <form class="Register_Form" aria-labelledby="Register Form">
+        <form class="Register_Form" action="/api/register" method="POST" aria-labelledby="Register Form" >
 
           <fieldset>
             <legend id="registerForm" class="visually-hidden">Register Form</legend>
             <!-- FIRST NAME INPUT -->
             <div class="Form_Group">
-              <label for="First Name">First Name:</label>
-              <input type="text" name="firstName" id="FName" placeholder="First Name" aria-required="true" required>
+              <label for="FName">First Name:</label>
+              <input type="text" name="first_name" id="FName" placeholder="First Name" aria-required="true" required>
             </div>
 
             <!-- LAST NAME INPUT -->
             <div class="Form_Group">
-              <label for="Last Name">Last Name:</label>
-              <input type="text" name="lastName" id="LName" placeholder="Last Name" aria-required="true" required> 
+              <label for="LName">Last Name:</label>
+              <input type="text" name="last_name" id="LName" placeholder="Last Name" aria-required="true" required> 
             </div>
 
             <!-- EMAIL INPUT -->
@@ -114,8 +114,8 @@
   <!-- List for the logo on the page -->
   <ul class="navbar_logo">
     <li>
-      <a href="HomePage.html">
-        <img class = logo src = "ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo, linking back to home page">
+      <a href="/api/home">
+        <img class = logo src = "/ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo, linking back to home page">
       </a>
     </li>
   </ul>
@@ -131,3 +131,4 @@
 <!-- FOOTER END -->
 </body>
 </html>
+

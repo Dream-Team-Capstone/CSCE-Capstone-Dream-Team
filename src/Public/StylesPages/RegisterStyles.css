@@ -9,6 +9,18 @@ body {
     box-sizing: border-box;
 }
 
+/* To ensure compatibility with smaller screens */
+@media (max-width: 768px) {
+  .navbar_buttons_list {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
+  .page_body {
+    font-size: large;
+  }
+}
+
 /* !!NAV BAR START!! */
 /* Styles the header (navigation bar) */
 header {
@@ -45,25 +57,28 @@ width: 200px; /* Sets a fixed width for the logo */
 .navbar_buttons_list {
 display: flex; /* Display items in a row */
 list-style: none; /* Removes bullets */
-margin-left: 20px; /* keeps the navigation list right aligned */
+/*margin-left: 270px; /* keeps the navigation list right aligned */
 padding: 20px; /* Adds padding inside the button list */
 align-items: right; 
+list-style-type: none;
 }
 
 /* Styles the individual navigation buttons */
 .navbar_buttons_list li {
-margin: 0 20px; /* Adds space around each button */
+margin: 0 20px;  /*Adds space around each button */
 position: relative; /* Allows for custom positioning of list elements */
+align-items: right; 
 }
 
 /* Styles the links inside the navigation buttons */
 .navbar_buttons_list li a {
 text-decoration: none; /* Removes underlines from links */
 color: black; /* Text color */
+align-items: right; 
 }
 
 /* Styles general navigation buttons */
-.Nav_buttons{
+.Nav_Buttons{
 color: black; /* Text color */
 width: 110px;
 padding: 15px; /* Padding inside buttons */
@@ -74,6 +89,7 @@ font-weight: bold; /* Bolds text */
 border: 2.5px solid #fd3636;
 background-color: #FFC6C6;
 cursor: pointer; /* Changes cursor to pointer on hover */
+align-items: right; 
 }
 
 /* Makes the buttons change appearance when hovered over */
@@ -81,28 +97,6 @@ cursor: pointer; /* Changes cursor to pointer on hover */
   background-color: #fd3636; /* New background */
   color: white; /* New text color */
   font-weight: bolder;
-}
-
-/* Styles for the "Sign In" and "Register" buttons */
-.SignInRegister_Nav_Button{
-color: black; /* Text color */
-width: 110px;
-padding: 15px; /* Padding inside buttons */
-text-align: center; /* Centers the text */
-margin: 0px 0px; /* Removes margin */
-border-radius: 15px; /* Rounds button corners */
-font-weight: bold;
-border: 2.5px solid #fd3636;
-background-color: #FFC6C6; 
-cursor: pointer; /* Changes cursor to pointer on hover */
-}
-
-/* Makes the buttons in the navigation change color
-when hovered over */
-.SignInRegister_Nav_Button:hover{
-background-color: #fd3636; /* New background */
-color: white; /* New text color */
-font-weight: bolder;
 }
 
 /* !! BODY OF PAGE START!! */
@@ -227,14 +221,21 @@ legend {
   display: inline; /* Inline display for footer buttons */
   list-style: none; /* Removes bullets from the list */
   margin: 0;
-  padding: 0; 
+  padding: 0px; 
+}
+
+/* Adds space between each link */
+.footer_buttons li{
+  padding: 10px;
 }
 
 /* Styles the individual footer buttons */
-.footer_buttons li {
+.footer_buttons li a{
   margin-left: 20px; /* Adds space between footer buttons */
   padding: 8px; /* Adds padding inside the buttons */
   font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  text-decoration: none;
+  color: black;
 }
 
 /* !!FOOTER START!! */
