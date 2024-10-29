@@ -1,240 +1,207 @@
-/* Removes white space around the elements */
+/* General reset for body and elements */
 body {
   margin: 0;
   padding: 0;
 }
 
-/* Ensures that padding and borders are included within the element's total width and height */  
 * {
   box-sizing: border-box;
 }
 
-/* !!NAV BAR START!! */
-/* Styles the header (navigation bar) */
+/* NAVIGATION BAR STYLES */
 header {
-background-color: #21b0fe;
-display: flex; /* Flexbox to arrange the elements horizontally */
-justify-content: space-between; /* Spaces out content within the header */
-align-items: center; /* Vertically centers content */
-width: 100%; /* Full width of the screen */
-margin: 0;
-padding: 0 20px;
+  background-color: #21b0fe;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  width: 100%;
 }
 
-/* Styles the <nav> to align correctly within the header */
 nav {
-display: flex;
-align-items: center; /* Vertically aligns the navigation buttons with the logo */
+  display: flex;
+  align-items: center;
 }
 
-/* Removes the default list styling from the logo list */
-.navbar_logo{
-list-style: none; /* Removes bullets */
-margin: 0;
-padding: 0;
+/* Logo styles */
+.navbar_logo {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-/* Styles the logo in the navigation bar */
-.logo{
-display: block; /* Ensures the logo takes up its own block of space */
-height: auto; /* Keeps the original height-to-width ratio */
-width: 200px; /* Sets a fixed width for the logo */
+.logo {
+  display: block;
+  width: 200px;
+  height: auto;
 }
 
-/* Styles the navigation buttons as a flexbox container */
+/* Navbar buttons list */
 .navbar_buttons_list {
-display: flex; /* Display items in a row */
-list-style: none; /* Removes bullets */
-margin-left: 20px; /* keeps the navigation list right aligned */
-padding: 20px; /* Adds padding inside the button list */
-align-items: right; 
+  display: flex;
+  list-style: none;
+  margin-left: 20px;
+  padding: 0;
+  align-items: center;
 }
 
-/* Styles the individual navigation buttons */
-.navbar_buttons_list li {
-margin: 0 20px; /* Adds space around each button */
-position: relative; /* Allows for custom positioning of list elements */
+/* Common style for all navigation buttons */
+.Nav_Buttons, .SignInRegister_Nav_Button {
+  color: black;
+  width: 110px;
+  padding: 15px;
+  text-align: center;
+  margin: 0 20px;
+  border-radius: 15px;
+  font-weight: bold;
+  border: 2.5px solid #fd3636;
+  background-color: #FFC6C6;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-decoration: none;
 }
 
-/* Styles the links inside the navigation buttons */
-.navbar_buttons_list li a {
-text-decoration: none; /* Removes underlines from links */
-color: black; /* Text color */
+/* Hover effect for all buttons */
+.Nav_Buttons:hover, .SignInRegister_Nav_Button:hover {
+  background-color: #fd3636;
+  color: white;
 }
-
-/* Styles general navigation buttons */
-.Nav_buttons{
-color: black; /* Text color */
-width: 110px;
-padding: 15px; /* Padding inside buttons */
-text-align: center; /* Centers text inside the buttons */
-margin: 0px 0px; /* Removes margin */
-border-radius: 15px; /* Rounds the button corners */
-font-weight: bold; /* Bolds text */
-border: 2.5px solid #fd3636;
-background-color: #FFC6C6;
-cursor: pointer; /* Changes cursor to pointer on hover */
-}
-
-/* Makes the buttons change appearance when hovered over */
-.Nav_Buttons:hover{
-background-color: #fd3636; /* New background */
-color: white; /* New text color */
-font-weight: bolder;
-}
-
-/* Styles for the "Sign In" and "Register" buttons */
-.SignInRegister_Nav_Button{
-color: black; /* Text color */
-width: 110px;
-padding: 15px; /* Padding inside buttons */
-text-align: center; /* Centers the text */
-margin: 0px 0px; /* Removes margin */
-border-radius: 15px; /* Rounds button corners */
-font-weight: bold;
-border: 2.5px solid #fd3636;
-background-color: #FFC6C6; 
-cursor: pointer; /* Changes cursor to pointer on hover */
-}
-
-/* Makes the buttons in the navigation change color
-when hovered over */
-.SignInRegister_Nav_Button:hover{
-background-color: #fd3636; /* New background */
-color: white; /* New text color */
-font-weight: bolder;
-}
-
 /* !! BODY OF PAGE START!! */
 /* Styles the main content area of the respective page */
 .page_body{
-position: relative; /* Positions the background image relative to its container */
-width: 100%; /* Full width of the screen */
-height: 100vh; /* Full viewport height */
-font-family: 'Trebuchet MS', Helvetica, sans-serif;
-font-size: xx-large;
-overflow: hidden; /* Hides overflowed content */
-display: flex;
-flex-direction: column; /* Stacks elements vertically */
-justify-content: center; /* Centers content vertically */
-align-items: center; /* Centers content horizontally */
-text-align: center; /* Centers text */
+  position: relative; /* Positions the background image relative to its container */
+  width: 100%; /* Full width of the screen */
+  height: 100vh; /* Full viewport height */
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  font-size: xx-large;
+  overflow: hidden; /* Hides overflowed content */
+  display: flex;
+  flex-direction: column; /* Stacks elements vertically */
+  justify-content: center; /* Centers content vertically */
+  align-items: center; /* Centers content horizontally */
+  text-align: center; /* Centers text */
 }
-
-/* Adds a semi-transparent background image to the page */
 .page_body::before{
-content: ""; /* Creates an empty content block */
-position: absolute; /* Positions it relative to the nearest positioned ancestor */
-top: 0; /* Aligns it to the top of the container */
-left: 0; /* Aligns it to the left of the container */
-width: 100%; /* Full width */
-height: 100%; /* Full height */
-background-image: url('../ImagesUsed/homepage_backgroud.jpg'); /* Adds background image */
-background-size: cover; /* Ensures the image covers the container */
-background-position: center; /* Centers the background image */
-opacity: 0.25; /* Makes the image semi-transparent */
-z-index: -1; /* Places the image behind other elements */
+  content: ""; /* Creates an empty content block */
+  position: absolute; /* Positions it relative to the nearest positioned ancestor */
+  top: 0; /* Aligns it to the top of the container */
+  left: 0; /* Aligns it to the left of the container */
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  background-image: url('../ImagesUsed/homepage_backgroud.jpg'); /* Adds background image */
+  background-size: cover; /* Ensures the image covers the container */
+  background-position: center; /* Centers the background image */
+  opacity: 0.25; /* Makes the image semi-transparent */
+  z-index: -1; /* Places the image behind other elements */
 }
-
-/* Main body Styling */
-
 /* Style box around the registration form */
 .Settings_Form{
-border: 3px solid #fd3636;
-border-radius: 15px; /* Rounded corners */
-background-color: white;
-width: 400px; 
-padding: 30px; 
-margin: 20px auto; /* Centers the form horizontally with margin */
+  border: 3px solid #fd3636;
+  border-radius: 15px; /* Rounded corners */
+  background-color: white;
+  width: 400px; 
+  padding: 30px; 
+  margin: 20px auto; /* Centers the form horizontally with margin */
 }
 /* Centers the form */
 form{
-display: block;
+  display: block;
 }
 
 /* Ensures each label-input pair is aligned properly */
 .Form_Group {
-display: block; /* Labels and inputs stack vertically */
-margin-bottom: 15px; /* Space below each form group */
-text-align: left;
-padding: 10px; /* Adds padding around each form group */
+  display: block; /* Labels and inputs stack vertically */
+  margin-bottom: 15px; /* Space below each form group */
+  text-align: left;
+  padding: 10px; /* Adds padding around each form group */
 }
 
 /*sets the font, weight, and color of the form labels */
 .Form_Group label {
-width: 150px; 
-margin-right: 20px; /* Space between label and input */
-color: rgb(93, 93, 93);
-font-weight: 100;
-font-size: 25px;
-font-family: Arial, sans-serif;
+  width: 150px; 
+  margin-right: 20px; /* Space between label and input */
+  color: rgb(93, 93, 93);
+  font-weight: 100;
+  font-size: 25px;
+  font-family: Arial, sans-serif;
 }
 
 /* Styles the placeholder text */
 ::placeholder{
-font-size: 18px;
+ font-size: 18px;
 }
 
+/*sets the color, size, and formatting of the form's input properties*/
+form input[type="password"], form input[type="text"], form input[type="email"] {
+  font-size: 20px;
+  display: block; /* Stacks inputs vertically */
+  width: 325px;
+  height: 35px;
+  background: white;
+  border: 2px solid #D9D9D9;
+  border-radius: 5px; /* Rounded corners */
+  padding: 5px; /* Padding inside input fields */
+}
 
 /* Center the submit button */
 .Form_Group.Button_Center {
-text-align: center;
+  text-align: center;
 }
 
 /*sets the formatting of the form's sumit button */
-form input[type="save"], form button {
-color: black;
-background-color: #FFC6C6;
-border-color: #fd3636;
-padding: 10px 20px; /* Padding inside the button */
-border-radius: 15px; /* Rounded corners */
-cursor: pointer; /* Changes cursor to pointer on hover */
-transition: background-color 0.3s; /* Smooth transition for background color change */
-width: 200px;
-font-weight: bolder;
+form input[type="submit"], form button {
+  color: black;
+  background-color: #FFC6C6;
+  border-color: #fd3636;
+  padding: 10px 20px; /* Padding inside the button */
+  border-radius: 15px; /* Rounded corners */
+  cursor: pointer; /* Changes cursor to pointer on hover */
+  transition: background-color 0.3s; /* Smooth transition for background color change */
+  width: 200px;
+  font-weight: bolder;
 }
 
 /*sets the color of the form's sumbit button when hovered over */
 form input[type="submit"]:hover, form button:hover {
-background-color: #fd3636; /* New background color */
-color: white; /* New text color */
-font-weight: bolder;
+  background-color: #fd3636; /* New background color */
+  color: white; /* New text color */
+  font-weight: bolder;
 }
 
 fieldset {
-border: none; /* Removes the default border */
-padding: 0; /* Removes padding */
-margin: 0; /* Removes margin */
+  border: none; /* Removes the default border */
+  padding: 0; /* Removes padding */
+  margin: 0; /* Removes margin */
 }
 
 legend {
-display: none; /* Hides the legend */
+  display: none; /* Hides the legend */
 }
 
 /* Styles the footer buttons */
 .footer_buttons {
-display: inline; /* Inline display for footer buttons */
-list-style: none; /* Removes bullets from the list */
-margin: 0;
-padding: 0; 
+  display: inline; /* Inline display for footer buttons */
+  list-style: none; /* Removes bullets from the list */
+  margin: 0;
+  padding: 0; 
 }
 
 /* Styles the individual footer buttons */
 .footer_buttons li {
-margin-left: 20px; /* Adds space between footer buttons */
-padding: 8px; /* Adds padding inside the buttons */
-font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  margin-left: 20px; /* Adds space between footer buttons */
+  padding: 8px; /* Adds padding inside the buttons */
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
 }
 
 /* !!FOOTER START!! */
 /* Styles the footer container */
 footer {
-background-color: #FED702;
-padding: 20px;
-width: 100%;
-height: 20%;
-text-align: right; /* Aligns footer content to the right */
-display: flex; /* Flexbox layout */
-justify-content: space-between; /* Spaces content between left and right */
-align-items: center;
+  background-color: #FED702;
+  padding: 20px;
+  width: 100%;
+  height: 20%;
+  text-align: right; /* Aligns footer content to the right */
+  display: flex; /* Flexbox layout */
+  justify-content: space-between; /* Spaces content between left and right */
+  align-items: center;
 }
