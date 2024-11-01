@@ -7,7 +7,7 @@ Handles the user registration process, validating input data and checking for ex
 // Import the getUserByName, getUserByEmail, and createUser functions from the registerModel file
 const { getUserByName, 
         getUserByEmail, 
-        createUser } = require('../Models/registerModel');
+        createUser } = require('../../../../src/Models/registerModel');
 
 // exports asynchronous function signupUser
 exports.signupUser = async (req, res) => {

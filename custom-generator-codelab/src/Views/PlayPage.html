@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <title>pyBlock Play Page</title>
+    <link href='/StylesPages/PlayStyle.css' rel='stylesheet'>
+    <!-- Include Blockly core library -->
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <!-- Include Python code generator -->
+    <script src="https://unpkg.com/blockly/python.min.js"></script>
+    <!-- Include custom blocks and generators -->
+    <script src="/blocks/custom_blocks.js"></script>
+    <script src="/generators/python/custom_python.js"></script>
+    <!-- Include your custom JavaScript file -->
+    <script type="module" src="/path/to/your/index.js"></script>
+</head>
+<body>
+    <!-- NAV BAR START -->
+    <header class="navigation">
+        <!-- List for the logo on the page -->
+        <ul class="navbar_logo">
+            <li>
+                <a href="/api/home">
+                    <img class="logo" src="/ImagesUsed/pyBlocks_Updated.png" alt="PyBlocks logo">
+                </a>
+            </li>
+        </ul>
+
+        <!-- List for the Buttons on the navigation pane -->
+        <ul class="navbar_buttons_list">
+            <li>
+                <a>
+                    <button class="Nav_Buttons">Contact Us</button>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <button class="Nav_Buttons">Tutorials</button>
+                </a>
+            </li>
+            <li>
+                <a href="/api/play">
+                    <button class="Nav_Buttons">Play</button>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <button class="Nav_Buttons">Courses</button>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <button class="Nav_Buttons">Resources</button>
+                </a>
+            </li>
+            <li>
+                <a href="/api/login">
+                    <button class="Nav_Buttons">Sign In</button>
+                </a>
+            </li>
+            <li>
+                <a href="/api/register">
+                    <button class="Nav_Buttons">Register</button>
+                </a>
+            </li>
+            <li>
+                <a href="/api/settings">
+                    <button class="Nav_Buttons">Settings</button>
+                </a>
+            </li>
+        </ul>
+    </header>
+    <!-- NAV BAR END -->
+
+    <!-- BODY START -->
+    <div class="PlayPage_Body">
+        <div class="container">
+            <!-- Left panel: Code output -->
+            <div class="code-pane">
+                <h2>Generated Python Code</h2>
+                <pre id="output"></pre>
+            </div>
+            <!-- Right panel: Blockly workspace -->
+            <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+        </div>
+
+        <!-- Toolbox definition for Blockly -->
+        <xml id="toolbox" style="display: none">
+            <category name="Logic" colour="%{BKY_LOGIC_HUE}">
+                <block type="controls_if"></block>
+                <block type="logic_compare"></block>
+                <block type="logic_operation"></block>
+                <block type="logic_boolean"></block>
+            </category>
+            <category name="Loops" colour="%{BKY_LOOPS_HUE}">
+                <block type="controls_repeat_ext">
+                    <value name="TIMES">
+                        <shadow type="math_number">
+                            <field name="NUM">10</field>
+                        </shadow>
+                    </value>
+                </block>
+                <block type="controls_whileUntil"></block>
+            </category>
+            <category name="Math" colour="%{BKY_MATH_HUE}">
+                <block type="math_number"></block>
+                <block type="math_arithmetic"></block>
+                <block type="math_single"></block>
+            </category>
+            <!-- Custom blocks defined in custom_blocks.js -->
+            <category name="Custom Blocks" colour="210">
+                <block type="custom_print"></block>
+            </category>
+        </xml>
+
+        <!-- Toggle switch for blocks/Python -->
+        <label>
+            <input type="checkbox" id="toggleSwitch"> Toggle Blocks/Python
+        </label>
+    </div>
+    <!-- BODY END -->
+
+    <!-- FOOTER START -->
+    <footer role="contentinfo">
+        <!-- List for the logo on the page -->
+        <ul class="navbar_logo">
+            <li>
+                <a href="/api/home">
+                    <img class="logo" src="/ImagesUsed/pyBlocks_Updated.png" alt="PyBlocks logo, linking back to home page">
+                </a>
+            </li>
+        </ul>
+
+        <!-- List for the links in the footer -->
+        <ul class="footer_buttons">
+            <li><a href="#resources" aria-label="Resources section (Coming soon)">Resources</a></li>
+            <li><a href="#tutorials" aria-label="Tutorials section (Coming soon)">Tutorials</a></li>
+            <li><a href="#editors" aria-label="Open blank editors (Coming soon)">Open Blank Editors</a></li>
+        </ul>
+    </footer>
+    <!-- FOOTER END -->
+
+    <script>
+        // Initialize Blockly workspace with the toolbox
+        const workspace = Blockly.inject('blocklyDiv', {
+            toolbox: document.getElementById('toolbox'),
+            scrollbars: true,
+            trashcan: true
+        });
+
+        // Function to generate Python code from blocks and display it
+        function generateCode() {
+            try {
+                console.log(pythonGenerator);  // Check if it's defined
+                console.log(workspace);         // Check if workspace is initialized
+
+                const code = Blockly.Python.workspaceToCode(workspace);
+                document.getElementById('output').textContent = code || "No code generated.";
+            } catch (e) {
+                document.getElementById('output').textContent = "Error generating code: " + e.message;
+            }
+        }
+
+        // Trigger code generation whenever the workspace changes
+        workspace.addChangeListener(generateCode);
+
+        // Functionality for the toggle switch
+        const toggleSwitch = document.getElementById('toggleSwitch');
+        toggleSwitch.addEventListener('change', () => {
+            if (toggleSwitch.checked) {
+                document.getElementById('output').style.display = 'block'; // Show the output area
+                workspace.setVisible(false); // Hide Blockly
+            } else {
+                document.getElementById('output').style.display = 'none'; // Hide the output area
+                workspace.setVisible(true); // Show Blockly
+            }
+        });
+    </script>
+</body>
+</html>

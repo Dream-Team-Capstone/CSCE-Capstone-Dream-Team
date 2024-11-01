@@ -1,7 +1,7 @@
 // src/Controllers/loginController.js
 
 // Import the getUser function from the registerModel file
-const { getUser} = require('../Models/loginModel');
+const { getUser} = require('../../../../src/Models/loginModel');
 const bcrypt = require('bcrypt');
 
 // exports asynchronous function loginUser

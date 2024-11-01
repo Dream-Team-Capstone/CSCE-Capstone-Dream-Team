@@ -27,8 +27,8 @@ app.set('views', path.join(__dirname, 'src', 'Views'));
 app.set('view engine', 'ejs'); 
 
 // Serve static files
-app.use(express.static(path.join(__dirname, 'src', 'public')));
-// Serve static HTML files from the Views folder
+app.use(express.static(path.join(__dirname, 'src', 'Public')));
+//console.log('Views directory set to:', path.join(__dirname, 'src', 'Public', 'StylesPages')); // DEBUGGING
 app.use(express.static(path.join(__dirname, 'src', 'Views')));
 
 
@@ -36,8 +36,6 @@ app.use(express.static(path.join(__dirname, 'src', 'Views')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-// Serve static files from the build directory (where Webpack outputs)
-app.use(express.static(path.join(__dirname, 'custom-generator-codelab', 'build')));
 
 // Set up session configuration
 sessionConfig(app);
@@ -47,7 +45,7 @@ connectToDatabase();
 
 // Define the home route
 app.get('/api/home', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src', 'Views', 'HomePage.html')); // Renders HomePage
+    res.render('index.ejs'); // Renders HomePage
 });
 
 // Define the login route
@@ -57,11 +55,8 @@ app.get('/api/login', (req, res) => {
 
 // Define the play route
 app.get('/api/play', (req, res) => {
-    res.sendFile(path.join(__dirname, 'custom-generator-codelab', 'src', 'index.html')); // Renders index.html
+    res.sendFile(path.join(__dirname, 'src', 'Views', 'PlayPage.html')); // Renders index.html
 });
-
-// Serve static files from custom generator codelab
-app.use('/api/play', express.static(path.join(__dirname, 'custom-generator-codelab', 'src')));
 
 // Define the settings route
 app.get('/api/settings', (req, res) => {
