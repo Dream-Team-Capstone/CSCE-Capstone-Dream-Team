@@ -2,10 +2,10 @@
 
 // Import the getUser function from the registerModel file
 const { getUser} = require('../Models/loginModel');
+const bcrypt = require('bcrypt');
 
 // exports asynchronous function loginUser
 exports.loginUser = async (req, res) => {
-    console.log("Login function triggered");
     const { email, password } = req.body;
     const errors = [];
 
@@ -18,25 +18,19 @@ exports.loginUser = async (req, res) => {
     try {
         // Retrieve the user by email
         const user = await getUser(email);
-        console.log('Fetched user:', user);
 
         //If user not found, return error
         if (!user) {
             errors.push("Invalid email or password.");
             return res.render('LoginPage', { errors });
         }
-
-        // Compare provided password with stored hashed password
-        console.log("Provided Password:", password);
-        console.log("Stored Password Hash:", user.password);
-        const match = await bcrypt.compare(password, user.password, 12);
-        console.log("Password Match:", match);
+        const match = await bcrypt.compare(password, user.password);
         if (!match) {
             errors.push("Invalid email or password.");
             return res.render('LoginPage', { errors });
         }
         // If login is successful, set session variables
-        req.session.id = id; 
+        req.session.userId = user.id; 
         req.session.email = user.email;
 
         // Redirect to the user's profile or homepage
