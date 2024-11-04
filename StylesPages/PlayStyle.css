@@ -75,51 +75,35 @@ nav {
   
 /* !!PLAY PAGE START!! */
 /* Main part of the page */
-.PlayPage_Body{
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    font-family: 'Trebuchet MS', Helvetica, sans-serif;
-    font-size: xx-large;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-/* Styling for the Blockly and code container */
-.container {
+/* Adjust the PlayPage_Body to a horizontal flex layout */
+.PlayPage_Body {
   display: flex;
+  flex-direction: row; /* Set row direction for side-by-side layout */
+  width: 100vw;
   height: 100vh;
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  overflow: hidden; /* Ensure no overflow outside the main container */
 }
 
-/* Left pane for the generated code */
-.code-pane {
-  width: 40%;
-  padding: 10px;
-  background-color: #f5f5dc;
-  overflow-y: scroll;
+/* Styling for the left pane (Python code output) */
+#code-pane {
+  width: 50%;
+  height: 100%;
+  background-color: #f5f5dc; /* Light beige background */
   border-right: 2px solid #ccc;
-}
-
-/* Code output display */
-#output {
-  height: 100%;
-  width: 100%;
-  font-family: "Courier New", monospace;
-  white-space: pre;
-  background-color: #f9f9f9;
   padding: 10px;
-  border: none;
+  overflow-y: auto; /* Enable vertical scrolling */
   box-sizing: border-box;
-  background-color: #f5f5dc;
+  font-family: "Courier New", monospace;
+  white-space: pre-wrap;
 }
 
-/* Right pane for Blockly */
+/* Styling for the right pane (Blockly workspace) */
 #blocklyDiv {
-  width: 60%;
+  width: 50%;
   height: 100%;
+  overflow-y: auto; /* Enable vertical scrolling for Blockly */
+  background-color: #e9ecef; /* Slightly darker background for Blockly */
 }
 /* !!FOOTER START!! */
 .footer_buttons {

@@ -1,11 +1,19 @@
 <!doctype html>
-<html>
+<html lang="en-us">
   <head>
     <meta charset="utf-8" />
     <title>pyBlock Play Page</title>
+    <script src="../node_modules/blockly/blockly_compressed.js"></script>
+        <!-- Load the default blocks -->
+        <script src="..\node_modules\blockly\blocks_compressed.js"></script>
+        <!-- Load a generator -->
+        <script src="..\node_modules\blockly\python_compressed.js"></script>
+        <!-- Load a message file -->
+        <script src="..\node_modules\blockly\msg\en.js"></script>
+        <script src=".\toolbox.js"></script>     
   </head>
 
-  <body>
+  <body onload="start()">
     <!-- NAV BAR START -->
     <header class="navigation">
 
@@ -90,6 +98,10 @@
         <li>Open Blank Editors</li>
       </ul>
     </footer>
+    <script src="https://unpkg.com/blockly/blockly_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/blocks_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/msg/en.js"></script>
     <!-- FOOTER END -->
   </body>
 </html>
