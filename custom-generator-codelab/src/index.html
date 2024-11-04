@@ -1,19 +1,27 @@
 <!doctype html>
-<html>
+<html lang="en-us">
   <head>
     <meta charset="utf-8" />
     <title>pyBlock Play Page</title>
+    <script src="../node_modules/blockly/blockly_compressed.js"></script>
+        <!-- Load the default blocks -->
+        <script src="..\node_modules\blockly\blocks_compressed.js"></script>
+        <!-- Load a generator -->
+        <script src="..\node_modules\blockly\python_compressed.js"></script>
+        <!-- Load a message file -->
+        <script src="..\node_modules\blockly\msg\en.js"></script>
+        <script src=".\toolbox.js"></script>     
   </head>
 
-  <body>
+  <body onload="start()">
     <!-- NAV BAR START -->
     <header class="navigation">
 
       <!-- List for the logo on the page -->
       <ul class="navbar_logo">
         <li>
-          <a href="HomePage.html">
-            <img class = logo src = "pyBlocks_Updated.png" alt = "PyBlocks logo">
+          <a href="~/HomePage.html">
+            <img class = logo src = "~/ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo">
           </a>
         </li>
       </ul>
@@ -31,7 +39,7 @@
           </a>
         </li>
         <li>
-          <a href = "PlayPage.html">
+          <a href = "index.html">
             <button class="Nav_Buttons">Play</button>
           </a>
         </li>
@@ -46,12 +54,12 @@
           </a>
         </li>
         <li>
-          <a href = "LoginPage.html">
+          <a href = "~/LoginPage.html">
             <button class="SignInRegister_Nav_Button">Sign In</button>
           </a>
         </li>
         <li>
-          <a href= "RegisterPage.html">
+          <a href= "~/RegisterPage.html">
             <button class="SignInRegister_Nav_Button">Register</button>
           </a>
         </li>
@@ -60,6 +68,10 @@
     <!-- NAV BAR END -->
 
     <div id="pageContainer">
+      <label class="toggleSwitch">
+        <input type="checkbox" id="toggleSwitch" />
+        <span class="slider"></span>
+      </label>
       <div id="outputPane">
         <pre id="generatedCode"><code></code></pre>
         <div id="output"></div>
@@ -73,8 +85,8 @@
       <!-- List for the logo on the page -->
       <ul class="navbar_logo">
         <li>
-          <a href="HomePage.html">
-            <img class = logo src = "pyBlocks_Updated.png" alt = "PyBlocks logo">
+          <a href="~/HomePage.html">
+            <img class = logo src = "~/ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo">
           </a>
         </li>
       </ul>
@@ -86,6 +98,10 @@
         <li>Open Blank Editors</li>
       </ul>
     </footer>
+    <script src="https://unpkg.com/blockly/blockly_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/blocks_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/msg/en.js"></script>
     <!-- FOOTER END -->
   </body>
 </html>
