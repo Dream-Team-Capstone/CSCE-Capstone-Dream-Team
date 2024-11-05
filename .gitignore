@@ -3,3 +3,4 @@ node_modules
 test_connection.js
 test.ejs
 NOTES
+.DS_Store
