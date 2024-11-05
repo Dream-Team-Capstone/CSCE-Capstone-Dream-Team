@@ -25,18 +25,20 @@ body {
 /* Styles the header (navigation bar) */
 header {
   background-color: #21b0fe;
-  display: flex; /* Flexbox to arrange the elements horizontally */
-  justify-content: space-between; /* Spaces out content within the header */
-  align-items: center; /* Vertically centers content */
-  width: 100%; /* Full width of the screen */
-  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 0 20px;
+  width: 100%;
 }
 
 /* Styles the <nav> to align correctly within the header */
 nav {
   display: flex;
   align-items: center; /* Vertically aligns the navigation buttons with the logo */
+  justify-content: space-between; /* Distributes space between items */
+  max-width: 100%; /* Ensures nav does not exceed the width of the viewport */
+  overflow: hidden; /* Hides overflow if elements exceed the width */
 }
 
 /* Removes the default list styling from the logo list */
@@ -53,34 +55,39 @@ height: auto; /* Keeps the original height-to-width ratio */
 width: 200px; /* Sets a fixed width for the logo */
 }
 
+.Settings_logo {
+  list-style: none;
+  margin: 0 px;
+  padding: 0;
+  width: 50px; /* Adjust width as needed */
+  height: auto; /* Keeps aspect ratio */
+}
+
 /* Styles the navigation buttons as a flexbox container */
 .navbar_buttons_list {
 display: flex; /* Display items in a row */
 list-style: none; /* Removes bullets */
-/*margin-left: 270px; /* keeps the navigation list right aligned */
-padding: 20px; /* Adds padding inside the button list */
+margin-left: 0px; /* keeps the navigation list right aligned */
+padding: 0; /* Adds padding inside the button list */
 align-items: right; 
-list-style-type: none;
 }
 
 /* Styles the individual navigation buttons */
 .navbar_buttons_list li {
-margin: 0 20px;  /*Adds space around each button */
+margin: 0 28px; /* Adds space around each button */
 position: relative; /* Allows for custom positioning of list elements */
-align-items: right; 
 }
 
 /* Styles the links inside the navigation buttons */
 .navbar_buttons_list li a {
 text-decoration: none; /* Removes underlines from links */
 color: black; /* Text color */
-align-items: right; 
 }
 
 /* Styles general navigation buttons */
 .Nav_Buttons{
 color: black; /* Text color */
-width: 110px;
+width: 107px;
 padding: 15px; /* Padding inside buttons */
 text-align: center; /* Centers text inside the buttons */
 margin: 0px 0px; /* Removes margin */
@@ -89,7 +96,6 @@ font-weight: bold; /* Bolds text */
 border: 2.5px solid #fd3636;
 background-color: #FFC6C6;
 cursor: pointer; /* Changes cursor to pointer on hover */
-align-items: right; 
 }
 
 /* Makes the buttons change appearance when hovered over */
@@ -98,6 +104,7 @@ align-items: right;
   color: white; /* New text color */
   font-weight: bolder;
 }
+
 
 /* !! BODY OF PAGE START!! */
 /* Styles the main content area of the respective page */

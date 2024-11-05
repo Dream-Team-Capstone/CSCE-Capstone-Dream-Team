@@ -7,7 +7,7 @@ const config = {
   output: {
     // Compile the source files into a bundle.
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'src'), // Change this to your desired output directory
+    path: path.resolve(__dirname, 'dist'), // Change this to your desired output directory
     clean: true,
   },
   // Enable webpack-dev-server to get hot refresh of the app.

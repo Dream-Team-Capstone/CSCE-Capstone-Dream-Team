@@ -9,7 +9,7 @@ const userModel = require('../Models/loginModel'); // model handling user data i
 const bodyParser = require('body-parser'); // Middleware to parse incoming request bodies 
 
 // Define login route
-router.post('/login', 
+/*router.post('/login', 
     // Validate input
     body('email').isEmail().withMessage('Invalid email address.'),
     body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long.'),
@@ -49,7 +49,46 @@ router.post('/login',
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }
+);*/
+
+router.post('/login', 
+    body('email').isEmail().withMessage('Invalid email address.'),
+    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long.'),
+    async (req, res) => {
+        console.log('Login request received:', req.body);
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            console.log('Validation errors:', errors.array());
+            return res.status(400).render('LoginPage', { errors: errors.array() });
+        }
+
+        const { email, password } = req.body;
+        
+        try {
+            const user = await userModel.getUser(email);
+            console.log('User found:', user);
+            if (!user) {
+                return res.status(400).render('LoginPage', { errors: [{ msg: 'Invalid email or password.' }] });
+            }
+
+            const isMatch = await bcrypt.compare(password.trim(), user.password);
+            if (isMatch) {
+                req.session.id = user.id;
+                req.session.email = user.email;
+                console.log('User session set:', req.session);
+                return res.redirect('/api/dashboard');
+            } else {
+                console.log('Password mismatch');
+                return res.status(400).render('LoginPage', { errors: [{ msg: 'Invalid email or password.' }] });
+            }
+
+        } catch (error) {
+            console.error("Error logging in:", error);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
 );
+
 
 
 // export to be used in other files

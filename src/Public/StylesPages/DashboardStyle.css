@@ -1,42 +1,11 @@
+/* General reset for body and elements */
 body {
     margin: 0;
-    max-width: 100vw;
+    padding: 0;
   }
   
-  pre,
-  code {
-    overflow: auto;
-  }
-  
-  #pageContainer {
-    display: flex;
-    width: 100%;
-    max-width: 100vw;
-    height: 100vh;
-  }
-  
-  #blocklyDiv {
-    flex-basis: 100%;
-    height: 100%;
-    min-width: 600px;
-  }
-  
-  #outputPane {
-    display: flex;
-    flex-direction: column;
-    width: 400px;
-    flex: 0 0 400px;
-    overflow: auto;
-    margin: 1rem;
-  }
-  
-  #generatedCode {
-    height: 50%;
-    background-color: rgb(247, 240, 228);
-  }
-  
-  #output {
-    height: 50%;
+  * {
+    box-sizing: border-box;
   }
   /* To ensure compatibility with smaller screens */
 @media (max-width: 768px) {
@@ -49,8 +18,7 @@ body {
     font-size: large;
   }
 }
-  
-  /* !!NAV BAR START!! */
+/* !!NAV BAR START!! */
 /* Styles the header (navigation bar) */
 header {
   background-color: #21b0fe;
@@ -86,7 +54,7 @@ width: 200px; /* Sets a fixed width for the logo */
 
 .Settings_logo {
   list-style: none;
-  margin: 0 px;
+  margin: 0;
   padding: 0;
   width: 50px; /* Adjust width as needed */
   height: auto; /* Keeps aspect ratio */
@@ -134,13 +102,83 @@ cursor: pointer; /* Changes cursor to pointer on hover */
   font-weight: bolder;
 }
 
+  /* !! BODY OF PAGE START!! */
+  /* Styles the main content area of the respective page */
+  .page_body{
+    position: relative; /* Positions the background image relative to its container */
+    width: 100%; /* Full width of the screen */
+    height: 100vh; /* Full viewport height */
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+    font-size: xx-large;
+    overflow: hidden; /* Hides overflowed content */
+    display: flex;
+    flex-direction: column; /* Stacks elements vertically */
+    justify-content: center; /* Centers content vertically */
+    align-items: center; /* Centers content horizontally */
+    text-align: center; /* Centers text */
+  }
+  
+  /* Adds a semi-transparent background image to the page */
+  .page_body::before{
+    content: ""; /* Creates an empty content block */
+    position: absolute; /* Positions it relative to the nearest positioned ancestor */
+    top: 0; /* Aligns it to the top of the container */
+    left: 0; /* Aligns it to the left of the container */
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-image: url('../ImagesUsed/homepage_backgroud.jpg'); /* Adds background image */
+    background-size: cover; /* Ensures the image covers the container */
+    background-position: center; /* Centers the background image */
+    opacity: 0.25; /* Makes the image semi-transparent */
+    z-index: -1; /* Places the image behind other elements */
+  }
+  
+  /* Styling for the text on the homepage */
+  h1, h2, p {
+    margin: 0; 
+  }
+  
+  h1 {
+    margin-bottom: 10px; 
+  }
+  h2{
+    margin-bottom: 30px;
+  }
+  
+  .subheading{
+    font-size: .8em;
+    margin-bottom: 40px;
+    color: #757575;
+  }
+  
+  /* Play Button Styling */
+  .play_button{
+    color: black;
+    width: 250px;
+    padding: 15px;
+    text-align: center;
+    margin: 0px 0px;
+    border-radius: 15px;
+    font-weight: bold;
+    border: 2.5px solid #fd3636;
+    background-color: #FFC6C6; 
+    cursor: pointer;
+  }
+  
+  .play_button:hover{
+    background-color: #fd3636;
+    color: white;
+    font-weight: bolder;
+  }
   
   /* !!FOOTER START!! */
+  /* Styles the footer buttons */
   .footer_buttons {
     display: inline; /* Inline display for footer buttons */
     list-style: none; /* Removes bullets from the list */
     margin: 0;
     padding: 0; 
+    color: black;
   }
   
   /* Styles the individual footer buttons */
@@ -148,6 +186,13 @@ cursor: pointer; /* Changes cursor to pointer on hover */
     margin-left: 20px; /* Adds space between footer buttons */
     padding: 8px; /* Adds padding inside the buttons */
     font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  }
+  
+  /* Styles the links inside the footer buttons */
+  .footer_buttons li a {
+    text-decoration: none; /* Removes underline from links */
+    color: black; /* Set the desired text color */
+    font-weight: bold; /* Optionally make the text bold */
   }
   
   
@@ -163,44 +208,3 @@ cursor: pointer; /* Changes cursor to pointer on hover */
     align-items: center;
   }
   
-  /* !!TOGGLE SWITCH START!! */
-/* Styles for the toggle switch */
-.toggleSwitch {
-  position: relative;
-  display: inline-block;
-  width: 100px;
-  height: 30px;
-}
-.toggleSwitch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: .4s;
-  border-radius: 34px;
-}
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
-}
-input:checked + .slider {
-  background-color: #2196F3;
-}
-input:checked + .slider:before {
-  transform: translateX(200%);
-}

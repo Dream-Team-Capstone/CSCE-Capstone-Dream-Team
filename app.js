@@ -60,15 +60,15 @@ app.get('/api/play', (req, res) => {
 
 // Define the settings route
 app.get('/api/settings', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src', 'Views', 'SettingsPage.html')); // Renders index.html
+    res.sendFile(path.join(__dirname, 'src', 'Views', 'SettingsPage.html')); // Renders SettingsPage.html
 });
 
 // Define the dashboard route
 app.get('/api/dashboard', (req, res) => {
     if (!req.session.id) {
-        return res.redirect('/api/login'); // Redirect to login if not authenticated
+        return res.redirect('/api/login'); // Renders DashboardPage.html // Redirect to login if not authenticated
     }
-    res.send('<h1>Dashboard Under Construction</h1><p>This page will be available soon.</p>');
+    res.sendFile(path.join(__dirname, 'src', 'Views', 'DashboardPage.html'));
 });
 
 

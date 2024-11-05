@@ -1,181 +1,333 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en-us">
 <head>
     <meta charset="UTF-8">
-    <title>pyBlock Play Page</title>
-    <link href='/StylesPages/index.css' rel='stylesheet'>
-    <!-- Include Blockly core library -->
+    <title>pyBlock</title>
+    <link href="/StylesPages/PlayStyle.css" rel="stylesheet">
+
+    <!-- Include Blockly core library and blocks -->
     <script src="https://unpkg.com/blockly/blockly.min.js"></script>
-    <!-- Include Python code generator -->
     <script src="https://unpkg.com/blockly/python.min.js"></script>
+    
+    <!-- Local copies of Blockly libraries as fallback -->
+    <script src="../../node_modules/blockly/blockly_compressed.js"></script>
+    <script src="../../node_modules/blockly/blocks_compressed.js"></script>
+    <script src="../../node_modules/blockly/python_compressed.js"></script>
+
     <!-- Include custom blocks and generators -->
-    <script src="../blocks/json.js"></script>
-    <script src="../blocks/text.js"></script>
-    <script src="../generators/python.js"></script>
-    <!-- Include your custom JavaScript file -->
+    <script src="/src/blocks/custom_blocks.js"></script>
+    
+    <!-- Load Blockly messages -->
+    <script src="../../node_modules/blockly/msg/en.js"></script>
+    
+    <!-- Toolbox and main JavaScript file -->
+    <script src="/src/toolbox.js"></script>
     <script type="module" src="../index.js"></script>
 </head>
-<body>
-    <!-- NAV BAR START -->
-    <header class="navigation">
-        <!-- List for the logo on the page -->
-        <ul class="navbar_logo">
-            <li>
-                <a href="/api/home">
-                    <img class="logo" src="/ImagesUsed/pyBlocks_Updated.png" alt="PyBlocks logo">
-                </a>
-            </li>
-        </ul>
+<body onload="start()">
 
-        <!-- List for the Buttons on the navigation pane -->
-        <ul class="navbar_buttons_list">
-            <li>
-                <a>
-                    <button class="Nav_Buttons">Contact Us</button>
-                </a>
-            </li>
-            <li>
-                <a>
-                    <button class="Nav_Buttons">Tutorials</button>
-                </a>
-            </li>
-            <li>
-                <a href="/api/play">
-                    <button class="Nav_Buttons">Play</button>
-                </a>
-            </li>
-            <li>
-                <a>
-                    <button class="Nav_Buttons">Courses</button>
-                </a>
-            </li>
-            <li>
-                <a>
-                    <button class="Nav_Buttons">Resources</button>
-                </a>
-            </li>
-            <li>
-                <a href="/api/login">
-                    <button class="Nav_Buttons">Sign In</button>
-                </a>
-            </li>
-            <li>
-                <a href="/api/register">
-                    <button class="Nav_Buttons">Register</button>
-                </a>
-            </li>
-            <li>
-                <a href="/api/settings">
-                    <button class="Nav_Buttons">Settings</button>
-                </a>
-            </li>
-        </ul>
-    </header>
-    <!-- NAV BAR END -->
+<!-- NAV BAR START -->
+<header class="navigation" role="banner">
+    
+  <!-- List for the logo on the page -->
+  <nav aria-label="Main Navigation">
+  <ul class="navbar_logo">
+    <li>
+      <a href="/api/home">
+        <img class = logo src = "/ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo, linking back to home page">
+      </a>
+    </li>
+  </ul>
 
-    <!-- BODY START -->
-    <div class="PlayPage_Body">
-        <div class="container">
-            <!-- Left panel: Code output -->
-            <div class="code-pane">
-                <h2>Generated Python Code</h2>
-                <pre id="output"></pre>
-            </div>
-            <!-- Right panel: Blockly workspace -->
-            <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
-        </div>
+  <!-- List for the Buttons on the navigation pane -->
+  <ul class="navbar_buttons_list">
+    <li>
+      <a href ="#contact" aria-label="Contact Us page (Coming soon)">
+        <button class="Nav_Buttons" aria-disabled="true">Contact Us</button> <!-- TBC in another sprint -->
+      </a>
+    </li>
+    <li>
+      <a href="#tutorials" aria-label="Tutorials page (Coming soon)">
+        <button class="Nav_Buttons" aria-disabled="true">Tutorials</button> <!-- TBC in another sprint -->
+      </a>
+    </li>
+    <li>
+      <a href = "/api/play">
+        <button class="Nav_Buttons" aria-label="Start coding by going to the Play page">Play</button>
+      </a>
+    </li>
+    <li>
+      <a href="#courses" aria-label="Courses page (Coming soon)">
+        <button class="Nav_Buttons" aria-disabled="true">Courses</button> <!-- TBC in another sprint -->
+      </a>
+    </li>
+    <li>
+      <a href="#resources" aria-label="Resources page (Coming soon)">
+        <button class="Nav_Buttons" aria-disabled="true">Resources</button> <!-- TBC in another sprint -->
+      </a>
+    </li>
+    <li>
+      <a href = "/api/login">
+        <button class="Nav_Buttons">Sign In</button>
+      </a>
+    </li>
+    <li>
+      <a href="/api/register">
+        <button class="Nav_Buttons">Register</button>
+      </a>
+    </li>
+  </ul>
+  <ul class="Settings_logo">
+    <li>
+    <a href="/api/settings">
+        <img class="Settings_logo" src="/ImagesUsed/SettingsIcon.png" alt="Settings logo, linking to settings page">
+    </a>
+    </li>
+</ul>
+</nav>
+</header>
+<!-- NAV BAR END -->
 
-        <!-- Toolbox definition for Blockly -->
-        <xml id="toolbox" style="display: none">
-            <category name="Logic" colour="%{BKY_LOGIC_HUE}">
-                <block type="controls_if"></block>
-                <block type="logic_compare"></block>
-                <block type="logic_operation"></block>
-                <block type="logic_boolean"></block>
-            </category>
-            <category name="Loops" colour="%{BKY_LOOPS_HUE}">
-                <block type="controls_repeat_ext">
-                    <value name="TIMES">
-                        <shadow type="math_number">
-                            <field name="NUM">10</field>
-                        </shadow>
-                    </value>
-                </block>
-                <block type="controls_whileUntil"></block>
-            </category>
-            <category name="Math" colour="%{BKY_MATH_HUE}">
-                <block type="math_number"></block>
-                <block type="math_arithmetic"></block>
-                <block type="math_single"></block>
-            </category>
-            <!-- Custom blocks defined in custom_blocks.js -->
-            <category name="Custom Blocks" colour="210">
-                <block type="custom_print"></block>
-            </category>
-        </xml>
-
-        <!-- Toggle switch for blocks/Python -->
-        <label>
-            <input type="checkbox" id="toggleSwitch"> Toggle Blocks/Python
-        </label>
+<!-- BODY START -->
+<div class="PlayPage_Body">
+    <!--Toggle Switch-->
+    <label class="toggleSwitch">
+        <input type="checkbox" id="toggleSwitch" />
+        <span class="slider"></span>
+    </label>
+    <!-- Left panel: Code output -->
+    <div id="code-pane">
+        <h2>Generated Python Code</h2>
+        <pre id="output"></pre>
     </div>
-    <!-- BODY END -->
 
-    <!-- FOOTER START -->
-    <footer role="contentinfo">
-        <!-- List for the logo on the page -->
-        <ul class="navbar_logo">
-            <li>
-                <a href="/api/home">
-                    <img class="logo" src="/ImagesUsed/pyBlocks_Updated.png" alt="PyBlocks logo, linking back to home page">
-                </a>
-            </li>
-        </ul>
+    <!-- Right panel: Blockly workspace -->
+    <div id="blocklyDiv"></div>
+</div>
 
-        <!-- List for the links in the footer -->
-        <ul class="footer_buttons">
-            <li><a href="#resources" aria-label="Resources section (Coming soon)">Resources</a></li>
-            <li><a href="#tutorials" aria-label="Tutorials section (Coming soon)">Tutorials</a></li>
-            <li><a href="#editors" aria-label="Open blank editors (Coming soon)">Open Blank Editors</a></li>
-        </ul>
-    </footer>
-    <!-- FOOTER END -->
+<!-- Toolbox definition for Blockly -->
+<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+    <category name="Logic" categorystyle="logic_category">
+        <block type="controls_if"></block>
+        <block type="logic_compare"></block>
+        <block type="logic_operation"></block>
+        <block type="logic_negate"></block>
+        <block type="logic_boolean"></block>
+        <block type="logic_null" disabled="true"></block>
+        <block type="logic_ternary"></block>
+    </category>
+    <category name="Loops" categorystyle="loop_category">
+        <block type="controls_repeat_ext">
+            <value name="TIMES">
+                <shadow type="math_number">
+                    <field name="NUM">10</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="controls_repeat" disabled="true"></block>
+        <block type="controls_whileUntil"></block>
+        <block type="controls_for">
+            <value name="FROM"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+            <value name="TO"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+            <value name="BY"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+        </block>
+        <block type="controls_forEach"></block>
+        <block type="controls_flow_statements"></block>
+    </category>
+    <category name="Math" categorystyle="math_category">
+        <block type="math_number" gap="32">
+            <field name="NUM">123</field>
+        </block>
+        <block type="math_arithmetic">
+            <value name="A"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+            <value name="B"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+        </block>
+        <block type="math_single">
+            <value name="NUM"><shadow type="math_number"><field name="NUM">9</field></shadow></value>
+        </block>
+        <block type="math_trig">
+            <value name="NUM"><shadow type="math_number"><field name="NUM">45</field></shadow></value>
+        </block>
+        <block type="math_constant"></block>
+        <block type="math_number_property">
+            <value name="NUMBER_TO_CHECK"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+        </block>
+        <block type="math_round">
+            <value name="NUM"><shadow type="math_number"><field name="NUM">3.1</field></shadow></value>
+        </block>
+        <block type="math_on_list"></block>
+        <block type="math_modulo">
+            <value name="DIVIDEND"><shadow type="math_number"><field name="NUM">64</field></shadow></value>
+            <value name="DIVISOR"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+        </block>
+        <block type="math_constrain">
+            <value name="VALUE"><shadow type="math_number"><field name="NUM">50</field></shadow></value>
+            <value name="LOW"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+            <value name="HIGH"><shadow type="math_number"><field name="NUM">100</field></shadow></value>
+        </block>
+        <block type="math_random_int">
+            <value name="FROM"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+            <value name="TO"><shadow type="math_number"><field name="NUM">100</field></shadow></value>
+        </block>
+        <block type="math_random_float"></block>
+        <block type="math_atan2"><value name="X"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+            <value name="Y"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+          </block>
+    </category>
+    <category name="Text" categorystyle="text_category">
+        <block type="text"></block>
+        <block type="text_multiline"></block>
+        <block type="text_join"></block>
+        <block type="text_append">
+            <value name="TEXT"><shadow type="text"></shadow></value>
+        </block>
+        <block type="text_length">
+            <value name="VALUE"><shadow type="text"></shadow></value>
+        </block>
+        <block type="text_isEmpty">
+            <value name="VALUE"><shadow type="text"></shadow></value>
+        </block>
+        <block type="text_indexOf">
+            <value name="VALUE"><block type="variables_get"></block></value>
+            <value name="FIND"><shadow type="text"><field name="TEXT">abc</field></shadow></value>
+        </block>
+        <block type="text_charAt">
+            <value name="VALUE"><block type="variables_get"></block></value>
+        </block>
+        <block type="text_getSubstring">
+            <value name="STRING"><block type="variables_get"></block></value>
+        </block>
+        <block type="text_changeCase"><value name="TEXT"><shadow type="text"><field name="TEXT">abc</field></shadow></value></block>
+        <block type="text_trim"><value name="TEXT"><shadow type="text"><field name="TEXT">abc</field></shadow></value></block>
+        <block type="text_print"><value name="TEXT"><shadow type="text"><field name="TEXT">abc</field></shadow></value></block>
+        <block type="text_prompt_ext"><value name="TEXT"><shadow type="text"><field name="TEXT">abc</field></shadow></value></block>
+        <block type="text_count"><value name="SUB"><shadow type="text"></shadow></value>
+            <value name="TEXT"><shadow type="text"></shadow></value>
+        </block>
+        <block type="text_replace"><value name="FROM"><shadow type="text"></shadow></value>
+            <value name="TO"><shadow type="text"></shadow></value>
+            <value name="TEXT"><shadow type="text"></shadow></value>
+        </block>
+        <block type="text_reverse"><value name="TEXT"><shadow type="text"></shadow></value></block>
+        <label text="Input/Output:" web-class="ioLabel"></label>
+    </category>
+    <category name="Lists" categorystyle="list_category">
+        <block type="lists_create_with"><mutation items="0"></mutation></block>
+        <block type="lists_create_with"></block>
+        <block type="lists_repeat"><value name="NUM"><shadow type="math_number"><field name="NUM">5</field></shadow></value></block>
+        <block type="lists_length"></block>
+        <block type="lists_isEmpty"></block>
+        <block type="lists_indexOf"><value name="VALUE">
+            <block type="variables_get">
+              <field name="VAR">list</field>
+            </block>
+          </value>
+        </block>
+        <block type="lists_getIndex">
+          <value name="VALUE">
+            <block type="variables_get">
+              <field name="VAR">list</field>
+            </block>
+          </value>
+        </block>
+        <block type="lists_setIndex">
+          <value name="LIST">
+            <block type="variables_get">
+              <field name="VAR">list</field>
+            </block>
+          </value>
+        </block>
+        <block type="lists_getSublist">
+          <value name="LIST">
+            <block type="variables_get">
+              <field name="VAR">list</field>
+            </block>
+          </value>
+        </block>
+        <block type="lists_split">
+          <value name="DELIM">
+            <shadow type="text">
+              <field name="TEXT">,</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="lists_sort"></block>
+        <block type="lists_reverse"></block>
+      </category>
+      <sep></sep>
+      <category
+        name="Variables"
+        categorystyle="variable_category"
+        custom="VARIABLE">
+      </category>
+      <category
+        name="Functions"
+        categorystyle="procedure_category"
+        custom="PROCEDURE">
+      </category>
+        <!-- Custom blocks defined in custom_blocks.js -->
+      <category name="Custom Blocks" colour="210">
+        <block type="custom_print"></block>
+      </category>
+</xml>
+<!-- Blockly workspace initialization script -->
+<script>
+    // Initialize Blockly workspace with the toolbox
+    const workspace = Blockly.inject('blocklyDiv', {
+        toolbox: document.getElementById('toolbox'),
+        scrollbars: true,
+        trashcan: true
+    });
 
-    <script>
-        // Initialize Blockly workspace with the toolbox
-        const workspace = Blockly.inject('blocklyDiv', {
-            toolbox: document.getElementById('toolbox'),
-            scrollbars: true,
-            trashcan: true
-        });
-
-        // Function to generate Python code from blocks and display it
-        function generateCode() {
-            try {
-                console.log(pythonGenerator);  // Check if it's defined
-                console.log(workspace);         // Check if workspace is initialized
-
-                const code = Blockly.Python.workspaceToCode(workspace);
-                document.getElementById('output').textContent = code || "No code generated.";
-            } catch (e) {
-                document.getElementById('output').textContent = "Error generating code: " + e.message;
-            }
+    // Function to generate Python code from blocks and display it
+    function generateCode() {
+        try {
+            const code = Blockly.JavaScript.workspaceToCode(workspace);
+            document.getElementById('output').textContent = code || "No code generated.";
+        } catch (e) {
+            document.getElementById('output').textContent = "Error generating code: " + e.message;
+        }
         }
 
-        // Trigger code generation whenever the workspace changes
-        workspace.addChangeListener(generateCode);
+    // Trigger code generation whenever the workspace changes
+    workspace.addChangeListener(generateCode);
 
-        // Functionality for the toggle switch
-        const toggleSwitch = document.getElementById('toggleSwitch');
-        toggleSwitch.addEventListener('change', () => {
-            if (toggleSwitch.checked) {
-                document.getElementById('output').style.display = 'block'; // Show the output area
-                workspace.setVisible(false); // Hide Blockly
-            } else {
-                document.getElementById('output').style.display = 'none'; // Hide the output area
-                workspace.setVisible(true); // Show Blockly
-            }
-        });
-    </script>
-</body>
-</html>
+    // Switch for going from Block to Python and vice versa
+    document.getElementById('toggleSwitch').addEventListener('change', function() {
+    const outputPane = document.getElementById('code-pane');
+    const blocklyDiv = document.getElementById('blocklyDiv');
+    
+    if (this.checked) {
+      outputPane.style.display = 'none';
+      blocklyDiv.style.display = 'block';
+    } else {
+      outputPane.style.display = 'block';
+      blocklyDiv.style.display = 'none';
+    }
+  });
+</script>
+<!-- BODY END -->
+
+<!-- FOOTER START -->
+<footer role="contentinfo">
+
+    <!-- List for the logo on the page -->
+    <ul class="navbar_logo">
+      <li>
+        <a href="/api/home">
+          <img class = logo src = "/ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo, linking back to home page">
+        </a>
+      </li>
+    </ul>
+  
+    <!-- List for the links in the footer -->
+    <ul class="footer_buttons">
+      <li><a href="#resources" aria-label="Resources section (Coming soon)">Resources</a></li>
+      <li><a href="#tutorials" aria-label="Tutorials section (Coming soon)">Tutorials</a></li>
+      <li><a href="#editors" aria-label="Open blank editors (Coming soon)">Open Blank Editors</a></li>
+    </ul>
+    <!-- holds links and some navigation, may add more later -->
+  </footer>
+  <!-- FOOTER END -->
+  </body>
+  </html>  

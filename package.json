@@ -6,17 +6,15 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js",
+    "start": "webpack serve --open --mode development",
     "dev": "nodemon app.js",
-    "build": "webpack --mode production",
-    "start-codelab": "cd custom-generator-codelab && npm start",
-    "dev-codelab": "cd custom-generator-codelab && npm run dev"
+    "build": "webpack --mode production"
   },
   "keywords": [
     "blockly"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",

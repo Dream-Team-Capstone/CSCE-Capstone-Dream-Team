@@ -5,20 +5,19 @@
  */
 
 import * as Blockly from 'blockly';
-import {blocks} from './blocks/text';
+import {blocks} from '../node_modules/blockly/blocks';
 import {forBlock} from './generators/python';  // Import the Python generator instead
-import {pythonGenerator} from '../node_modules/blockly/python';  // Use Blockly's Python generator
-import {save, load} from './serialization';
-import {toolbox} from './toolbox';
-import './Public/StylesPages/index.css';
+import { pythonGenerator } from './generators/python.js';  // Use Blockly's Python generator
+import {save, load} from '../src/serialization';
+import {toolbox} from '../src/toolbox';
+import '../src/Public/StylesPages/index.css';
 
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks);
 Object.assign(pythonGenerator.forBlock, forBlock);  // Use the Python generator
 
 // Set up UI elements and inject Blockly
-const codeDiv = document.getElementById('generatedCode').firstChild;
-const outputDiv = document.getElementById('output');
+const codeDiv = document.getElementById('output');
 const blocklyDiv = document.getElementById('blocklyDiv');
 const ws = Blockly.inject(blocklyDiv, {toolbox});
 
@@ -27,9 +26,8 @@ const ws = Blockly.inject(blocklyDiv, {toolbox});
 // In this case, we are not using `eval` since it's not JavaScript.
 const runCode = () => {
   const code = pythonGenerator.workspaceToCode(ws);  // Generate Python code
+  console.log(code);
   codeDiv.innerText = code;
-
-  outputDiv.innerHTML = 'Python code generated.';
 
   // You would need to handle Python execution separately,
   // such as by sending it to a backend server or using a Python interpreter.
@@ -66,8 +64,8 @@ ws.addChangeListener((e) => {
 
 // Switch for going from Block to Python and vice versa
 document.getElementById('toggleSwitch').addEventListener('change', function() {
-  const outputPane = document.getElementById('outputPane');
-  const blocklyDiv = document.getElementById('blocklyDiv');
+  const outputPane = document.getElementById('code-pane');
+  const blocklyDiv = document.getElementById('output');
   
   if (this.checked) {
     outputPane.style.display = 'none';
