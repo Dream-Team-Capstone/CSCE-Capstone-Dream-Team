@@ -1,10 +1,10 @@
-<DOCTYPE! html>
+<!DOCTYPE html>
     <html lang="en-us">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>PyBlock</title>
-        <link href='StylesPages/LoginStyles.css' rel='stylesheet'>
+        <link href='/StylesPages/LoginStyles.css' rel='stylesheet'>
     </head>    
     <body>
     <!-- NAV BAR START -->
@@ -14,8 +14,8 @@
             <nav aria-label="Main Navigation">
             <ul class="navbar_logo">
               <li>
-                <a href="HomePage.html">
-                  <img class = logo src = "ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo, linking back to home page">
+                <a href="/api/home">
+                  <img class = logo src = "/ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo, linking back to home page">
                 </a>
               </li>
             </ul>
@@ -33,7 +33,7 @@
                 </a>
               </li>
               <li>
-                <a href = "PlayPage.html">
+                <a href = "/api/play">
                   <button class="Nav_Buttons" aria-label="Start coding by going to the Play page">Play</button>
                 </a>
               </li>
@@ -48,23 +48,23 @@
                 </a>
               </li>
               <li>
-                <a href = "LoginPage.html">
-                  <button class="SignInRegister_Nav_Button">Sign In</button>
+                <a href = "/api/login">
+                  <button class="Nav_Buttons">Sign In</button>
                 </a>
               </li>
               <li>
-                <a href="RegisterPage.html">
-                  <button class="SignInRegister_Nav_Button">Register</button>
+                <a href="/api/register">
+                  <button class="Nav_Buttons">Register</button>
                 </a>
               </li>
-    <!-- Updated HTML for Settings Icon -->
-    <ul class="Settings_logo">
-      <li>
-        <a href="SettingsPage.html">
-          <img class="Settings_logo" src="ImagesUsed/SettingsIcon.png" alt="Settings logo, linking to settings page">
-        </a>
-      </li>
             </ul>
+            <ul class="Settings_logo">
+              <li>
+              <a href="/api/settings">
+                  <img class="Settings_logo" src="/ImagesUsed/SettingsIcon.png" alt="Settings logo, linking to settings page">
+              </a>
+              </li>
+          </ul>
           </nav>
           </header>
     <!-- NAV BAR END -->
@@ -73,7 +73,7 @@
           <main class="page_body">
             <h1 class="page_title">Sign In to PyBlocks!</h1>
             
-            <form class="SignIn_Form" aria-labelledby="signInForm">
+            <form class="SignIn_Form" aria-labelledby="signInForm" action="/api/login" method="POST">
     
               <fieldset>
                 <legend id="signInForm" class="visually-hidden">Sign In Form</legend>
@@ -105,8 +105,8 @@
       <!-- List for the logo on the page -->
       <ul class="navbar_logo">
         <li>
-          <a href="HomePage.html">
-            <img class = logo src = "ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo, linking back to home page">
+          <a href="/api/home">
+            <img class = logo src = "/ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo, linking back to home page">
           </a>
         </li>
       </ul>
