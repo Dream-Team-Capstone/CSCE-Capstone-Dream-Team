@@ -189,12 +189,14 @@ legend {
   display: none; /* Hides the legend */
 }
 
+/* !!FOOTER START!! */
 /* Styles the footer buttons */
 .footer_buttons {
   display: inline; /* Inline display for footer buttons */
   list-style: none; /* Removes bullets from the list */
   margin: 0;
   padding: 0; 
+  color: black;
 }
 
 /* Styles the individual footer buttons */
@@ -204,7 +206,14 @@ legend {
   font-family: 'Trebuchet MS', Helvetica, sans-serif;
 }
 
-/* !!FOOTER START!! */
+/* Styles the links inside the footer buttons */
+.footer_buttons li a {
+  text-decoration: none; /* Removes underline from links */
+  color: black; /* Set the desired text color */
+  font-weight: bold; /* Optionally make the text bold */
+}
+
+
 /* Styles the footer container */
 footer {
   background-color: #FED702;

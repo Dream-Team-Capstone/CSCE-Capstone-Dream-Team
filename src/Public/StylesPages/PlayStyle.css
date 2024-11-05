@@ -106,32 +106,41 @@ nav {
   background-color: #e9ecef; /* Slightly darker background for Blockly */
 }
 /* !!FOOTER START!! */
+/* Styles the footer buttons */
 .footer_buttons {
-    display: inline; /* Inline display for footer buttons */
-    list-style: none; /* Removes bullets from the list */
-    margin: 0;
-    padding: 0; 
-  }
-  
-  /* Styles the individual footer buttons */
-  .footer_buttons li {
-    margin-left: 20px; /* Adds space between footer buttons */
-    padding: 8px; /* Adds padding inside the buttons */
-    font-family: 'Trebuchet MS', Helvetica, sans-serif;
-  }
-  
-  
-  /* Styles the footer container */
-  footer {
-    background-color: #FED702;
-    padding: 20px;
-    width: 100%;
-    height: 20%;
-    text-align: right; /* Aligns footer content to the right */
-    display: flex; /* Flexbox layout */
-    justify-content: space-between; /* Spaces content between left and right */
-    align-items: center;
-  }
+  display: inline; /* Inline display for footer buttons */
+  list-style: none; /* Removes bullets from the list */
+  margin: 0;
+  padding: 0; 
+  color: black;
+}
+
+/* Styles the individual footer buttons */
+.footer_buttons li {
+  margin-left: 20px; /* Adds space between footer buttons */
+  padding: 8px; /* Adds padding inside the buttons */
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
+}
+
+/* Styles the links inside the footer buttons */
+.footer_buttons li a {
+  text-decoration: none; /* Removes underline from links */
+  color: black; /* Set the desired text color */
+  font-weight: bold; /* Optionally make the text bold */
+}
+
+
+/* Styles the footer container */
+footer {
+  background-color: #FED702;
+  padding: 20px;
+  width: 100%;
+  height: 20%;
+  text-align: right; /* Aligns footer content to the right */
+  display: flex; /* Flexbox layout */
+  justify-content: space-between; /* Spaces content between left and right */
+  align-items: center;
+}
   
 /* !!TOGGLE SWITCH START!! */
 /* Styles for the toggle switch */
