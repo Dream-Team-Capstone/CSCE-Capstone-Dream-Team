@@ -95,6 +95,7 @@
         <input type="checkbox" id="toggleSwitch" />
         <span class="slider"></span>
     </label>
+
     <!-- Left panel: Code output -->
     <div id="code-pane">
         <h2>Generated Python Code</h2>
@@ -291,6 +292,16 @@
 
     // Trigger code generation whenever the workspace changes
     workspace.addChangeListener(generateCode);
+
+    // Set initial display styles
+    document.addEventListener('DOMContentLoaded', function() {
+      const outputPane = document.getElementById('code-pane');
+      const blocklyDiv = document.getElementById('blocklyDiv');
+
+      // Initially show blocklyDiv and hide outputPane
+      outputPane.style.display = 'none';
+      blocklyDiv.style.display = 'block';
+    });
 
     // Switch for going from Block to Python and vice versa
     document.getElementById('toggleSwitch').addEventListener('change', function() {

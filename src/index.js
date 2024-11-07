@@ -6,7 +6,7 @@
 
 import * as Blockly from 'blockly';
 import {blocks} from '../node_modules/blockly/blocks';
-//import {forBlock} from './generators/python';  // Import the Python generator instead
+import {forBlock} from './generators/python';  // Import the Python generator instead
 import {pythonGenerator} from 'blockly/python';  // Use Blockly's Python generator
 import {save, load} from './serialization';
 import {toolbox} from './toolbox';
@@ -14,11 +14,11 @@ import './index.css';
 
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks);
-//Object.assign(pythonGenerator.forBlock, forBlock);  // Use the Python generator
+Object.assign(pythonGenerator.forBlock, forBlock);  // Use the Python generator
 
 // Set up UI elements and inject Blockly
 const codeDiv = document.getElementById('generatedCode').firstChild;
-//const outputDiv = document.getElementById('output');
+const outputDiv = document.getElementById('output');
 const blocklyDiv = document.getElementById('blocklyDiv');
 const ws = Blockly.inject(blocklyDiv, {toolbox});
 
