@@ -1,4 +1,3 @@
-/* General reset for body and elements */
 body {
     margin: 0;
     padding: 0;
@@ -103,6 +102,49 @@ body {
     z-index: -1; /* Places the image behind other elements */
   }
   
+  .dashboard {
+    text-align: center;
+    padding: 20px;
+}
+
+.dashboard-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.dashboard-item {
+    width: 40%;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.item-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 10px;
+    background-color: #ccc;
+    border-radius: 10px;
+}
+
+.tutorial-icon {
+    background-color: #FED702;
+}
+
+.project-icon {
+    background-color: #ef5350;
+}
+
+.dashboard-button {
+    background-color: #4285f4;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
   /* Styling for the text on the homepage */
   h1, h2, p {
     margin: 0; 
