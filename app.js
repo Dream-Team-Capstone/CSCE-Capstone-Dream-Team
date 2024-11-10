@@ -28,8 +28,11 @@ app.set('view engine', 'ejs');
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'src', 'Public')));
-//console.log('Views directory set to:', path.join(__dirname, 'src', 'Public', 'StylesPages')); // DEBUGGING
 app.use(express.static(path.join(__dirname, 'src', 'Views')));
+app.use('/node_modules', express.static('node_modules'));
+app.use(express.static(path.join(__dirname, 'src', 'blocks')));
+app.use(express.static(path.join(__dirname, 'src', 'generators')));
+app.use(express.static(path.join(__dirname, 'src')));
 
 
 // Middleware for parsing request bodies

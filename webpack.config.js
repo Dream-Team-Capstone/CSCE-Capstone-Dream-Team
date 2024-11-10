@@ -35,22 +35,23 @@ const config = {
 
 module.exports = (env, argv) => {
   if (argv.mode === 'development') {
-    // Set the output path to the `build` directory
-    // so we don't clobber production builds.
-    config.output.path = path.resolve(__dirname, 'build');
-
-    // Generate source maps for our code for easier debugging.
+    // Enable source maps for easier debugging in development mode
     config.devtool = 'eval-cheap-module-source-map';
 
-    // Include the source maps for Blockly for easier debugging Blockly code.
+    // Override output path for development builds
+    config.output.path = path.resolve(__dirname, 'build');
+
     config.module.rules.push({
       test: /(blockly\/.*\.js)$/,
       use: [require.resolve('source-map-loader')],
       enforce: 'pre',
     });
 
-    // Ignore spurious warnings from source-map-loader
     config.ignoreWarnings = [/Failed to parse source map/];
+  } else if (argv.mode === 'production') {
+    // Disable source maps in production mode to reduce bundle size
+    config.devtool = false;
   }
+  
   return config;
 };

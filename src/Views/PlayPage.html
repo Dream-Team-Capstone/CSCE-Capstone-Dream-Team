@@ -283,7 +283,7 @@
     // Function to generate Python code from blocks and display it
     function generateCode() {
         try {
-            const code = Blockly.JavaScript.workspaceToCode(workspace);
+            const code = Blockly.Python.workspaceToCode(workspace);
             document.getElementById('output').textContent = code || "No code generated.";
         } catch (e) {
             document.getElementById('output').textContent = "Error generating code: " + e.message;
