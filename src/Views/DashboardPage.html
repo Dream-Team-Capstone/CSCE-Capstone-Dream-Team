@@ -1,4 +1,4 @@
-<DOCTYPE! html>
+<!DOCTYPE html>
 <html lang="en-us">
 <head>
     <meta charset="UTF-8">
@@ -8,99 +8,83 @@
 </head>    
 <body>
 <!-- NAV BAR START -->
-      <header class="navigation" role="banner">
-
-        <!-- List for the logo on the page -->
-        <nav aria-label="Main Navigation">
+<header class="navigation" role="banner">
+    <nav aria-label="Main Navigation">
+        <!-- Logo -->
         <ul class="navbar_logo">
-          <li>
-            <a href="/api/home">
-              <img class = logo src = "/ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo, linking back to home page">
-            </a>
-          </li>
+            <li>
+                <a href="/api/home">
+                    <img class="logo" src="/ImagesUsed/pyBlocks_Updated.png" alt="PyBlocks logo, linking back to home page">
+                </a>
+            </li>
         </ul>
 
-        <!-- List for the Buttons on the navigation pane -->
+        <!-- Navigation Buttons -->
         <ul class="navbar_buttons_list">
-          <li>
-            <a href ="#contact" aria-label="Contact Us page (Coming soon)">
-              <button class="Nav_Buttons" aria-disabled="true">Contact Us</button> <!-- TBC in another sprint -->
-            </a>
-          </li>
-          <li>
-            <a href="#tutorials" aria-label="Tutorials page (Coming soon)">
-              <button class="Nav_Buttons" aria-disabled="true">Tutorials</button> <!-- TBC in another sprint -->
-            </a>
-          </li>
-          <li>
-            <a href = "/api/play">
-              <button class="Nav_Buttons" aria-label="Start coding by going to the Play page">Play</button>
-            </a>
-          </li>
-          <li>
-            <a href="#courses" aria-label="Courses page (Coming soon)">
-              <button class="Nav_Buttons" aria-disabled="true">Courses</button> <!-- TBC in another sprint -->
-            </a>
-          </li>
-          <li>
-            <a href="#resources" aria-label="Resources page (Coming soon)">
-              <button class="Nav_Buttons" aria-disabled="true">Resources</button> <!-- TBC in another sprint -->
-            </a>
-          </li>
-          <li>
-            <a href = "/api/login">
-              <button class="Nav_Buttons">Sign In</button>
-            </a>
-          </li>
-          <li>
-            <a href="/api/register">
-              <button class="Nav_Buttons">Register</button>
-            </a>
-          </li>
+            <li><a href="#contact"><button class="Nav_Buttons" aria-disabled="true">Contact Us</button></a></li>
+            <li><a href="#tutorials"><button class="Nav_Buttons" aria-disabled="true">Tutorials</button></a></li>
+            <li><a href="/api/play"><button class="Nav_Buttons">Play</button></a></li>
+            <li><a href="#courses"><button class="Nav_Buttons" aria-disabled="true">Courses</button></a></li>
+            <li><a href="DashboardPage.html"><button class="Nav_Buttons">Resources</button></a></li>
+            <li><a href="/api/login"><button class="Nav_Buttons">Sign In</button></a></li>
+            <li><a href="/api/register"><button class="Nav_Buttons">Register</button></a></li>
         </ul>
-        <!-- Updated HTML for Settings Icon -->
+
+        <!-- Settings Icon -->
         <ul class="Settings_logo">
-          <li>
-            <a href="/api/settings">
-              <img class="Settings_logo" src="/ImagesUsed/SettingsIcon.png" alt="Settings logo, linking to settings page">
-            </a>
-          </li>
+            <li>
+                <a href="/api/settings">
+                    <img class="Settings_logo" src="/ImagesUsed/SettingsIcon.png" alt="Settings logo, linking to settings page">
+                </a>
+            </li>
         </ul>
-      </nav>
-      </header>
+    </nav>
+</header>
 <!-- NAV BAR END -->
 
 <!-- BODY START -->
+<section class="dashboard">
+    <h1>Welcome Back!</h1>
+    <p>Your Progress So Far!</p>
 
+    <div class="dashboard-container">
+        <!-- Tutorials Section -->
+        <div class="dashboard-item" id="tutorials">
+            <div class="item-icon tutorial-icon"></div>
+            <h2>Tutorials</h2>
+            <p>Lessons to practice with block and text coding with Python!</p>
+            <button class="dashboard-button">Let's Go!</button>
+        </div>
 
-
-
-
+        <!-- Projects Section -->
+        <div class="dashboard-item" id="projects">
+            <div class="item-icon project-icon"></div>
+            <h2>Projects</h2>
+            <p>Project guides to get you used to block and text coding with Python!</p>
+            <button class="dashboard-button">Let's Go!</button>
+        </div>
+    </div>
+</section>
 <!-- BODY END -->
-
-
-
 
 <!-- FOOTER START -->
 <footer role="contentinfo">
-
-    <!-- List for the logo on the page -->
+    <!-- Logo -->
     <ul class="navbar_logo">
-      <li>
-        <a href="/api/home">
-          <img class = logo src = "/ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo, linking back to home page">
-        </a>
-      </li>
+        <li>
+            <a href="/api/home">
+                <img class="logo" src="/ImagesUsed/pyBlocks_Updated.png" alt="PyBlocks logo, linking back to home page">
+            </a>
+        </li>
     </ul>
 
-    <!-- List for the links in the footer -->
+    <!-- Footer Links -->
     <ul class="footer_buttons">
-      <li><a href="#resources" aria-label="Resources section (Coming soon)">Resources</a></li>
-      <li><a href="#tutorials" aria-label="Tutorials section (Coming soon)">Tutorials</a></li>
-      <li><a href="#editors" aria-label="Open blank editors (Coming soon)">Open Blank Editors</a></li>
+        <li><a href="#resources">Resources</a></li>
+        <li><a href="#tutorials">Tutorials</a></li>
+        <li><a href="#editors">Open Blank Editors</a></li>
     </ul>
-    <!-- holds links and some navigation, may add more later -->
-  </footer>
+</footer>
 <!-- FOOTER END -->
 </body>
 </html>
