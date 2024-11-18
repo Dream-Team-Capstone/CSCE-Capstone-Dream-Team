@@ -74,13 +74,12 @@ app.get('/api/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'src', 'Views', 'DashboardPage.html'));
 });
 
-
-
-// Route for rendering the registration page
 app.get('/api/register', async (req, res) => {
     try {
-        //console.log('Attempting to render:', 'RegisterPage.ejs'); // Debugging
-        await res.render('RegisterPage'); 
+        const errors = req.session.errors || []; 
+        req.session.errors = []; // Clear errors after rendering
+        
+        res.render('RegisterPage', { errors: [] }); // Pass errors to the view
     } catch (err) {
         console.error("Error rendering RegisterPage:", err);
         return res.status(500).json({ error: 'Error rendering view' });

@@ -72,6 +72,14 @@
 <!-- BODY START -->
       <main class="page_body">
         <h1 class="page_title">Welcome to PyBlocks!</h1>
+
+        <% if (errors && errors.length > 0) { %>
+          <div class="error_box">
+            <% errors.forEach(error => { %>
+              <p class="error_popup_text"><%= error.msg %></p>
+            <% }); %>
+            </div>
+        <% } %>
         
         <form class="Register_Form" action="/api/register" method="POST" aria-labelledby="Register Form" >
 
@@ -80,25 +88,49 @@
             <!-- FIRST NAME INPUT -->
             <div class="Form_Group">
               <label for="FName">First Name:</label>
-              <input type="text" name="first_name" id="FName" placeholder="First Name" aria-required="true" required>
+              <input type="text" name="first_name" id="FName" placeholder="First Name" aria-required="true"
+                    class="<%= errors && errors.some(e => e.param === 'first_name') ? 'error' : '' %>">
+              <% if (errors && errors.some(e => e.param === 'first_name')) { %>
+                <div class="error_box">
+                  <p class="error_popup_text"><%= errors.find(e => e.param === 'first_name').msg %></p>
+                </div>
+              <% } %>
             </div>
 
             <!-- LAST NAME INPUT -->
             <div class="Form_Group">
               <label for="LName">Last Name:</label>
-              <input type="text" name="last_name" id="LName" placeholder="Last Name" aria-required="true" required> 
+              <input type="text" name="last_name" id="LName" placeholder="Last Name" aria-required="true"
+                    class="<%= errors && errors.some(e => e.param === 'last_name') ? 'error' : '' %>">
+              <% if (errors && errors.some(e => e.param === 'last_name')) { %>
+                <div class="error_box">
+                  <p class="error_popup_text"><%= errors.find(e => e.param === 'last_name').msg %></p>
+                </div>
+              <% } %> 
             </div>
 
             <!-- EMAIL INPUT -->
             <div class="Form_Group">
               <label for="Email">Email:</label>
-              <input type="email" name="email" id="Email" placeholder="Email" aria-required="true" required>
+              <input type="email" name="email" id="Email" placeholder="Email" aria-required="true"
+                    class="<%= errors && errors.some(e => e.param === 'email') ? 'error' : '' %>">
+              <% if (errors && errors.some(e => e.param === 'email')) { %>
+                <div class="error_box">
+                  <p class="error_popup_text"><%= errors.find(e => e.param === 'email').msg %></p>
+                </div>
+              <% } %> 
             </div>
 
             <!-- PASSWORD INPUT -->
             <div class="Form_Group">
               <label for="Password">Password:</label>
-              <input type="password" name="password" id="Password" placeholder="Password" aria-required="true" required> 
+              <input type="password" name="password" id="Password" placeholder="Password" aria-required="true"
+                    class="<%= errors && errors.some(e => e.param === 'password') ? 'error' : '' %>">
+              <% if (errors && errors.some(e => e.param === 'password')) { %>
+                <div class="error_box">
+                  <p class="error_popup_text"><%= errors.find(e => e.param === 'password').msg %></p>
+                </div>
+              <% } %> 
             </div>
 
             <!-- REGISTER BUTTON -->
