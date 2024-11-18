@@ -125,6 +125,7 @@ form{
   margin-bottom: 15px; /* Space below each form group */
   text-align: left;
   padding: 10px; /* Adds padding around each form group */
+  position: relative;
 }
 
 /*sets the font, weight, and color of the form labels */
@@ -187,6 +188,51 @@ fieldset {
 
 legend {
   display: none; /* Hides the legend */
+}
+
+/* !! Styles for Error Messages !! */
+.error_box {
+  position: absolute; /* Set the container to fixed positioning */
+  margin-left: 45%;
+  margin-top: 0px;
+  border: 2px solid red;
+  background-color: #ffe6e6;
+  border-radius: 5px;
+  padding: 5px;
+  left: 300px;
+}
+
+.error_box.hidden {
+  display: none;
+}
+
+.error_popup_text{
+  visibility: visible;
+  width: auto;
+  text-align: center;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: red;
+  font-weight: bold;
+  padding: 10px;
+  background-color: #ffe6e6;
+  font-size: 20px;
+  position: relative;
+}
+
+/* Popup arrow */
+.error_box::after {
+  content: "";
+  position: absolute;
+  left: -20px; 
+  top: 50%; 
+  margin-top: -5px;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 10px solid transparent;
+  border-right: 10px solid red;
 }
 
 /* !!FOOTER START!! */

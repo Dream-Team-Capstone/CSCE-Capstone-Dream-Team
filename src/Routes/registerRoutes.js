@@ -14,21 +14,29 @@ router.post('/register',
     body('first_name').notEmpty().withMessage('First name is required.'),
     body('last_name').notEmpty().withMessage('Last name is required.'),
     body('email').isEmail().withMessage('Invalid email address.'),
-    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long.'),
+    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long!'),
     async (req, res) => {
-        const errors = validationResult(req); // Checks for validation errors
-        if (!errors.isEmpty()) {
-            return res.status(400).render('RegisterPage', { errors: errors.array() });
-        }
+        let errors = validationResult(req).array(); // Checks for validation errors
 
         const { first_name, last_name, email, password } = req.body;
         const trimmedPassword = password.trim(); // Trim whitespace from password
+
+        // If there are validation errors, render the page with errors
+        if (errors.length >= 4) {
+            errors = [{ msg: 'Must fill in ALL fields!' }];
+            console.log("Errors: ", errors);
+            return res.status(400).render('RegisterPage', { errors });
+        }
+        else if (errors.length > 0){
+            return res.status(400).render('RegisterPage', { errors });
+        }
 
         // Check for existing users
         try {
             const existingUser = await userModel.getUserByEmail(email);
             if (existingUser) {
-                return res.status(400).json({ error: 'User already exists.' });
+                errors.push({ msg: 'User already exists.' }); // error for existing user
+                return res.status(400).render('RegisterPage', { errors });
             }
 
             // Generate salt
