@@ -53,7 +53,9 @@ app.get('/api/home', (req, res) => {
 
 // Define the login route
 app.get('/api/login', (req, res) => {
-    res.render('LoginPage'); // Renders LoginPage
+    const errors = req.session.errors || []; 
+    req.session.errors = []; // Clear errors after rendering
+    res.render('LoginPage', { errors: [] }); // Pass errors to the view // Renders LoginPage
 });
 
 // Define the play route

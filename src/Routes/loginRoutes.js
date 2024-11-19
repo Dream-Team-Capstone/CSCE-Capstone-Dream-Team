@@ -11,21 +11,27 @@ const bodyParser = require('body-parser'); // Middleware to parse incoming reque
 // Define login route
 router.post('/login', 
     // Validate input
-    body('email').isEmail().withMessage('Invalid email address.'),
-    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long.'),
+    body('email').isEmail().withMessage('Please enter a valid email.'),
+    body('password').isLength({ min: 6 }).withMessage('Please enter your password.'),
     async (req, res) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).render('LoginPage', { errors: errors.array() });
-        }
+        let errors = validationResult(req).array();
 
         const { email, password } = req.body;
+
+        if (errors.length >= 2) {
+            errors = [{ msg: 'Must fill in ALL fields!' }];
+            return res.status(400).render('LoginPage', { errors });
+        }
+        else if (errors.length > 0){
+            return res.status(400).render('LoginPage', { errors });
+        }
         
         // Check for existing users
         try {
             const user = await userModel.getUser(email);
             if (!user) {
-                return res.status(400).render('LoginPage', { errors: [{ msg: 'Invalid email or password.' }] });
+                errors.push({ msg: 'Invalid email or password.' });
+                return res.status(400).render('LoginPage', { errors });
             }
 
             // Compare the password
@@ -41,7 +47,8 @@ router.post('/login',
                 req.session.email = user.email;
                 res.redirect('/api/dashboard');
             } else {
-                return res.status(400).json({ error: 'Invalid email or password.' }); 
+                errors.push({ msg: 'Invalid email or password.' });
+                return res.status(400).render('LoginPage', { errors });
             }
 
         } catch (error) {
