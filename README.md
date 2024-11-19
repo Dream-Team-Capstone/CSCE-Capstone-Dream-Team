@@ -1,9 +1,7 @@
 # CSCE-Capstone-Dream-Team
 
-## For sprint 2:
-  - Create and integrate Database
-  - Create Dashboard
-  - Create Settings page
-  - Update Block Code 
-    - Add Toggle Switch
-    - Integrate with website
+## For sprint 3:
+  - Add Error Messages to Register/login pages
+  - Create thorough testing
+  - Continue settings page
+  - Polish up code 
