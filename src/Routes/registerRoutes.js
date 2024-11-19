@@ -24,7 +24,6 @@ router.post('/register',
         // If there are validation errors, render the page with errors
         if (errors.length >= 4) {
             errors = [{ msg: 'Must fill in ALL fields!' }];
-            console.log("Errors: ", errors);
             return res.status(400).render('RegisterPage', { errors });
         }
         else if (errors.length > 0){

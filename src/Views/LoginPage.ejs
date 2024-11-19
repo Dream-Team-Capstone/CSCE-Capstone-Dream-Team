@@ -72,6 +72,15 @@
     <!-- BODY START -->
           <main class="page_body">
             <h1 class="page_title">Sign In to PyBlocks!</h1>
+
+            <!-- Displays errors on the website. -->
+            <% if (errors && errors.length > 0) { %>
+              <div class="error_box">
+                <% errors.forEach(error => { %>
+                  <p class="error_popup_text"><%= error.msg %></p>
+                <% }); %>
+                </div>
+            <% } %>
             
             <form class="SignIn_Form" aria-labelledby="signInForm" action="/api/login" method="POST">
     
@@ -80,14 +89,26 @@
     
                 <!-- EMAIL INPUT -->
                 <div class="Form_Group">
-                    <label for="Email">Email:</label>
-                    <input type="email" name="email" id="Email" placeholder="Enter your email" aria-required="true" required>
+                  <label for="Email">Email:</label>
+                  <input type="email" name="email" id="Email" placeholder="Email" aria-required="true"
+                        class="<%= errors && errors.some(e => e.param === 'email') ? 'error' : '' %>">
+                  <% if (errors && errors.some(e => e.param === 'email')) { %>
+                    <div class="error_box">
+                      <p class="error_popup_text"><%= errors.find(e => e.param === 'email').msg %></p>
+                    </div>
+                  <% } %> 
                 </div>
     
                 <!-- PASSWORD INPUT -->
                 <div class="Form_Group">
-                    <label for="Password">Password:</label>
-                    <input type="password" name="password" id="Password" placeholder="Enter your password" aria-required="true" required>
+                  <label for="Password">Password:</label>
+                  <input type="password" name="password" id="Password" placeholder="Password" aria-required="true"
+                        class="<%= errors && errors.some(e => e.param === 'password') ? 'error' : '' %>">
+                  <% if (errors && errors.some(e => e.param === 'password')) { %>
+                    <div class="error_box">
+                      <p class="error_popup_text"><%= errors.find(e => e.param === 'password').msg %></p>
+                    </div>
+                  <% } %> 
                 </div>
     
                 <!-- REGISTER BUTTON -->
