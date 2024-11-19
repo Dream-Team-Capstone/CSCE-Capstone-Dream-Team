@@ -14,7 +14,15 @@ router.post('/register',
     body('first_name').notEmpty().withMessage('First name is required.'),
     body('last_name').notEmpty().withMessage('Last name is required.'),
     body('email').isEmail().withMessage('Invalid email address.'),
-    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long!'),
+    body('password')
+        .isLength({ min: 6 }).withMessage('Password must be at least 6 characters long!')
+        .custom((value) => {
+            // Check if password is only whitespace
+            if (value.trim().length === 0) {
+                throw new Error('Password cannot contain only whitespace!');
+            }
+            return true;
+        }),
     async (req, res) => {
         let errors = validationResult(req).array(); // Checks for validation errors
 
