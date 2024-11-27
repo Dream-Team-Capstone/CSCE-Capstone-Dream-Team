@@ -28,7 +28,6 @@ app.set('view engine', 'ejs');
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'src', 'Public')));
-app.use(express.static(path.join(__dirname, 'src', 'Views')));
 app.use('/node_modules', express.static('node_modules'));
 app.use(express.static(path.join(__dirname, 'src', 'blocks')));
 app.use(express.static(path.join(__dirname, 'src', 'generators')));
@@ -48,7 +47,7 @@ connectToDatabase();
 
 // Define the home route
 app.get('/api/home', (req, res) => {
-    res.render('index.ejs'); // Renders HomePage
+    res.render('index'); // Renders HomePage
 });
 
 // Define the login route
@@ -60,12 +59,12 @@ app.get('/api/login', (req, res) => {
 
 // Define the play route
 app.get('/api/play', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src', 'Views', 'PlayPage.html')); // Renders index.html
+    res.render('PlayPage'); // Renders index.html
 });
 
 // Define the settings route
 app.get('/api/settings', (req, res) => {
-    res.sendFile(path.join(__dirname, 'src', 'Views', 'SettingsPage.html')); // Renders SettingsPage.html
+    res.render('SettingsPage'); // Renders SettingsPage.ejs
 });
 
 // Define the dashboard route
@@ -73,7 +72,7 @@ app.get('/api/dashboard', (req, res) => {
     if (!req.session.id) {
         return res.redirect('/api/login'); // Renders DashboardPage.html // Redirect to login if not authenticated
     }
-    res.sendFile(path.join(__dirname, 'src', 'Views', 'DashboardPage.html'));
+    res.render('DashboardPage');
 });
 
 app.get('/api/register', async (req, res) => {

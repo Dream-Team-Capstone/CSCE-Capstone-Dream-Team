@@ -4,3 +4,7 @@ test_connection.js
 test.ejs
 NOTES
 .DS_Store
+tests
+blockConverter.js
+cypress
+cypress.config.js
