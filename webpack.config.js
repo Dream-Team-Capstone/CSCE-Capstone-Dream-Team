@@ -7,13 +7,22 @@ const config = {
   output: {
     // Compile the source files into a bundle.
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist'), // Change this to your desired output directory
+    path: path.resolve(__dirname, 'dist'), // Output directory for static assets
     clean: true,
   },
   // Enable webpack-dev-server to get hot refresh of the app.
   devServer: {
-    static: path.join(__dirname, 'src'), // Serve static files from the correct directory
-    port: 4000, // Change this to avoid conflict with your main server port if needed
+    static: [
+      // Serve static assets from Webpack's output directory
+      { directory: path.join(__dirname, 'dist'), publicPath: '/' },
+      // Other directories to serve static files from
+      { directory: path.join(__dirname, 'src', 'blocks'), publicPath: '/blocks' },
+      { directory: path.join(__dirname, 'src', 'generators'), publicPath: '/generators' },
+      { directory: path.join(__dirname, 'node_modules'), publicPath: '/node_modules' },
+    ],
+    port: 4000,
+    hot: true, // Enable hot module replacement (HMR) for faster updates
+    historyApiFallback: true, // Handle client-side routing
   },
   module: {
     rules: [
@@ -27,8 +36,8 @@ const config = {
   plugins: [
     // Generate the HTML index page based on our template.
     new HtmlWebpackPlugin({
-      template: 'src/Views/index.ejs',
-      filename: 'index.ejs',
+      template: 'src/Views/index.ejs', // Ensure this path is correct
+      filename: 'index.html',  // Output as 'index.html' (Webpack will process this)
     }),
   ],
 };
@@ -52,6 +61,6 @@ module.exports = (env, argv) => {
     // Disable source maps in production mode to reduce bundle size
     config.devtool = false;
   }
-  
+
   return config;
 };

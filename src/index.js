@@ -10,7 +10,7 @@ import {forBlock} from './generators/python';  // Import the Python generator in
 import {pythonGenerator} from 'blockly/python';  // Use Blockly's Python generator
 import {save, load} from './serialization';
 import {toolbox} from './toolbox';
-import './index.css';
+import './Public/StylesPages/index.css';
 
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks);
