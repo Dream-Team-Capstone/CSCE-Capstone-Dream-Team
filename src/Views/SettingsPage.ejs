@@ -138,20 +138,62 @@
 <!-- FOOTER END -->
 
 <script>
-  // Dark Mode Toggle
-  document.getElementById('darkModeToggle').addEventListener('change', function() {
-      document.body.classList.toggle('dark-mode', this.checked);
+
+window.onload = function () {
+      const savedFontSize = localStorage.getItem('fontSize') || 14; // Default font size
+      document.getElementById('fontSizeSetting').value = savedFontSize;
+      applyFontSize(savedFontSize);
+
+    // Load and apply dark mode
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    document.getElementById('darkModeToggle').checked = isDarkMode;
+    if (isDarkMode) document.body.classList.add('dark-mode');
+
+    // Load and apply high contrast mode
+    const isHighContrast = localStorage.getItem('highContrast') === 'true';
+    document.getElementById('colorContrastToggle').checked = isHighContrast;
+    if (isHighContrast) document.body.classList.add('high-contrast');
+  };
+
+// Dark Mode Toggle
+document.getElementById('darkModeToggle').addEventListener('change', function () {
+    const isChecked = this.checked;
+    document.body.classList.toggle('dark-mode', isChecked);
+    localStorage.setItem('darkMode', isChecked);
+});
+
+// Color Contrast Toggle
+document.getElementById('colorContrastToggle').addEventListener('change', function () {
+    const isChecked = this.checked;
+    document.body.classList.toggle('high-contrast', isChecked);
+    localStorage.setItem('highContrast', isChecked);
+});
+
+// Font Size Setting
+document.getElementById('fontSizeSetting').addEventListener('input', function () {
+    const fontSize = this.value;
+    applyFontSize(fontSize);
+    localStorage.setItem('fontSize', fontSize);
+});
+
+  // Function to apply font size globally
+  function applyFontSize(fontSize) {
+      const textElements = document.querySelectorAll('h2, h3, h4, h5, h6, p, span, li, a, button'); 
+      textElements.forEach(element => {
+          element.style.fontSize = fontSize + 'px';
+      });
+  }
+
+  // Event Listener for Font Size Setting
+  document.getElementById('fontSizeSetting').addEventListener('input', function () {
+      const fontSize = this.value;
+      applyFontSize(fontSize);
+      // Save the font size to localStorage
+      localStorage.setItem('fontSize', fontSize);
   });
 
-  // Color Contrast Toggle
-  document.getElementById('colorContrastToggle').addEventListener('change', function() {
-      document.body.classList.toggle('high-contrast', this.checked);
-  });
+  // Load saved font size on page load
 
-  // Font Size Setting
-  document.getElementById('fontSizeSetting').addEventListener('input', function() {
-      document.body.style.fontSize = this.value + 'px';
-  });
 
   // Block Size Setting
   document.getElementById('blockSizeSetting').addEventListener('input', function() {
