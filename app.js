@@ -31,6 +31,8 @@ app.use(express.static(path.join(__dirname, 'src', 'Public')));
 app.use('/node_modules', express.static('node_modules'));
 app.use(express.static(path.join(__dirname, 'src', 'blocks')));
 app.use(express.static(path.join(__dirname, 'src', 'generators')));
+app.use(express.static(path.join(__dirname, 'src', 'serialization')));
+app.use(express.static(path.join(__dirname, 'src', 'toolbox')));
 app.use(express.static(path.join(__dirname, 'src')));
 
 

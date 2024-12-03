@@ -6,9 +6,9 @@
   "private": true,
   "scripts": {
     "test": "jest",
-    "start": "node app.js",  
-    "dev": "nodemon app.js", 
-    "build": "webpack --mode production", 
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "build": "webpack --mode production",
     "serve": "webpack serve --mode development --open"
   },
   "keywords": [
@@ -18,7 +18,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "blockly": "^11.0.0",
+    "blockly": "^11.1.1",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.21.1",

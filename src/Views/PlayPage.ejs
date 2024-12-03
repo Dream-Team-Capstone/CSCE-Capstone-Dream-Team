@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>pyBlock</title>
-    <link href="/StylesPages/PlayStyle.css" rel="stylesheet">
+    <link type="text/css" href="/StylesPages/PlayStyle.css" rel="stylesheet">
 
     <!-- Include Blockly core library and blocks -->
     <script src="https://unpkg.com/blockly/blockly.min.js"></script>
@@ -15,13 +15,13 @@
     <script src="../../node_modules/blockly/python_compressed.js"></script>
 
     <!-- Include custom blocks and generators -->
-    <script src="/src/blocks/custom_blocks.js"></script>
+    <!--<script src="/src/blocks/custom_blocks.js"></script>-->
     
     <!-- Load Blockly messages -->
     <script src="../../node_modules/blockly/msg/en.js"></script>
     
     <!-- Toolbox and main JavaScript file -->
-    <script src="/src/toolbox.js"></script>
+    <script type="module" src="../toolbox.js"></script>
     <script type="module" src="../index.js"></script>
 </head>
 <body onload="start()">
