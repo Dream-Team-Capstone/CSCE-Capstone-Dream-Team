@@ -2,15 +2,12 @@ describe('Add Block', () => {
   it('adds a block to the workspace', () => {
     cy.visit('http://localhost:4000/api/play');
 
-    // Manually call the start function to ensure Blockly is initialized
-    cy.window().then((win) => {
-      win.start();  // Manually initialize Blockly
-    });
+
 
     // Retry until Blockly is available on the window
     cy.window().should('have.property', 'Blockly').wait(1000).then((win) => {
       // Ensure Blockly is available
-      expect(win.Blockly).to.exist;
+      //expect(win.Blockly).to.exist;
 
       // Wait for the Blockly workspace container to be in the DOM
       cy.get('#blocklyDiv').should('exist');

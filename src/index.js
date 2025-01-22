@@ -69,4 +69,7 @@ document.getElementById('toggleSwitch').addEventListener('change', function() {
 });
 
 // Wait for DOM to be ready and then call start()
-document.addEventListener('DOMContentLoaded', start);
+document.addEventListener('DOMContentLoaded', () => {
+  start();
+  window.start = start;
+});
