@@ -31,7 +31,7 @@ nav {
 }
 .Settings_logo {
   list-style: none;
-  margin: 10px;
+  margin: -5px;
   padding: 0;
   width: 50px; /* Adjust width as needed */
   height: auto; /* Keeps aspect ratio */
@@ -51,10 +51,14 @@ nav {
   align-items: center;
 }
 
+.navbar_buttons_list li{
+  margin-left: -25px;
+}
+
 /* Common style for all navigation buttons */
-.Nav_Buttons, .SignInRegister_Nav_Button {
+.Nav_Buttons{
   color: black;
-  width: 110px;
+  width: 108px;
   padding: 15px;
   text-align: center;
   margin: 0 20px;
@@ -67,8 +71,9 @@ nav {
   text-decoration: none;
 }
 
+
 /* Hover effect for all buttons */
-.Nav_Buttons:hover, .SignInRegister_Nav_Button:hover {
+.Nav_Buttons:hover {
   background-color: #fd3636;
   color: white;
 }
