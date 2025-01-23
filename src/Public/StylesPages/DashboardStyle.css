@@ -1,6 +1,7 @@
 body {
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
   }
   
   * {
@@ -105,11 +106,110 @@ body {
     opacity: 0.25; /* Makes the image semi-transparent */
     z-index: -1; /* Places the image behind other elements */
   }
-  
-  .dashboard {
-    text-align: center;
-    padding: 20px;
+
+/* Ensure the section is the containing block */
+section.dashboard {
+  position: relative;
+  overflow: hidden; /* Prevent content overflow beyond section */
+  padding: 0; /* Ensure no padding affecting positioning */
+  text-align: center;
 }
+
+h1{
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  font-size: xx-large;
+}
+p{
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  font-size: medium;
+}
+
+/* Hamburger Menu Lines */
+.Profile_Options div {
+  height: 4px;
+  background-color: black;
+  margin: 5px 0;
+  border-radius: 25px;
+  transition: 0.3s;
+}
+
+.Profile_Options {
+  width: 30px;
+  display: block;
+  margin: 1em 0 0 1em;
+  position: relative;
+  cursor: pointer;
+  z-index: 15; /* Initially, hamburger has higher z-index */
+}
+
+.First_Line, .Second_Line {
+  width: 30px;
+}
+.Third_Line {
+  width: 20px;
+}
+
+/* Hover Effect for Hamburger */
+.Profile_Options:hover div {
+  width: 30px;
+  z-index: 20; /* Increase z-index on hover to make sure it's on top */
+  background-color: #ff0000;
+}
+
+/* Off-Screen Menu */
+.Profile_Options_with_menu {
+  position: relative;
+}
+
+.off_screen_menu {
+  background-color: #FFC6C6;
+  height: 1630%; /* Full viewport height */
+  width: 100%; /* Width of the menu */
+  max-width: 150px;
+  position: absolute;
+  top: 0; /* Align it with the top of the section */
+  left: -300px; /* Initially off-screen to the left */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 1.5rem;
+  transition: left 0.3s ease; /* Smooth sliding effect */
+  border-radius: 8px;
+  z-index: 10; /* Lower z-index for the off-screen menu */
+  text-align: left;
+}
+
+/* Slide the menu into view when hovering over the hamburger icon */
+.Profile_Options_with_menu:hover .off_screen_menu {
+  left: 0; /* Slide into view */
+}
+
+/* Links and hover effects */
+.off_screen_menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.off_screen_menu li {
+  margin: 20px 0;
+  align-items: left;
+}
+
+.off_screen_menu a {
+  text-decoration: none;
+  color: black;
+  transition: color 0.3s ease;
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  font-size: medium;
+}
+
+.off_screen_menu a:hover {
+  color: #ff0000; /* Change link color on hover */
+}
+
 
 .dashboard-container {
     display: flex;
