@@ -89,6 +89,16 @@ app.get('/api/register', async (req, res) => {
     }
 });
 
+app.post('/api/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).send('Failed to log out');
+        }
+        // Redirect to the home or login page after logging out
+        res.redirect('/api/login'); 
+    });
+});
+
 // API routes
 app.use('/api', registerRoutes);
 app.use('/api', loginRoutes);
