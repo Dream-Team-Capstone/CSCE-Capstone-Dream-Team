@@ -198,15 +198,17 @@ p{
   align-items: left;
 }
 
-.off_screen_menu a {
+.off_screen_menu a, .logout_button {
   text-decoration: none;
   color: black;
   transition: color 0.3s ease;
   font-family: 'Trebuchet MS', Helvetica, sans-serif;
   font-size: medium;
+  background-color: inherit;
+  border: none;
 }
 
-.off_screen_menu a:hover {
+.off_screen_menu a:hover, .logout_button:hover {
   color: #ff0000; /* Change link color on hover */
 }
 

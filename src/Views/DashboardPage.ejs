@@ -59,13 +59,19 @@
             <div class="off_screen_menu" id="menu">
                 <ul>
                     <li><a href="#Account_Details" aria-label="Account Details page (Coming soon)">Account Details</a></li>
-                    <li><a href="#Logout">Logout</a></li>
+                    <li>
+                        <form action="/api/logout" method="POST">
+                            <button class = "logout_button" type="submit" class="logout-btn">Logout</button>
+                        </form>
+                    </li>
                     <li><a href="#Delete Account">Delete Account</a></li>
                 </ul>
             </div>
         </div>
         <div class="text_content">
-            <h1>Welcome Back!</h1>
+            <% if (user) { %>
+                <h1>Welcome, <%= user %>!</h1>
+            <% } %>
             <p>Your Progress So Far!</p>
         </div>
     </div>

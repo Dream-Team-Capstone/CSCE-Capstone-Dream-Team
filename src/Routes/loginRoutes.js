@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs'); // used to hash passwords
 const { body, validationResult } = require('express-validator'); // validate and sanitize input data
 const router = express.Router(); // used to define routes
 const userModel = require('../Models/loginModel'); // model handling user data interactions with the database
-const bodyParser = require('body-parser'); // Middleware to parse incoming request bodies 
+const bodyParser = require('body-parser'); // Middleware to parse incoming request bodies
 
 // Define login route
 router.post('/login', 
@@ -43,8 +43,9 @@ router.post('/login',
 
             if (isMatch) {
                 // Proceed with authentication
-                req.session.id = user.id;
+                req.session.userId = user.id;
                 req.session.email = user.email;
+                req.session.first_name = user.first_name;
                 res.redirect('/api/dashboard');
             } else {
                 errors.push({ msg: 'Invalid email or password.' });
