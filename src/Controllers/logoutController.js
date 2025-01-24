@@ -7,4 +7,4 @@ module.exports.logout = (req, res) => {
       // Redirect to dashboard
       res.redirect('/api/dashboard');
     });
-  };
+};

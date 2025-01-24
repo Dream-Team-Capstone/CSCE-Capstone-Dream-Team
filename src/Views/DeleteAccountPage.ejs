@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete PyBlocks Account</title>
+    <link href='/StylesPages/DeleteStyle.css' rel='stylesheet'>
+</head>
+
+<body>
+    <main class="page_body" role="main">
+        <h1> Delete Account </h1>
+        <p> Please re-enter your login information to confirm deletion.<br>
+            Notice: Once an account has been deleted it cannot be recovered.</p>
+
+        <% if (errors && errors.length > 0) { %>
+            <div class="error_box">
+                <% errors.forEach(error => { %>
+                    <p class="error_popup_text"><%= error %></p>
+                <% }); %>
+            </div>
+        <% } %>
+
+        <form class="DeleteForm" aria-labelledby="DeleteForm" action="/api/delete" method="POST">
+            <fieldset>
+              <legend id="DeleteForm" class="visually-hidden">Delete Form</legend>
+  
+              <!-- EMAIL INPUT -->
+              <div class="Form_Group">
+                <label for="Email">Email:</label>
+                <input type="email" name="email" id="Email" placeholder="Email" aria-required="true">
+              </div>
+  
+              <!-- PASSWORD INPUT -->
+              <div class="Form_Group">
+                <label for="Password">Password:</label>
+                <input type="password" name="password" id="Password" placeholder="Password" aria-required="true">
+              </div>
+  
+              <!-- REGISTER BUTTON -->
+              <div class="Form_Group Button_Center">
+                  <button type="submit" class="Delete_Button" aria-label="Delete your account.">Delete Account</button>
+              </div>
+            </fieldset>
+        </form>
+    </main>
+</body>
+</html>

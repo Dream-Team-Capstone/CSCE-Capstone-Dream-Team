@@ -1,4 +1,4 @@
-// src/Routes/authRoutes.js
+// src/Routes/logoutRoutes.js
 
 const express = require('express');
 const router = express.Router();
