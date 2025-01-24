@@ -20,6 +20,8 @@ const registerRoutes = require('./src/Routes/registerRoutes'); // routes for use
 const loginRoutes = require('./src/Routes/loginRoutes'); // routes for user login functionality
 const PORT = process.env.PORT || 4000; 
 const ejs = require('ejs'); // ejs is a templating engine for rendering HTML
+const cookieParser = require('cookie-parser'); 
+
 
 // setting up views and template engine
 app.set('views', path.join(__dirname, 'src', 'Views')); 
@@ -40,6 +42,7 @@ app.use(express.static(path.join(__dirname, 'src')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 // Set up session configuration
 sessionConfig(app);
@@ -70,11 +73,15 @@ app.get('/api/settings', (req, res) => {
 });
 
 // Define the dashboard route
-app.get('/api/dashboard', (req, res) => {
-    if (!req.session.id) {
-        return res.redirect('/api/login'); // Renders DashboardPage.html // Redirect to login if not authenticated
+function ensureAuthenticated(req, res, next) {
+    if (req.session.userId) {
+        return next();
     }
-    res.render('DashboardPage');
+    res.redirect('/api/login');
+}
+app.get('/api/dashboard', ensureAuthenticated, (req, res) => {
+    const user = req.session.first_name;
+    res.render('DashboardPage', { user });
 });
 
 app.get('/api/register', async (req, res) => {
@@ -89,13 +96,20 @@ app.get('/api/register', async (req, res) => {
     }
 });
 
+// Define the logout route
 app.post('/api/logout', (req, res) => {
+
+    // Destroy session and log the user out
     req.session.destroy((err) => {
         if (err) {
-            return res.status(500).send('Failed to log out');
+            console.log('Error during session destruction:', err);
+            return res.status(500).send('Error logging out');
         }
-        // Redirect to the home or login page after logging out
-        res.redirect('/api/login'); 
+        else{
+            res.clearCookie('connect.sid'); // clear session cookie
+            // Render the 'loggingOut.ejs' page
+            res.render('LoggingOutPage');
+        }
     });
 });
 
