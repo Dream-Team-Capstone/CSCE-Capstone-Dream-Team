@@ -19,7 +19,7 @@ const { connectToDatabase } = require('./src/Config/dbh'); // imported from dbh 
 const registerRoutes = require('./src/Routes/registerRoutes'); // routes for user registration functionality
 const loginRoutes = require('./src/Routes/loginRoutes'); // routes for user login functionality
 const deleteRoutes = require('./src/Routes/deleteRoutes');
-const { deleteUser } = require('./src/Models/deleteModel');
+const deleteController = require('./src/Controllers/deleteController');
 const PORT = process.env.PORT || 4000; 
 const ejs = require('ejs'); // ejs is a templating engine for rendering HTML
 const cookieParser = require('cookie-parser'); 
@@ -115,42 +115,16 @@ app.post('/api/logout', (req, res) => {
     });
 });
 
-app.get('/api/confirmDelete', (req, res) =>{
-    const errors = req.session.errors || []; 
+app.get('/api/confirmDelete', (req, res) => {
+    console.log('Deleting account for user:', req.session);
+    const errors = req.session.errors || [];
     req.session.errors = []; // Clear errors after rendering
-    res.render('DeleteAccountPage', { errors: [] });
-    }
-);
+    res.render('DeleteAccountPage', { errors });
+});
+
 
 // Define the delete route
-app.post('/api/delete', (req, res) => {
-    const errors = req.session.errors || []; 
-    req.session.errors = []; // Clear errors after rendering
-    
-    if (req.session.userId) {
-        // Logic to delete the user's account
-        deleteUser(req.session.userId)  // Assuming you have a function to delete user data
-            .then(() => {
-                // Destroy the session and clear the session cookie
-                req.session.destroy((err) => {
-                    if (err) {
-                        console.log('Error during session destruction:', err);
-                        return res.status(500).send('Error logging out');
-                    }
-                    res.clearCookie('connect.sid'); // Clear session cookie
-
-                    res.render('DeletingAccountPage');
-                });
-            })
-            .catch((error) => {
-                console.error('Error deleting account:', error);
-                res.status(500).send('Error deleting account');
-            });
-    } else {
-        // If the user is not logged in, redirect to the homepage
-        res.redirect('/api/home');
-    }
-});
+app.post('/api/delete', deleteController.deleteAccount);
     
 
 // API routes

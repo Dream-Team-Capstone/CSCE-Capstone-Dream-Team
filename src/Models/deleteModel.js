@@ -12,11 +12,16 @@ exports.getUser = async (email) => {
 };
 
 // Function to delete user by ID
-exports.deleteUser = async (userId) => {
+const deleteUser = async (userId) => {
     try {
-        await pool.query("DELETE FROM user_info WHERE id = $1", [userId]);
+        const query = 'DELETE FROM user_info WHERE id = $1';
+        const params = [userId];
+        return pool.query(query, params);
     } catch (error) {
-        console.error("Error deleting user:", error);
+        console.error('Database deletion error:', error);
         throw error;
     }
 };
+
+// Export the deleteUser function correctly
+module.exports = { deleteUser };
