@@ -46,6 +46,8 @@ router.post('/login',
                 req.session.userId = user.id;
                 req.session.email = user.email;
                 req.session.first_name = user.first_name;
+                req.session.last_name = user.last_name;
+                req.session.password = user.password;
                 res.redirect('/api/dashboard');
             } else {
                 errors.push({ msg: 'Invalid email or password.' });

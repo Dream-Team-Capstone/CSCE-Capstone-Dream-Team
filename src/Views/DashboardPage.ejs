@@ -61,11 +61,29 @@
                     <li><a href="#Account_Details" aria-label="Account Details page (Coming soon)">Account Details</a></li>
                     <li>
                         <form action="/api/logout" method="POST">
-                            <button class = "logout_button" type="submit" class="logout-btn">Logout</button>
+                            <button class = "menu_button" type="submit">Logout</button>
                         </form>
                     </li>
-                    <li><a href="#Delete Account">Delete Account</a></li>
+                    <li>
+                        <!-- Form to delete account (hidden until confirmation) -->
+                        <form id="deleteAccountForm" style="display:none;">
+                            <button class="menu_button" type="submit" id="deleteAccountBtn">Delete Account</button>
+                        </form>
+
+                        <!-- Button to open the modal -->
+                        <button class="menu_button" type="button" onclick="openModal()">Delete Account</button>
+                    </li>
                 </ul>
+            </div>
+        </div>
+        <div id="deleteModal" class="modal">
+            <div class="modal-content">
+                <h2>Are you sure you want to delete your account?</h2>
+                <p>This action cannot be undone.</p>
+                <div class="modal-actions">
+                    <button class="modal-btn" id="confirmDeleteBtn">Yes, Delete</button>
+                    <button class="modal-btn" onclick="closeModal()">Cancel</button>
+                </div>
             </div>
         </div>
         <div class="text_content">
@@ -133,5 +151,22 @@
         document.body.style.fontSize = savedFontSize + 'px';
     };
   </script>
+<script>
+    // Open the modal when the delete account button is clicked
+    function openModal() {
+        document.getElementById("deleteModal").style.display = "flex";
+    }
+
+    // Close the modal
+    function closeModal() {
+        document.getElementById("deleteModal").style.display = "none";
+    }
+
+    // Confirm deletion and submit the form
+    document.getElementById("confirmDeleteBtn").onclick = function() {
+        // Submit the delete account form after confirmation
+        window.location.href = "/api/confirmDelete";
+    };
+</script>
 </body>
 </html>

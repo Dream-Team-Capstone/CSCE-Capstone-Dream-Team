@@ -18,6 +18,8 @@ const sessionConfig = require('./src/Config/config_session'); // imported from c
 const { connectToDatabase } = require('./src/Config/dbh'); // imported from dbh file
 const registerRoutes = require('./src/Routes/registerRoutes'); // routes for user registration functionality
 const loginRoutes = require('./src/Routes/loginRoutes'); // routes for user login functionality
+const deleteRoutes = require('./src/Routes/deleteRoutes');
+const deleteController = require('./src/Controllers/deleteController');
 const PORT = process.env.PORT || 4000; 
 const ejs = require('ejs'); // ejs is a templating engine for rendering HTML
 const cookieParser = require('cookie-parser'); 
@@ -113,9 +115,22 @@ app.post('/api/logout', (req, res) => {
     });
 });
 
+app.get('/api/confirmDelete', (req, res) => {
+    console.log('Deleting account for user:', req.session);
+    const errors = req.session.errors || [];
+    req.session.errors = []; // Clear errors after rendering
+    res.render('DeleteAccountPage', { errors });
+});
+
+
+// Define the delete route
+app.post('/api/delete', deleteController.deleteAccount);
+    
+
 // API routes
 app.use('/api', registerRoutes);
 app.use('/api', loginRoutes);
+app.use('/api', deleteRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

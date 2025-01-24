@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete PyBlocks Account</title>
+    <link href='/StylesPages/DeleteStyle.css' rel='stylesheet'>
+    <style>
+      /* Additional styles for settings */
+      .dark-mode { background-color: #121212b3; color: #f0f0f0; }
+      .high-contrast { color: black; background-color: rgba(242, 0, 255, 0.428); }
+    </style>
+</head>
+
+<body>
+    <main class="page_body" role="main">
+        <h1> Delete Account </h1>
+        <p> Please re-enter your login information to confirm deletion.<br>
+            Notice: Once an account has been deleted it cannot be recovered.</p>
+
+          <!-- Displays errors on the website. -->
+          <% if (errors && errors.length > 0) { %>
+            <div class="error_box">
+              <% errors.forEach(error => { %>
+                <p class="error_popup_text"><%= error.msg %></p>
+              <% }); %>
+              </div>
+          <% } %>
+
+        <form class="DeleteForm" aria-labelledby="DeleteForm" action="/api/delete" method="POST">
+            <fieldset>
+              <legend id="DeleteForm" class="visually-hidden">Delete Form</legend>
+  
+              <!-- EMAIL INPUT -->
+              <div class="Form_Group">
+              <label for="Email">Email:</label>
+                  <input type="email" name="email" id="Email" placeholder="Email" aria-required="true"
+                        class="<%= errors && errors.some(e => e.param === 'email') ? 'error' : '' %>">
+                  <% if (errors && errors.some(e => e.param === 'email')) { %>
+                    <div class="error_box">
+                      <p class="error_popup_text"><%= errors.find(e => e.param === 'email').msg %></p>
+                    </div>
+                  <% } %> 
+            </div>
+  
+              <!-- PASSWORD INPUT -->
+              <div class="Form_Group">
+                <label for="Password">Password:</label>
+                  <input type="password" name="password" id="Password" placeholder="Password" aria-required="true"
+                        class="<%= errors && errors.some(e => e.param === 'password') ? 'error' : '' %>">
+                  <% if (errors && errors.some(e => e.param === 'password')) { %>
+                    <div class="error_box">
+                      <p class="error_popup_text"><%= errors.find(e => e.param === 'password').msg %></p>
+                    </div>
+                  <% } %> 
+              </div>
+  
+              <!-- REGISTER BUTTON -->
+              <div class="Form_Group Button_Center">
+                  <button type="submit" class="Delete_Button" aria-label="Delete your account.">Delete Account</button>
+              </div>
+            </fieldset>
+        </form>
+    </main>
+    <script>
+      // Load saved settings on page load
+      window.onload = function () {
+          const isDarkMode = localStorage.getItem('darkMode') === 'true';
+          const isHighContrast = localStorage.getItem('highContrast') === 'true';
+          const savedFontSize = localStorage.getItem('fontSize') || 14;
+    
+          // Apply dark mode
+          if (isDarkMode) document.body.classList.add('dark-mode');
+    
+          // Apply high contrast mode
+          if (isHighContrast) document.body.classList.add('high-contrast');
+    
+          // Apply font size
+          document.body.style.fontSize = savedFontSize + 'px';
+      };
+    </script>
+</body>
+</html>
