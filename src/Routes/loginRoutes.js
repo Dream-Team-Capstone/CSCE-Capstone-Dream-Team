@@ -14,6 +14,12 @@ router.post('/login',
     body('email').isEmail().withMessage('Please enter a valid email.'),
     body('password').isLength({ min: 6 }).withMessage('Please enter your password.'),
     async (req, res) => {
+
+        // Check if user is already authenticated
+        if (req.session.userId) {
+            return res.redirect('/api/dashboard');
+        }
+
         let errors = validationResult(req).array();
 
         const { email, password } = req.body;

@@ -83,33 +83,75 @@ nav {
 /* Adjust the PlayPage_Body to a horizontal flex layout */
 .PlayPage_Body {
   display: flex;
-  flex-direction: row; /* Set row direction for side-by-side layout */
-  width: 100vw;
+  flex-direction: column;
+  padding: 20px;
   height: 100vh;
-  font-family: 'Trebuchet MS', Helvetica, sans-serif;
-  overflow: hidden; /* Ensure no overflow outside the main container */
+  margin-bottom: 40px;
+  overflow: scroll;
 }
 
-/* Styling for the left pane (Python code output) */
-#code-pane {
-  width: 50%;
-  height: 100%;
-  background-color: #f5f5dc; /* Light beige background */
-  border-right: 2px solid #ccc;
+.category-header {
+  background-color: #FFC6C6;
   padding: 10px;
-  overflow-y: auto; /* Enable vertical scrolling */
-  box-sizing: border-box;
-  font-family: "Courier New", monospace;
-  white-space: pre-wrap;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  width: 100%;
+  margin-bottom: 20px;
 }
 
-/* Styling for the right pane (Blockly workspace) */
-#blocklyDiv {
-  width: 50%;
-  height: 100%;
-  overflow-y: auto; /* Enable vertical scrolling for Blockly */
-  background-color: #e9ecef; /* Slightly darker background for Blockly */
+.workspace-container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  flex: 1;
+  overflow: scroll;
 }
+
+/* Blocks panel styling */
+.blocks-panel {
+  width: 250px;
+  background-color: #f0f0f0;
+  border-right: 1px solid #ddd;
+}
+
+/* Update workspace styling */
+#blocklyDiv {
+  width: 100vh;
+  height: 100vh;
+  min-height: 500px;
+}
+
+/* Update code pane styling */
+#code-pane {
+  width: 100vh;
+  height: 100vh;
+  overflow-y: auto;
+  background-color: #f5f5dc;
+  padding: 10px;
+}
+
+/* Style the "Generated Python Code" title*/
+#code-pane h2 {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+  color: #333;
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
+}
+
+/* Style the code output area */
+#code-pane pre {
+  margin: 0;
+  padding: 10px;
+  background-color: #f5f5dc;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  height: 100vh;
+  width: 100vh;
+}
+
 /* !!FOOTER START!! */
 /* Styles the footer buttons */
 .footer_buttons {
@@ -192,4 +234,53 @@ input:checked + .slider {
 
 input:checked + .slider:before {
   transform: translateX(200%);
+}
+
+.category-header {
+    background-color: #f0f0f0;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+}
+
+.category-title {
+    font-weight: bold;
+    font-size: 16px;
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+}
+
+.toolbox-container {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* Style the category header */
+.category-header {
+    background-color: #f0f0f0;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Style the Blockly toolbox */
+.blocklyToolboxDiv {
+    width: 160px !important; /* Increase this value to make it wider */
+    background-color: #f0f0f0 !important;
+}
+
+/* Style the category items */
+.blocklyTreeRow {
+    padding: 5px 0 !important;
+    margin: 2px 0 !important;
+    height: auto !important;
+}
+
+/* Style the category color indicators */
+.blocklyTreeIcon {
+    margin: 0 8px !important;
 }

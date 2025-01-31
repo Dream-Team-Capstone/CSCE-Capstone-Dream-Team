@@ -57,11 +57,25 @@ app.get('/api/home', (req, res) => {
     res.render('index'); // Renders HomePage
 });
 
+function redirectIfAuthenticated(req, res, next) {
+    // console.log('Checking auth status:', req.session); // DEBUG
+    if (req.session && req.session.userId) {
+        // console.log('User is authenticated, redirecting to dashboard'); // DEBUG
+        return res.redirect('/api/dashboard');
+    }
+    // console.log('User is not authenticated, continuing to login page'); // DEBUG
+    next();
+}
+
 // Define the login route
-app.get('/api/login', (req, res) => {
+app.get('/api/login', redirectIfAuthenticated, (req, res) => {
+    // console.log('Session data:', req.session); // DEBUG
     const errors = req.session.errors || []; 
     req.session.errors = []; // Clear errors after rendering
-    res.render('LoginPage', { errors: [] }); // Pass errors to the view // Renders LoginPage
+    res.render('LoginPage', { 
+        errors: [],
+        user: req.session.userId ? req.session.first_name : null
+    }); 
 });
 
 // Define the play route
@@ -104,7 +118,7 @@ app.post('/api/logout', (req, res) => {
     // Destroy session and log the user out
     req.session.destroy((err) => {
         if (err) {
-            console.log('Error during session destruction:', err);
+            // console.log('Error during session destruction:', err); // DEBUG
             return res.status(500).send('Error logging out');
         }
         else{
@@ -116,7 +130,7 @@ app.post('/api/logout', (req, res) => {
 });
 
 app.get('/api/confirmDelete', (req, res) => {
-    console.log('Deleting account for user:', req.session);
+    // console.log('Deleting account for user:', req.session); // DEBUG
     const errors = req.session.errors || [];
     req.session.errors = []; // Clear errors after rendering
     res.render('DeleteAccountPage', { errors });
