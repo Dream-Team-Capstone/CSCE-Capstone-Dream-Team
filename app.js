@@ -100,6 +100,11 @@ app.get('/api/dashboard', ensureAuthenticated, (req, res) => {
     res.render('DashboardPage', { user });
 });
 
+app.get('/api/Projects', ensureAuthenticated, (req, res) => {
+    const user = req.session.first_name;
+    res.render('ProjectsPage', { user });
+});
+
 app.get('/api/register', async (req, res) => {
     try {
         const errors = req.session.errors || []; 
