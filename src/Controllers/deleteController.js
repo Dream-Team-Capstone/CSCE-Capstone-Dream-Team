@@ -4,10 +4,10 @@ const { pool } = require('../Config/dbh');
 
 exports.deleteAccount = async (req, res) => {
     try {
-        console.log('Received request to delete account.');
+        // console.log('Received request to delete account.'); // DEBUG
         const { email, password } = req.body;
-        console.log('Email provided:', email);
-        console.log('Session details:', req.session);
+        // console.log('Email provided:', email); // DEBUG
+        // console.log('Session details:', req.session); // DEBUG
 
         if (!email || !password) {
             return res.status(400).render('DeleteAccountPage', {
@@ -45,7 +45,7 @@ exports.deleteAccount = async (req, res) => {
             });
         }
 
-        console.log('Deleting user from database...');
+        // console.log('Deleting user from database...'); // DEBUG
         await deleteUser(req.session.userId);
 
         req.session.destroy((err) => {
@@ -55,7 +55,7 @@ exports.deleteAccount = async (req, res) => {
                     errors: [{ msg: 'An error occurred during account deletion.' }]
                 });
             }
-            console.log('User account deleted successfully.');
+            // console.log('User account deleted successfully.'); // DEBUG
             res.render('DeletingAccountPage');
         });
     } catch (error) {

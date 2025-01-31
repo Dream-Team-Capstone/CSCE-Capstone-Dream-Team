@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pyBlock</title>
+    <link href='/StylesPages/ProjetsStyle.css' rel='stylesheet'>
+    <style>
+        /* Additional styles for settings */
+        .dark-mode { background-color: #121212b3; color: #f0f0f0; }
+        .high-contrast { color: black; background-color: rgba(242, 0, 255, 0.428); }
+    </style>
+</head>    
+<body>
+<!-- NAV BAR START -->
+<header class="navigation" role="banner">
+    <nav aria-label="Main Navigation">
+        <!-- Logo -->
+        <ul class="navbar_logo">
+            <li>
+                <a href="/api/home">
+                    <img class="logo" src="/ImagesUsed/pyBlocks_Updated.png" alt="PyBlocks logo, linking back to home page">
+                </a>
+            </li>
+        </ul>
+
+        <!-- Navigation Buttons -->
+        <ul class="navbar_buttons_list">
+            <li><a href="#contact"><button class="Nav_Buttons" aria-disabled="true" aria-label="Contact Us page (Coming soon)">Contact Us</button></a></li>
+            <li><a href="#tutorials"><button class="Nav_Buttons" aria-disabled="true" aria-label="Tutorials page (Coming soon)">Tutorials</button></a></li>
+            <li><a href="/api/play"><button class="Nav_Buttons" aria-label="Start coding by going to the Play page">Play</button></a></li>
+            <li><a href="#courses"><button class="Nav_Buttons" aria-disabled="true" aria-label="Courses page (Coming soon)">Courses</button></a></li>
+            <li><a href="DashboardPage.ejs"><button class="Nav_Buttons" aria-label="Access resources">Resources</button></a></li>
+            <li><a href="/api/login"><button class="Nav_Buttons" aria-label="Sign in to your account">Sign In</button></a></li>
+            <li><a href="/api/register"><button class="Nav_Buttons" aria-label="Register for a new account">Register</button></a></li>
+        </ul>
+
+        <!-- Settings Icon -->
+        <ul class="Settings_logo">
+            <li>
+                <a href="/api/settings">
+                    <img class="Settings_logo" src="/ImagesUsed/SettingsIcon.png" alt="Settings logo, linking to settings page">
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<!-- NAV BAR END -->
+
+<!-- BODY START -->
+<body>
+    <!-- Projects Container... add as many divs as you want Projects -->
+    <div class="Projects-container">
+        <ul class="Projects-list">
+            <!-- The two li's below are for the course description and the course image-->
+             <!-- They may be flipped depending on the desired design -->
+            <li class="project-description">
+                <h2>Hello World!</h2>
+                <p>This course teaches users how to print "Hello World!" using block code.
+                Equally, the corresponding text code is provided for users to learn.</p>
+                <a href="#comming soon">
+                    <button class="project-button">
+                        Start Project!
+                    </button>
+                </a>
+            </li>
+            <li class="project-image">
+                <img src="../Public/ImagesUsed/HelloWorld.jpeg" alt="Hello World! course image">
+            </li>
+        </ul>
+    </div>
+    <div class="Projects-container">
+        <ul class="Projects-list">
+            <!-- The two li's below are for the course description and the course image-->
+             <!-- They may be flipped depending on the desired design -->
+            <li class="project-image">
+                <img src="../Public/ImagesUsed/HelloWorld.jpeg" alt="Hello World! course image">
+            </li>
+            <li class="project-description">
+                <h2>Insert Title</h2>
+                <p>Insert Description<br>
+                <a href="#comming soon">
+                    <button class="project-button">
+                        Start Project!
+                    </button>
+                </a>
+            </li>
+        </ul>
+    </div>
+</body>
+<!-- BODY END -->
+
+<!-- FOOTER START -->
+<footer role="contentinfo">
+    <!-- Logo -->
+    <ul class="navbar_logo">
+        <li>
+            <a href="/api/home">
+                <img class="logo" src="/ImagesUsed/pyBlocks_Updated.png" alt="PyBlocks logo, linking back to home page">
+            </a>
+        </li>
+    </ul>
+
+    <!-- Footer Links -->
+    <ul class="footer_buttons">
+        <li><a href="#resources" aria-label="Access resources">Resources</a></li>
+        <li><a href="#tutorials" aria-label="Access tutorials">Tutorials</a></li>
+        <li><a href="#editors" aria-label="Open blank editors (Coming soon)">Open Blank Editors</a></li>
+    </ul>
+</footer>
+<!-- FOOTER END -->

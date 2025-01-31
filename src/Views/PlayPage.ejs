@@ -90,232 +90,274 @@
 
 <!-- BODY START -->
 <div class="PlayPage_Body" role="main" aria-label="Play page main content">
-    <!-- Toggle Switch -->
-    <label class="toggleSwitch" aria-label="Toggle between Blockly and Python view">
-        <input type="checkbox" id="toggleSwitch" />
-        <span class="slider"></span>
-    </label>
-
-    <!-- Left panel: Code output -->
-    <div id="code-pane" aria-live="polite" aria-label="Python code output">
-        <h2>Generated Python Code</h2>
-        <pre id="output"></pre>
+    <!-- Header above everything -->
+    <div class="category-header" role="region" aria-label="View mode toggle">
+        <span class="category-title" id="viewModeLabel">Code View</span>
+        <label class="toggleSwitch" aria-labelledby="viewModeLabel">
+            <input type="checkbox" id="toggleSwitch" aria-label="Toggle between block and code view" />
+            <span class="slider" aria-hidden="true"></span>
+        </label>
     </div>
 
-    <!-- Right panel: Blockly workspace -->
-    <div id="blocklyDiv" aria-label="Blockly workspace for code building"></div>
+    <div class="workspace-container" role="main">
+        <!-- Complete toolbox with all blocks -->
+        <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+            <category name="Logic" categorystyle="logic_category" aria-label="Logic blocks">
+                <block type="controls_if"></block>
+                <block type="logic_compare"></block>
+                <block type="logic_operation"></block>
+                <block type="logic_negate"></block>
+                <block type="logic_boolean"></block>
+                <block type="logic_null" disabled="true"></block>
+                <block type="logic_ternary"></block>
+            </category>
+            <category name="Loops" categorystyle="loop_category" aria-label="Loop blocks">
+                <block type="controls_repeat_ext">
+                    <value name="TIMES">
+                        <shadow type="math_number">
+                            <field name="NUM">10</field>
+                        </shadow>
+                    </value>
+                </block>
+                <block type="controls_repeat" disabled="true"></block>
+                <block type="controls_whileUntil"></block>
+                <block type="controls_for">
+                    <value name="FROM"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+                    <value name="TO"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+                    <value name="BY"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+                </block>
+                <block type="controls_forEach"></block>
+                <block type="controls_flow_statements"></block>
+            </category>
+            <category name="Math" categorystyle="math_category" aria-label="Math blocks">
+                <block type="math_number" gap="32">
+                    <field name="NUM">123</field>
+                </block>
+                <block type="math_arithmetic">
+                    <value name="A"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+                    <value name="B"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+                </block>
+                <block type="math_single">
+                    <value name="NUM"><shadow type="math_number"><field name="NUM">9</field></shadow></value>
+                </block>
+                <block type="math_trig">
+                    <value name="NUM"><shadow type="math_number"><field name="NUM">45</field></shadow></value>
+                </block>
+                <block type="math_constant"></block>
+                <block type="math_number_property">
+                    <value name="NUMBER_TO_CHECK"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+                </block>
+                <block type="math_round">
+                    <value name="NUM"><shadow type="math_number"><field name="NUM">3.1</field></shadow></value>
+                </block>
+                <block type="math_on_list"></block>
+                <block type="math_modulo">
+                    <value name="DIVIDEND"><shadow type="math_number"><field name="NUM">64</field></shadow></value>
+                    <value name="DIVISOR"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+                </block>
+                <block type="math_constrain">
+                    <value name="VALUE"><shadow type="math_number"><field name="NUM">50</field></shadow></value>
+                    <value name="LOW"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+                    <value name="HIGH"><shadow type="math_number"><field name="NUM">100</field></shadow></value>
+                </block>
+                <block type="math_random_int">
+                    <value name="FROM"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+                    <value name="TO"><shadow type="math_number"><field name="NUM">100</field></shadow></value>
+                </block>
+                <block type="math_random_float"></block>
+                <block type="math_atan2">
+                    <value name="X"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+                    <value name="Y"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+                </block>
+            </category>
+            <category name="Text" categorystyle="text_category" aria-label="Text blocks">
+                <block type="text"></block>
+                <block type="text_multiline"></block>
+                <block type="text_join"></block>
+                <block type="text_append">
+                    <value name="TEXT"><shadow type="text"></shadow></value>
+                </block>
+                <block type="text_length">
+                    <value name="VALUE"><shadow type="text"></shadow></value>
+                </block>
+                <block type="text_isEmpty">
+                    <value name="VALUE"><shadow type="text"></shadow></value>
+                </block>
+                <block type="text_indexOf">
+                    <value name="VALUE"><block type="variables_get"></block></value>
+                    <value name="FIND"><shadow type="text"><field name="TEXT">abc</field></shadow></value>
+                </block>
+                <block type="text_charAt">
+                    <value name="VALUE"><block type="variables_get"></block></value>
+                </block>
+                <block type="text_getSubstring">
+                    <value name="STRING"><block type="variables_get"></block></value>
+                </block>
+                <block type="text_changeCase">
+                    <value name="TEXT"><shadow type="text"><field name="TEXT">abc</field></shadow></value>
+                </block>
+                <block type="text_trim">
+                    <value name="TEXT"><shadow type="text"><field name="TEXT">abc</field></shadow></value>
+                </block>
+                <block type="text_print">
+                    <value name="TEXT"><shadow type="text"><field name="TEXT">abc</field></shadow></value>
+                </block>
+                <block type="text_prompt_ext">
+                    <value name="TEXT"><shadow type="text"><field name="TEXT">abc</field></shadow></value>
+                </block>
+                <block type="text_count">
+                    <value name="SUB"><shadow type="text"></shadow></value>
+                    <value name="TEXT"><shadow type="text"></shadow></value>
+                </block>
+                <block type="text_replace">
+                    <value name="FROM"><shadow type="text"></shadow></value>
+                    <value name="TO"><shadow type="text"></shadow></value>
+                    <value name="TEXT"><shadow type="text"></shadow></value>
+                </block>
+                <block type="text_reverse">
+                    <value name="TEXT"><shadow type="text"></shadow></value>
+                </block>
+                <label text="Input/Output:" web-class="ioLabel"></label>
+            </category>
+            <category name="Lists" categorystyle="list_category" aria-label="List blocks">
+                <block type="lists_create_with"><mutation items="0"></mutation></block>
+                <block type="lists_create_with"></block>
+                <block type="lists_repeat">
+                    <value name="NUM"><shadow type="math_number"><field name="NUM">5</field></shadow></value>
+                </block>
+                <block type="lists_length"></block>
+                <block type="lists_isEmpty"></block>
+                <block type="lists_indexOf">
+                    <value name="VALUE">
+                        <block type="variables_get">
+                            <field name="VAR">list</field>
+                        </block>
+                    </value>
+                </block>
+                <block type="lists_getIndex">
+                    <value name="VALUE">
+                        <block type="variables_get">
+                            <field name="VAR">list</field>
+                        </block>
+                    </value>
+                </block>
+                <block type="lists_setIndex">
+                    <value name="LIST">
+                        <block type="variables_get">
+                            <field name="VAR">list</field>
+                        </block>
+                    </value>
+                </block>
+                <block type="lists_getSublist">
+                    <value name="LIST">
+                        <block type="variables_get">
+                            <field name="VAR">list</field>
+                        </block>
+                    </value>
+                </block>
+                <block type="lists_split">
+                    <value name="DELIM">
+                        <shadow type="text">
+                            <field name="TEXT">,</field>
+                        </shadow>
+                    </value>
+                </block>
+                <block type="lists_sort"></block>
+                <block type="lists_reverse"></block>
+            </category>
+            <sep></sep>
+            <category name="Variables" categorystyle="variable_category" custom="VARIABLE" aria-label="Variable blocks"></category>
+            <category name="Functions" categorystyle="procedure_category" custom="PROCEDURE" aria-label="Function blocks"></category>
+            <category name="Custom Blocks" colour="210" aria-label="Custom blocks">
+                <block type="custom_print"></block>
+                <!-- Add any other custom blocks here -->
+            </category>
+        </xml>
+
+        <!-- Middle panel: Blockly workspace -->
+        <div id="blocklyDiv" role="application" aria-label="Block programming workspace"></div>
+
+        <!-- Right panel: Code output -->
+        <div id="code-pane" role="complementary" aria-label="Generated Python code">
+            <h2 id="codeOutputLabel">Generated Python Code</h2>
+            <pre id="output" aria-labelledby="codeOutputLabel" aria-live="polite"></pre>
+        </div>
+    </div>
 </div>
 
-<!-- Toolbox definition for Blockly -->
-<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
-  <category name="Logic" categorystyle="logic_category" aria-label="Logic blocks">
-        <block type="controls_if"></block>
-        <block type="logic_compare"></block>
-        <block type="logic_operation"></block>
-        <block type="logic_negate"></block>
-        <block type="logic_boolean"></block>
-        <block type="logic_null" disabled="true"></block>
-        <block type="logic_ternary"></block>
-    </category>
-    <category name="Loops" categorystyle="loop_category">
-        <block type="controls_repeat_ext">
-            <value name="TIMES">
-                <shadow type="math_number">
-                    <field name="NUM">10</field>
-                </shadow>
-            </value>
-        </block>
-        <block type="controls_repeat" disabled="true"></block>
-        <block type="controls_whileUntil"></block>
-        <block type="controls_for">
-            <value name="FROM"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
-            <value name="TO"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
-            <value name="BY"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
-        </block>
-        <block type="controls_forEach"></block>
-        <block type="controls_flow_statements"></block>
-    </category>
-    <category name="Math" categorystyle="math_category">
-        <block type="math_number" gap="32">
-            <field name="NUM">123</field>
-        </block>
-        <block type="math_arithmetic">
-            <value name="A"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
-            <value name="B"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
-        </block>
-        <block type="math_single">
-            <value name="NUM"><shadow type="math_number"><field name="NUM">9</field></shadow></value>
-        </block>
-        <block type="math_trig">
-            <value name="NUM"><shadow type="math_number"><field name="NUM">45</field></shadow></value>
-        </block>
-        <block type="math_constant"></block>
-        <block type="math_number_property">
-            <value name="NUMBER_TO_CHECK"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
-        </block>
-        <block type="math_round">
-            <value name="NUM"><shadow type="math_number"><field name="NUM">3.1</field></shadow></value>
-        </block>
-        <block type="math_on_list"></block>
-        <block type="math_modulo">
-            <value name="DIVIDEND"><shadow type="math_number"><field name="NUM">64</field></shadow></value>
-            <value name="DIVISOR"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
-        </block>
-        <block type="math_constrain">
-            <value name="VALUE"><shadow type="math_number"><field name="NUM">50</field></shadow></value>
-            <value name="LOW"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
-            <value name="HIGH"><shadow type="math_number"><field name="NUM">100</field></shadow></value>
-        </block>
-        <block type="math_random_int">
-            <value name="FROM"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
-            <value name="TO"><shadow type="math_number"><field name="NUM">100</field></shadow></value>
-        </block>
-        <block type="math_random_float"></block>
-        <block type="math_atan2"><value name="X"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
-            <value name="Y"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
-          </block>
-    </category>
-    <category name="Text" categorystyle="text_category">
-        <block type="text"></block>
-        <block type="text_multiline"></block>
-        <block type="text_join"></block>
-        <block type="text_append">
-            <value name="TEXT"><shadow type="text"></shadow></value>
-        </block>
-        <block type="text_length">
-            <value name="VALUE"><shadow type="text"></shadow></value>
-        </block>
-        <block type="text_isEmpty">
-            <value name="VALUE"><shadow type="text"></shadow></value>
-        </block>
-        <block type="text_indexOf">
-            <value name="VALUE"><block type="variables_get"></block></value>
-            <value name="FIND"><shadow type="text"><field name="TEXT">abc</field></shadow></value>
-        </block>
-        <block type="text_charAt">
-            <value name="VALUE"><block type="variables_get"></block></value>
-        </block>
-        <block type="text_getSubstring">
-            <value name="STRING"><block type="variables_get"></block></value>
-        </block>
-        <block type="text_changeCase"><value name="TEXT"><shadow type="text"><field name="TEXT">abc</field></shadow></value></block>
-        <block type="text_trim"><value name="TEXT"><shadow type="text"><field name="TEXT">abc</field></shadow></value></block>
-        <block type="text_print"><value name="TEXT"><shadow type="text"><field name="TEXT">abc</field></shadow></value></block>
-        <block type="text_prompt_ext"><value name="TEXT"><shadow type="text"><field name="TEXT">abc</field></shadow></value></block>
-        <block type="text_count"><value name="SUB"><shadow type="text"></shadow></value>
-            <value name="TEXT"><shadow type="text"></shadow></value>
-        </block>
-        <block type="text_replace"><value name="FROM"><shadow type="text"></shadow></value>
-            <value name="TO"><shadow type="text"></shadow></value>
-            <value name="TEXT"><shadow type="text"></shadow></value>
-        </block>
-        <block type="text_reverse"><value name="TEXT"><shadow type="text"></shadow></value></block>
-        <label text="Input/Output:" web-class="ioLabel"></label>
-    </category>
-    <category name="Lists" categorystyle="list_category">
-        <block type="lists_create_with"><mutation items="0"></mutation></block>
-        <block type="lists_create_with"></block>
-        <block type="lists_repeat"><value name="NUM"><shadow type="math_number"><field name="NUM">5</field></shadow></value></block>
-        <block type="lists_length"></block>
-        <block type="lists_isEmpty"></block>
-        <block type="lists_indexOf"><value name="VALUE">
-            <block type="variables_get">
-              <field name="VAR">list</field>
-            </block>
-          </value>
-        </block>
-        <block type="lists_getIndex">
-          <value name="VALUE">
-            <block type="variables_get">
-              <field name="VAR">list</field>
-            </block>
-          </value>
-        </block>
-        <block type="lists_setIndex">
-          <value name="LIST">
-            <block type="variables_get">
-              <field name="VAR">list</field>
-            </block>
-          </value>
-        </block>
-        <block type="lists_getSublist">
-          <value name="LIST">
-            <block type="variables_get">
-              <field name="VAR">list</field>
-            </block>
-          </value>
-        </block>
-        <block type="lists_split">
-          <value name="DELIM">
-            <shadow type="text">
-              <field name="TEXT">,</field>
-            </shadow>
-          </value>
-        </block>
-        <block type="lists_sort"></block>
-        <block type="lists_reverse"></block>
-      </category>
-      <sep></sep>
-      <category
-        name="Variables"
-        categorystyle="variable_category"
-        custom="VARIABLE">
-      </category>
-      <category
-        name="Functions"
-        categorystyle="procedure_category"
-        custom="PROCEDURE">
-      </category>
-        <!-- Custom blocks defined in custom_blocks.js -->
-      <category name="Custom Blocks" colour="210">
-        <block type="custom_print"></block>
-      </category>
-</xml>
 <!-- Blockly workspace initialization script -->
 <script>
-    // Initialize Blockly workspace with the toolbox
+    // Initialize Blockly workspace with the toolbox and specific container
     const workspace = Blockly.inject('blocklyDiv', {
         toolbox: document.getElementById('toolbox'),
+        toolboxPosition: 'start',
+        horizontalLayout: false,
+        toolboxContainer: 'toolbox-container', // Specify the container
         scrollbars: true,
-        trashcan: true
+        trashcan: true,
+        sounds: true,  
+        grid: {
+            spacing: 20,
+            length: 20,
+            colour: '#f5f5f5',
+            snap: true
+        },
+        zoom: {
+            controls: true,    // Show zoom controls
+            wheel: true,      // Enable mouse wheel zoom
+            startScale: 1.0,  // Initial zoom level
+            maxScale: 3,      // Maximum zoom level
+            minScale: 0.3,    // Minimum zoom level
+            scaleSpeed: 1.2   // Zoom sensitivity
+        },
     });
 
     // Function to generate Python code from blocks and display it
     function generateCode() {
         try {
             const code = Blockly.Python.workspaceToCode(workspace);
-            document.getElementById('output').textContent = code || "No code generated.";
+            const outputElement = document.getElementById('output');
+            outputElement.textContent = code || "No code generated.";
+            // Add aria-label to announce code changes
+            outputElement.setAttribute('aria-label', 'Generated Python code: ' + (code || "No code generated."));
         } catch (e) {
-            document.getElementById('output').textContent = "Error generating code: " + e.message;
+            const outputElement = document.getElementById('output');
+            const errorMessage = "Error generating code: " + e.message;
+            outputElement.textContent = errorMessage;
+            outputElement.setAttribute('aria-label', errorMessage);
         }
-        }
+    }
 
     // Trigger code generation whenever the workspace changes
     workspace.addChangeListener(generateCode);
 
     // Set initial display styles
     document.addEventListener('DOMContentLoaded', function() {
-      const outputPane = document.getElementById('code-pane');
-      const blocklyDiv = document.getElementById('blocklyDiv');
+        const outputPane = document.getElementById('code-pane');
+        const blocklyDiv = document.getElementById('blocklyDiv');
 
-      // Initially show blocklyDiv and hide outputPane
-      outputPane.style.display = 'none';
-      blocklyDiv.style.display = 'block';
+        // Initially show blocklyDiv and hide outputPane
+        outputPane.style.display = 'none';
+        blocklyDiv.style.display = 'block';
     });
 
     // Switch for going from Block to Python and vice versa
     document.getElementById('toggleSwitch').addEventListener('change', function() {
-    const outputPane = document.getElementById('code-pane');
-    const blocklyDiv = document.getElementById('blocklyDiv');
-    
-    if (this.checked) {
-      outputPane.style.display = 'block';
-      blocklyDiv.style.display = 'none';
-     } else {
-    outputPane.style.display = 'none';
-    blocklyDiv.style.display = 'block';
-   }
-  });
+        const outputPane = document.getElementById('code-pane');
+        const blocklyDiv = document.getElementById('blocklyDiv');
+        const viewMode = this.checked ? 'code view' : 'block view';
+        
+        if (this.checked) {
+            outputPane.style.display = 'block';
+            blocklyDiv.style.display = 'none';
+        } else {
+            outputPane.style.display = 'none';
+            blocklyDiv.style.display = 'block';
+        }
+        
+        // Announce view change
+        this.setAttribute('aria-label', `Switch to ${viewMode}`);
+    });
 </script>
 <!-- BODY END -->
 

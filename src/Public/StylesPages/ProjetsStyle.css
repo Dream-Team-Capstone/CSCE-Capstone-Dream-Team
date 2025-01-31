@@ -1,0 +1,224 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  /* NAVIGATION BAR STYLES */
+  header {
+    background-color: #21b0fe;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: auto;     /* or a specific height if needed */
+    position: relative;
+  }
+  
+  nav {
+    display: flex;
+    align-items: center;
+  }
+  
+/* Logo styles */
+.navbar_logo {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.Settings_logo {
+  list-style: none;
+  margin: -5px;
+  padding: 0;
+  width: 50px; /* Adjust width as needed */
+  height: auto; /* Keeps aspect ratio */
+}
+.logo {
+  display: block;
+  width: 200px;
+  height: auto;
+}
+
+/* Navbar buttons list */
+.navbar_buttons_list {
+  display: flex;
+  list-style: none;
+  margin-left: 20px;
+  padding: 0;
+  align-items: center;
+}
+
+.navbar_buttons_list li{
+  margin-left: -25px;
+}
+
+/* Common style for all navigation buttons */
+.Nav_Buttons{
+  color: black;
+  width: 108px;
+  padding: 15px;
+  text-align: center;
+  margin: 0 20px;
+  border-radius: 15px;
+  font-weight: bold;
+  border: 2.5px solid #fd3636;
+  background-color: #FFC6C6;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-decoration: none;
+}
+  
+/* Hover effect for all buttons */
+.Nav_Buttons:hover, .SignInRegister_Nav_Button:hover {
+background-color: #fd3636;
+color: white;
+}
+/* !! NAVIGATION BAR END !! */
+
+/* !! BODY START !! */
+
+h2, p{
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  margin: 10px 0;        /* Add some vertical spacing */
+  width: 100%;          /* Ensure text takes full width of container */
+  text-align: center;    /* Ensure text is centered */
+}
+h2{
+  font-size: 50px;
+}
+p{
+  font-size: 20px;
+}
+
+.Projects-container {
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: auto;     /* Change from 100vh to auto */
+    position: relative;
+    top: 0;
+}
+
+.Projects-container:nth-child(2) .Projects-list {
+  background-color: #c8ecfa;  /* Second container */
+  border-color: #21b0fe;
+  border-width: 2px;
+  border-style: solid;
+}
+
+.Projects-container:nth-child(3) .Projects-list {
+  background-color: #faf1c1;  /* Second container */
+  border-color: #FED702;
+  border-width: 2px;
+  border-style: solid;
+}
+
+.Projects-list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 300px;
+    list-style: none;
+    padding: 30px;
+    margin: 0;
+    height: 100%;    /* Make sure it fills the container */
+    width: 100%;     /* Make sure it fills the width */
+}
+.Projects-list li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin-top: -70px;
+}
+
+.project-image {
+    position: relative;
+    width: 40%;
+    height: auto;
+    display: flex;
+    justify-content: center;  /* Center the image instead of flex-end */
+}
+
+.project-image img {    /* target the image inside the container */
+    width: 390px;     
+    height: auto;      /* maintains aspect ratio */
+    object-fit: contain;
+    border-radius: 15px;
+}
+
+.project-description {
+    display: flex;
+    flex-direction: column;
+    align-items: center;    /* Centers content horizontally */
+    justify-content: center; /* Centers content vertically */
+    text-align: center;     /* Centers the text itself */
+    width: 40%;            /* Match the width of project-image */
+}
+
+.project-button {
+  background-color: #4285f4;
+  color: white;
+  height: 50px;
+  width: 200px;
+  margin-top: 15px;     /* Add some space above the button */
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.project-button:hover {
+  background-color: white;
+  color: #4285f4;
+  border: 2px solid #4285f4;
+}
+
+/* !! BODY END !! */
+
+
+/* !!FOOTER START!! */
+/* Styles the footer buttons */
+.footer_buttons {
+display: inline; /* Inline display for footer buttons */
+list-style: none; /* Removes bullets from the list */
+margin: 0;
+padding: 0; 
+color: black;
+}
+
+/* Styles the individual footer buttons */
+.footer_buttons li {
+margin-left: 20px; /* Adds space between footer buttons */
+padding: 8px; /* Adds padding inside the buttons */
+font-family: 'Trebuchet MS', Helvetica, sans-serif;
+}
+
+/* Styles the links inside the footer buttons */
+.footer_buttons li a {
+text-decoration: none; /* Removes underline from links */
+color: black; /* Set the desired text color */
+font-weight: bold; /* Optionally make the text bold */
+}
+
+
+/* Styles the footer container */
+footer {
+background-color: #FED702;
+padding: 20px;
+width: 100%;
+height: 20%;
+text-align: right; /* Aligns footer content to the right */
+display: flex; /* Flexbox layout */
+justify-content: space-between; /* Spaces content between left and right */
+align-items: center;
+}
+  
+
