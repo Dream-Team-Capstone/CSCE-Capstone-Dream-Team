@@ -19,6 +19,7 @@ const { connectToDatabase } = require('./src/Config/dbh'); // imported from dbh 
 const registerRoutes = require('./src/Routes/registerRoutes'); // routes for user registration functionality
 const loginRoutes = require('./src/Routes/loginRoutes'); // routes for user login functionality
 const deleteRoutes = require('./src/Routes/deleteRoutes');
+const projectTutorialRoutes = require('./src/Routes/ProjectTutorialsRoutes');
 const deleteController = require('./src/Controllers/deleteController');
 const PORT = process.env.PORT || 4000; 
 const ejs = require('ejs'); // ejs is a templating engine for rendering HTML
@@ -100,11 +101,6 @@ app.get('/api/dashboard', ensureAuthenticated, (req, res) => {
     res.render('DashboardPage', { user });
 });
 
-app.get('/api/Projects', ensureAuthenticated, (req, res) => {
-    const user = req.session.first_name;
-    res.render('ProjectsPage', { user });
-});
-
 app.get('/api/register', async (req, res) => {
     try {
         const errors = req.session.errors || []; 
@@ -150,6 +146,7 @@ app.post('/api/delete', deleteController.deleteAccount);
 app.use('/api', registerRoutes);
 app.use('/api', loginRoutes);
 app.use('/api', deleteRoutes);
+app.use('/api', projectTutorialRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

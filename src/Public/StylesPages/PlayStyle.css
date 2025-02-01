@@ -152,43 +152,6 @@ nav {
   width: 100vh;
 }
 
-/* !!FOOTER START!! */
-/* Styles the footer buttons */
-.footer_buttons {
-  display: inline; /* Inline display for footer buttons */
-  list-style: none; /* Removes bullets from the list */
-  margin: 0;
-  padding: 0; 
-  color: black;
-}
-
-/* Styles the individual footer buttons */
-.footer_buttons li {
-  margin-left: 20px; /* Adds space between footer buttons */
-  padding: 8px; /* Adds padding inside the buttons */
-  font-family: 'Trebuchet MS', Helvetica, sans-serif;
-}
-
-/* Styles the links inside the footer buttons */
-.footer_buttons li a {
-  text-decoration: none; /* Removes underline from links */
-  color: black; /* Set the desired text color */
-  font-weight: bold; /* Optionally make the text bold */
-}
-
-
-/* Styles the footer container */
-footer {
-  background-color: #FED702;
-  padding: 20px;
-  width: 100%;
-  height: 20%;
-  text-align: right; /* Aligns footer content to the right */
-  display: flex; /* Flexbox layout */
-  justify-content: space-between; /* Spaces content between left and right */
-  align-items: center;
-}
-  
 /* !!TOGGLE SWITCH START!! */
 /* Styles for the toggle switch */
 .toggleSwitch {
@@ -283,4 +246,98 @@ input:checked + .slider:before {
 /* Style the category color indicators */
 .blocklyTreeIcon {
     margin: 0 8px !important;
+}
+
+/* !!TUTORIAL START!! */
+
+#tutorial-overlay {
+    position: fixed;
+    top: 300px;
+    right: 100px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+    max-width: 300px;
+}
+
+.tutorial-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+}
+
+#step-title {
+  text-align: center;
+  width: 100%;
+  margin: 0;
+  padding-bottom: 10px;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+#next-step {
+  background-color: #4285f4;
+  color: white;
+  height: 50px;
+  width: 200px;
+  margin-top: 15px;    
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+#next-step:hover {
+  background-color: white;
+  color: #4285f4;
+  border: 2px solid #4285f4;
+}
+
+#step-instruction {
+    text-align: center;
+    width: 100%;
+    margin: 0;
+    white-space: pre-line; /* This makes \n work */
+}
+
+/* !!FOOTER START!! */
+/* Styles the footer buttons */
+.footer_buttons {
+  display: inline; /* Inline display for footer buttons */
+  list-style: none; /* Removes bullets from the list */
+  margin: 0;
+  padding: 0; 
+  color: black;
+}
+
+/* Styles the individual footer buttons */
+.footer_buttons li {
+  margin-left: 20px; /* Adds space between footer buttons */
+  padding: 8px; /* Adds padding inside the buttons */
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
+}
+
+/* Styles the links inside the footer buttons */
+.footer_buttons li a {
+  text-decoration: none; /* Removes underline from links */
+  color: black; /* Set the desired text color */
+  font-weight: bold; /* Optionally make the text bold */
+}
+
+
+/* Styles the footer container */
+footer {
+  background-color: #FED702;
+  padding: 20px;
+  width: 100%;
+  height: 20%;
+  text-align: right; /* Aligns footer content to the right */
+  display: flex; /* Flexbox layout */
+  justify-content: space-between; /* Spaces content between left and right */
+  align-items: center;
 }

@@ -119,6 +119,13 @@ p{
   border-style: solid;
 }
 
+.Projects-container:nth-child(4) .Projects-list {
+  background-color: #ffdede;  /* Second container */
+  border-color: #fd3636;
+  border-width: 2px;
+  border-style: solid;
+}
+
 .Projects-list {
     display: flex;
     flex-direction: row;

@@ -28,7 +28,17 @@
         <li><a href="/api/play"><button class="Nav_Buttons">Play</button></a></li>
         <li><a href="#courses"><button class="Nav_Buttons" aria-disabled="true">Courses</button></a></li>
         <li><a href="#resources"><button class="Nav_Buttons" aria-disabled="true">Resources</button></a></li>
-        <li><a href="/api/login"><button class="Nav_Buttons">Sign In</button></a></li>
+        <li>
+          <% if (locals.user && locals.user !== null) { %>
+            <a href="/api/dashboard">
+              <button class="Nav_Buttons" aria-label="Go to dashboard">Dashboard</button>
+            </a>
+          <% } else { %>
+            <a href="/api/login">
+              <button class="Nav_Buttons" aria-label="Sign in to your account">Sign In</button>
+            </a>
+          <% } %>
+        </li>
         <li><a href="/api/register"><button class="Nav_Buttons">Register</button></a></li>
       </ul>
       <ul class="Settings_logo">

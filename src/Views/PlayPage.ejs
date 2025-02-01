@@ -23,6 +23,9 @@
     <!-- Toolbox and main JavaScript file -->
     <script type="module" src="../toolbox.js"></script>
     <script type="module" src="../index.js"></script>
+
+    <!-- Add this in the head section -->
+    <script src="/Public/Guides/projectTutorialGuides.js"></script>
 </head>
 <body onload="start()">
 
@@ -67,10 +70,16 @@
       </a>
     </li>
     <li>
-      <a href="/api/login" aria-label="Login page">
-        <button class="Nav_Buttons">Sign In</button>
-      </a>
-    </li>
+        <% if (locals.user && locals.user !== null) { %>
+          <a href="/api/dashboard">
+            <button class="Nav_Buttons" aria-label="Go to dashboard">Dashboard</button>
+          </a>
+        <% } else { %>
+          <a href="/api/login">
+            <button class="Nav_Buttons" aria-label="Sign in to your account">Sign In</button>
+          </a>
+        <% } %>
+      </li>
     <li>
       <a href="/api/register" aria-label="Registration page">
         <button class="Nav_Buttons">Register</button>
@@ -172,16 +181,34 @@
             </category>
             <category name="Text" categorystyle="text_category" aria-label="Text blocks">
                 <block type="text"></block>
-                <block type="text_multiline"></block>
+                <block type="text_print">
+                    <value name="TEXT">
+                        <shadow type="text">
+                            <field name="TEXT">abc</field>
+                        </shadow>
+                    </value>
+                </block>
                 <block type="text_join"></block>
                 <block type="text_append">
-                    <value name="TEXT"><shadow type="text"></shadow></value>
+                    <value name="TEXT">
+                        <shadow type="text">
+                            <field name="TEXT">abc</field>
+                        </shadow>
+                    </value>
                 </block>
                 <block type="text_length">
-                    <value name="VALUE"><shadow type="text"></shadow></value>
+                    <value name="VALUE">
+                        <shadow type="text">
+                            <field name="TEXT">abc</field>
+                        </shadow>
+                    </value>
                 </block>
                 <block type="text_isEmpty">
-                    <value name="VALUE"><shadow type="text"></shadow></value>
+                    <value name="VALUE">
+                        <shadow type="text">
+                            <field name="TEXT">abc</field>
+                        </shadow>
+                    </value>
                 </block>
                 <block type="text_indexOf">
                     <value name="VALUE"><block type="variables_get"></block></value>
@@ -311,6 +338,14 @@
             scaleSpeed: 1.2   // Zoom sensitivity
         },
     });
+
+    const isTutorialMode = '<%= locals.tutorialMode %>' === 'true';
+    const tutorialId = '<%= locals.tutorialId || "" %>';
+    
+    if (isTutorialMode) {
+        // Initialize tutorial guide
+        const guide = new TutorialGuide(workspace, tutorialId);
+    }
 
     // Function to generate Python code from blocks and display it
     function generateCode() {
