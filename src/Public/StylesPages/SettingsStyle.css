@@ -105,6 +105,7 @@ nav {
   opacity: 0.25; /* Makes the image semi-transparent */
   z-index: -1; /* Places the image behind other elements */
 }
+
 /* Style box around the registration form */
 .Settings_Form{
   border: 3px solid #fd3636;
@@ -116,7 +117,7 @@ nav {
 }
 /* Centers the form */
 form{
-  display: block;
+  display: flex;
 }
 
 /* Ensures each label-input pair is aligned properly */
