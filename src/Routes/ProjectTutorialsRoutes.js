@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const tutorialsModel = require('../Models/ProjectTutorialsModel'); // !! model handling user data interactions with the database NOT YET CREATED !!
 const tutorialsController = require('../Controllers/ProjectTutorialsController');
+const { pool } = require('../Config/dbh');
 
 // Middleware to check if user is authenticated
 function ensureAuthenticated(req, res, next) {
@@ -14,9 +15,38 @@ function ensureAuthenticated(req, res, next) {
 }
 
 // Base tutorial route - list all available tutorials
-router.get('/project-tutorials', ensureAuthenticated, (req, res) => {
-    const user = req.session.first_name;
-    res.render('ProjectsPage', { user });
+router.get('/project-tutorials', ensureAuthenticated, async (req, res) => {
+    try {
+        const user = req.session.first_name;
+        const userId = req.session.userId;
+        
+        // Add console.log to debug
+        // console.log('Attempting to fetch progress for user:', userId); // DEBUG
+        
+        // Fetch progress data
+        const result = await pool.query(
+            `SELECT project1_progress, project2_progress, project3_progress 
+             FROM user_progress 
+             WHERE user_id = $1`,
+            [userId]
+        );
+
+        // Add console.log to see query result
+        //console.log('Query result:', result.rows); // DEBUG
+
+        // Set default progress if no data exists
+        const user_progress = result.rows[0] || {
+            project1_progress: 0,
+            project2_progress: 0,
+            project3_progress: 0
+        };
+
+        res.render('ProjectsPage', { user, user_progress });
+    } catch (err) {
+        // Improve error logging
+        console.error('Detailed error fetching progress:', err);
+        res.status(500).send('Server error while fetching progress');
+    }
 });
 
 // Specific Hello World tutorial route
