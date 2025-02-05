@@ -41,5 +41,52 @@ router.post('/project-tutorials/:tutorialId/validate', ensureAuthenticated, (req
     // This will be handled by the controller once created
 });
 
+// Save or update progress for all projects
+router.post('/project-tutorials/save', ensureAuthenticated, async (req, res) => {
+    const { project1_progress, project2_progress, project3_progress } = req.body;
+    const userId = req.session.userId;
+
+    if (
+        project1_progress < 0 || project1_progress > 100 ||
+        project2_progress < 0 || project2_progress > 100 ||
+        project3_progress < 0 || project3_progress > 100
+    ) {
+        return res.status(400).json({ error: 'Progress percentage must be between 0 and 100 for all projects.' });
+    }
+
+    try {
+        const result = await pool.query(
+            `INSERT INTO user_progress (user_id, project1_progress, project2_progress, project3_progress)
+             VALUES ($1, $2, $3, $4)
+             ON CONFLICT (user_id)
+             DO UPDATE SET project1_progress = $2, project2_progress = $3, project3_progress = $4, last_updated = now()
+             RETURNING *`,
+            [userId, project1_progress, project2_progress, project3_progress]
+        );
+        res.json({ status: 'success', progress: result.rows[0] });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to save progress.' });
+    }
+});
+
+// Fetch progress for all projects
+router.get('/project-tutorials/fetch', ensureAuthenticated, async (req, res) => {
+    const userId = req.session.userId;
+    try {
+        const result = await pool.query(
+            `SELECT project1_progress, project2_progress, project3_progress, last_updated FROM user_progress WHERE user_id = $1`,
+            [userId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Progress not found.' });
+        }
+
+        res.json(result.rows[0]);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch progress.' });
+    }
+});
+
 module.exports = router;
 

@@ -140,6 +140,24 @@ app.get('/api/confirmDelete', (req, res) => {
 
 // Define the delete route
 app.post('/api/delete', deleteController.deleteAccount);
+
+// Define the project tutorial route
+app.get('/api/projectTutorial', async (req, res) => {
+    if (!req.session.userId) {
+        return res.redirect('/api/login'); // Redirect if not logged in
+    }
+    
+    const userId = req.session.userId;
+    
+    // Fetch user info and progress data
+    const user_info = await user_info.findByPk(userId);
+    const user_progress = await user_progress.findOne({ where: { user_id: userId } });
+
+    res.render('ProjectsPage', {
+        user_info: user_info,
+        user_progress: user_progress
+    });
+});
     
 
 // API routes
