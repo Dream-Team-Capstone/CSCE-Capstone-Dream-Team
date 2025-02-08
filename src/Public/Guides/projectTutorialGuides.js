@@ -72,6 +72,9 @@ class TutorialGuide {
         this.currentStep = 0;
         this.steps = tutorialSteps[tutorialId];
         this.setupTutorialUI();
+        
+        // Make the tutorial guide instance globally accessible
+        window.tutorialGuide = this;
     }
 
     setupTutorialUI() {
@@ -103,12 +106,16 @@ class TutorialGuide {
     validateAndProgress() {
         const currentStep = this.steps[this.currentStep];
         if (currentStep.validation(this.workspace)) {
-            this.currentStep++;
-            if (this.currentStep < this.steps.length) {
+            if (this.currentStep < this.steps.length - 1) {
+                this.currentStep++;
                 this.showCurrentStep();
             } else {
+                this.currentStep = this.steps.length - 1; // Ensure we don't exceed the last step
                 this.completeTutorial();
             }
+            // Calculate progress as a percentage of total steps
+            const progress = Math.min(Math.round((this.currentStep / (this.steps.length - 1)) * 100), 100);
+            console.log('Tutorial step updated to:', this.currentStep);
         }
     }
 
@@ -117,8 +124,19 @@ class TutorialGuide {
             <div class="tutorial-content">
                 <h2 id="step-title">Congratulations!</h2>
                 <p id="step-instruction">You've completed the Hello World tutorial!</p>
-                <button id="next-step" onclick="window.location.href='/api/project-tutorials'">Back to Projects</button>
             </div>
         `;
+    }
+
+    // Add a getter for the current step
+    getCurrentStep() {
+        return this.currentStep;
+    }
+
+    setStep(step) {
+        if (step >= 0 && step < this.steps.length) {
+            this.currentStep = step;
+            this.showCurrentStep();
+        }
     }
 }

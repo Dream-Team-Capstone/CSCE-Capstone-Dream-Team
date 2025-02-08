@@ -202,11 +202,18 @@ p{
     height: 30px;
     width: 0%; /* Default width */
     background-color: #4caf50;
+    border-radius: 4px;
     text-align: center;
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+    font-size: 1.0em;
     line-height: 30px;
     color: white;
     font-weight: bold;
+    left: 0;
+    top: 0;
     transition: width 0.5s ease-in-out;
+    white-space: nowrap;
+    min-width: 2em;
 }
 
 /* !! BODY END !! */

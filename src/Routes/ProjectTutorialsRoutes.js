@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const tutorialsModel = require('../Models/ProjectTutorialsModel'); // !! model handling user data interactions with the database NOT YET CREATED !!
+const tutorialsModel = require('../Models/ProjectTutorialsModel'); 
 const tutorialsController = require('../Controllers/ProjectTutorialsController');
 const { pool } = require('../Config/dbh');
 
@@ -20,9 +20,6 @@ router.get('/project-tutorials', ensureAuthenticated, async (req, res) => {
         const user = req.session.first_name;
         const userId = req.session.userId;
         
-        // Add console.log to debug
-        // console.log('Attempting to fetch progress for user:', userId); // DEBUG
-        
         // Fetch progress data
         const result = await pool.query(
             `SELECT project1_progress, project2_progress, project3_progress 
@@ -30,9 +27,6 @@ router.get('/project-tutorials', ensureAuthenticated, async (req, res) => {
              WHERE user_id = $1`,
             [userId]
         );
-
-        // Add console.log to see query result
-        //console.log('Query result:', result.rows); // DEBUG
 
         // Set default progress if no data exists
         const user_progress = result.rows[0] || {
@@ -71,31 +65,89 @@ router.post('/project-tutorials/:tutorialId/validate', ensureAuthenticated, (req
     // This will be handled by the controller once created
 });
 
-// Save or update progress for all projects
+// Save tutorial progress
 router.post('/project-tutorials/save', ensureAuthenticated, async (req, res) => {
-    const { project1_progress, project2_progress, project3_progress } = req.body;
     const userId = req.session.userId;
+    const { tutorialId, currentStep, workspaceState } = req.body;
+    
+    console.log('Received save request:', {
+        userId,
+        tutorialId,
+        currentStep,
+        hasWorkspaceState: !!workspaceState
+    });
 
-    if (
-        project1_progress < 0 || project1_progress > 100 ||
-        project2_progress < 0 || project2_progress > 100 ||
-        project3_progress < 0 || project3_progress > 100
-    ) {
-        return res.status(400).json({ error: 'Progress percentage must be between 0 and 100 for all projects.' });
+    if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
     }
 
     try {
+        // Map tutorial IDs to project numbers
+        const projectMapping = {
+            'hello-world': 'project1_progress',
+            'loops-intro': 'project2_progress',
+            'variables-basic': 'project3_progress'
+        };
+
+        const projectField = projectMapping[tutorialId];
+        if (!projectField) {
+            return res.status(400).json({ error: 'Invalid tutorial ID' });
+        }
+
+        // Calculate progress percentage
+        const totalSteps = 6;
+        const progressPercentage = Math.round((currentStep / totalSteps) * 100);
+
+        // Validate progress percentage
+        if (progressPercentage < 0 || progressPercentage > 100) {
+            console.error('Invalid progress value:', progressPercentage);
+            return res.status(400).json({ error: 'Progress percentage must be between 0 and 100.' });
+        }
+
+        // Create update object with all projects initialized to 0
+        const updateData = {
+            project1_progress: 0,
+            project2_progress: 0,
+            project3_progress: 0
+        };
+        updateData[projectField] = progressPercentage;
+        // Log the workspace state before saving
+        console.log('Workspace state being saved:', {
+            hasState: !!workspaceState,
+            stateType: typeof workspaceState
+        });
+
         const result = await pool.query(
-            `INSERT INTO user_progress (user_id, project1_progress, project2_progress, project3_progress)
-             VALUES ($1, $2, $3, $4)
-             ON CONFLICT (user_id)
-             DO UPDATE SET project1_progress = $2, project2_progress = $3, project3_progress = $4, last_updated = now()
+            `INSERT INTO user_progress 
+                (user_id, ${projectField}, workspace_state)
+             VALUES ($1, $2, $3::jsonb)
+             ON CONFLICT (user_id) 
+             DO UPDATE SET 
+                ${projectField} = GREATEST(user_progress.${projectField}, $2),
+                workspace_state = $3::jsonb,
+                last_updated = now()
              RETURNING *`,
-            [userId, project1_progress, project2_progress, project3_progress]
+            [userId, progressPercentage, workspaceState]
         );
-        res.json({ status: 'success', progress: result.rows[0] });
+
+        console.log('Save successful:', {
+            userId,
+            progress: result.rows[0][projectField],
+            hasWorkspaceState: !!result.rows[0].workspace_state,
+            savedState: result.rows[0].workspace_state // Log the saved state
+        });
+
+        res.json({ 
+            status: 'success', 
+            progress: result.rows[0],
+            message: 'Progress saved successfully'
+        });
     } catch (err) {
-        res.status(500).json({ error: 'Failed to save progress.' });
+        console.error('Database error while saving progress:', err);
+        res.status(500).json({ 
+            error: 'Failed to save progress',
+            details: err.message 
+        });
     }
 });
 
@@ -104,9 +156,13 @@ router.get('/project-tutorials/fetch', ensureAuthenticated, async (req, res) => 
     const userId = req.session.userId;
     try {
         const result = await pool.query(
-            `SELECT project1_progress, project2_progress, project3_progress, last_updated FROM user_progress WHERE user_id = $1`,
+            `SELECT project1_progress, project2_progress, project3_progress, workspace_state, last_updated 
+             FROM user_progress 
+             WHERE user_id = $1`,
             [userId]
         );
+
+        console.log('Fetch result:', result.rows[0]); // Debug log
 
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Progress not found.' });
@@ -114,6 +170,7 @@ router.get('/project-tutorials/fetch', ensureAuthenticated, async (req, res) => 
 
         res.json(result.rows[0]);
     } catch (err) {
+        console.error('Error fetching progress:', err);
         res.status(500).json({ error: 'Failed to fetch progress.' });
     }
 });

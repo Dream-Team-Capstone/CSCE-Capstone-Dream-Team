@@ -84,8 +84,13 @@
                 <% } %>
                 <!-- Implementing progress bar -->
                 <div class="progress_container">
-                    <div class="progress_bar" style="width: <%= user_progress.project1_progress %>%" id="progress_bar">
-                        <%= user_progress.project1_progress %>%
+                    <div class="progress_bar" 
+                         role="progressbar"
+                         aria-valuenow="<%= user_progress.project1_progress %>"
+                         aria-valuemin="0"
+                         aria-valuemax="100"
+                         style="width: <%= user_progress.project1_progress %>%">
+                        <%= Math.round(user_progress.project1_progress) %>%
                     </div>
                 </div>
             </li>

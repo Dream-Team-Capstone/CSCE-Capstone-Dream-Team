@@ -27,7 +27,7 @@
     <!-- Add this in the head section -->
     <script src="/Public/Guides/projectTutorialGuides.js"></script>
 </head>
-<body onload="start()">
+<body>
 
 <!-- NAV BAR START -->
 <header class="navigation" role="banner">
@@ -100,12 +100,17 @@
 <!-- BODY START -->
 <div class="PlayPage_Body" role="main" aria-label="Play page main content">
     <!-- Header above everything -->
-    <div class="category-header" role="region" aria-label="View mode toggle">
+    <div class="category-header" role="region" aria-label="View mode toggle and save controls">
         <span class="category-title" id="viewModeLabel">Code View</span>
         <label class="toggleSwitch" aria-labelledby="viewModeLabel">
             <input type="checkbox" id="toggleSwitch" aria-label="Toggle between block and code view" />
             <span class="slider" aria-hidden="true"></span>
         </label>
+        <% if (locals.tutorialMode) { %>
+            <button id="saveProgressBtn" class="save-progress-btn" aria-label="Save progress and return to projects">
+                Save Progress & Return
+            </button>
+        <% } %>
     </div>
 
     <div class="workspace-container" role="main">
@@ -319,7 +324,7 @@
         toolbox: document.getElementById('toolbox'),
         toolboxPosition: 'start',
         horizontalLayout: false,
-        toolboxContainer: 'toolbox-container', // Specify the container
+        toolboxContainer: 'toolbox-container',
         scrollbars: true,
         trashcan: true,
         sounds: true,  
@@ -330,13 +335,18 @@
             snap: true
         },
         zoom: {
-            controls: true,    // Show zoom controls
-            wheel: true,      // Enable mouse wheel zoom
-            startScale: 1.0,  // Initial zoom level
-            maxScale: 3,      // Maximum zoom level
-            minScale: 0.3,    // Minimum zoom level
-            scaleSpeed: 1.2   // Zoom sensitivity
+            controls: true,
+            wheel: true,
+            startScale: 1.0,
+            maxScale: 3,
+            minScale: 0.3,
+            scaleSpeed: 1.2
         },
+        move: {
+            scrollbars: true,
+            drag: true,
+            wheel: true
+        }
     });
 
     const isTutorialMode = '<%= locals.tutorialMode %>' === 'true';
@@ -345,6 +355,7 @@
     if (isTutorialMode) {
         // Initialize tutorial guide
         const guide = new TutorialGuide(workspace, tutorialId);
+        window.tutorialGuide = guide; // Make it globally accessible
     }
 
     // Function to generate Python code from blocks and display it
@@ -393,6 +404,161 @@
         // Announce view change
         this.setAttribute('aria-label', `Switch to ${viewMode}`);
     });
+
+    document.getElementById('saveProgressBtn').addEventListener('click', async function() {
+        try {
+            const workspace = Blockly.getMainWorkspace();
+            
+            // Get the workspace state
+            const workspaceState = Blockly.serialization.workspaces.save(workspace);
+            console.log('Saving workspace state:', workspaceState); // Debug log
+
+            let currentStep = 0;
+            if (window.tutorialGuide) {
+                currentStep = window.tutorialGuide.getCurrentStep() + 1;
+                console.log('Saving progress - Current step:', currentStep);
+            }
+
+            const tutorialId = '<%= locals.tutorialId %>' || '';
+            console.log('Tutorial ID:', tutorialId); // Debug log
+
+            const payload = {
+                tutorialId: tutorialId,
+                currentStep: currentStep,
+                workspaceState: workspaceState
+            };
+
+            console.log('Sending payload:', {
+                ...payload,
+                workspaceState: 'Workspace data included'
+            });
+
+            const response = await fetch('/api/project-tutorials/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`HTTP error! status: ${response.status}, response: ${errorText}`);
+            }
+
+            const responseData = await response.json();
+            console.log('Server response:', responseData);
+
+            if (responseData.status === 'success') {
+                window.location.href = '/api/project-tutorials';
+            } else {
+                alert('Failed to save progress: ' + (responseData.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error saving progress:', error);
+            alert('Error saving progress: ' + error.message);
+        }
+    });
+
+    // Add this function to load the saved state when the page loads
+    async function loadSavedState() {
+        try {
+            console.log('Starting to load saved state...');
+            
+            const response = await fetch('/api/project-tutorials/fetch');
+            if (!response.ok) {
+                throw new Error('Failed to fetch saved state');
+            }
+            
+            const data = await response.json();
+            console.log('Full data received from server:', data);
+            
+            const tutorialId = '<%= locals.tutorialId %>' || '';
+            if (!tutorialId) {
+                console.log('No tutorial ID provided');
+                return;
+            }
+
+            // Map tutorial IDs to project numbers
+            const projectMapping = {
+                'hello-world': '1',
+                'loops-intro': '2',
+                'variables-basic': '3'
+            };
+
+            const projectNumber = projectMapping[tutorialId];
+            if (!projectNumber) {
+                console.log('Unknown tutorial ID:', tutorialId);
+                return;
+            }
+
+            const progressField = `project${projectNumber}_progress`;
+
+            if (data.workspace_state) {
+                console.log('Found workspace state, attempting to load...');
+                try {
+                    // Clear the workspace
+                    workspace.clear();
+                    
+                    // Temporarily disable events
+                    Blockly.Events.disable();
+                    
+                    try {
+                        // Load the saved state
+                        Blockly.serialization.workspaces.load(data.workspace_state, workspace);
+                        
+                        // Make sure all blocks are editable and movable
+                        workspace.getAllBlocks(false).forEach(block => {
+                            block.setEditable(true);
+                            block.setMovable(true);
+                            block.setDeletable(true);
+                            if (block.workspace) {
+                                block.initSvg();
+                                block.render();
+                            }
+                        });
+                    } finally {
+                        // Re-enable events
+                        Blockly.Events.enable();
+                    }
+                    
+                    // Resize and center
+                    Blockly.svgResize(workspace);
+                    workspace.scrollCenter();
+                    
+                    // Force a complete workspace render
+                    workspace.render();
+                    
+                    console.log('Workspace state loaded successfully');
+                } catch (e) {
+                    console.error('Error loading workspace state:', e);
+                }
+            }
+
+            // Load tutorial progress
+            if (window.tutorialGuide && data[progressField]) {
+                const progress = parseFloat(data[progressField]);
+                const step = Math.max(0, Math.floor((progress / 100) * 6));
+                window.tutorialGuide.setStep(step);
+            }
+        } catch (error) {
+            console.error('Error in loadSavedState:', error);
+        }
+    }
+
+    // Initialize workspace and load saved state
+    const GetWorkspace = Blockly.getMainWorkspace();
+    GetWorkspace.addChangeListener(function(e) {
+        if (e.type === Blockly.Events.FINISHED_LOADING) {
+            loadSavedState();
+        }
+    });
+
+    // Also try loading immediately
+    loadSavedState();
+
+    // Add this to ensure the workspace is properly initialized before loading state
+    Blockly.svgResize(workspace);
 </script>
 <!-- BODY END -->
 
