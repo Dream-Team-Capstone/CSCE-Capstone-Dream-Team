@@ -218,6 +218,13 @@ p{
     justify-content: space-around;
     padding: 20px;
 }
+.text_content{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
 
 .dashboard-item {
     width: 40%;

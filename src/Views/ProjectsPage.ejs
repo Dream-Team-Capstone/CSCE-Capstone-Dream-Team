@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pyBlock</title>
+    <title>PyBlocks Projects</title>
     <link href='/StylesPages/ProjetsStyle.css' rel='stylesheet'>
     <style>
         /* Additional styles for settings */
@@ -16,10 +16,10 @@
 <header class="navigation" role="banner">
     <nav aria-label="Main Navigation">
         <!-- Logo -->
-        <ul class="navbar_logo">
+        <ul class="navbar_logo" role="list">
             <li>
-                <a href="/api/home">
-                    <img class="logo" src="/ImagesUsed/pyBlocks_Updated.png" alt="PyBlocks logo, linking back to home page">
+                <a href="/api/home" aria-label="PyBlocks Home">
+                    <img class="logo" src="/ImagesUsed/pyBlocks_Updated.png" alt="PyBlocks logo">
                 </a>
             </li>
         </ul>
@@ -33,23 +33,23 @@
             <li><a href="#resources"><button class="Nav_Buttons" aria-label="Access resources">Resources</button></a></li>
             <li>
                 <% if (locals.user && locals.user !== null) { %>
-                  <a href="/api/dashboard">
-                    <button class="Nav_Buttons" aria-label="Go to dashboard">Dashboard</button>
-                  </a>
+                    <a href="/api/dashboard">
+                        <button class="Nav_Buttons" aria-label="View your dashboard">Dashboard</button>
+                    </a>
                 <% } else { %>
-                  <a href="/api/login">
-                    <button class="Nav_Buttons" aria-label="Sign in to your account">Sign In</button>
-                  </a>
+                    <a href="/api/login">
+                        <button class="Nav_Buttons" aria-label="Sign in to your account">Sign In</button>
+                    </a>
                 <% } %>
-              </li>
-            <li><a href="/api/register"><button class="Nav_Buttons" aria-label="Register for a new account">Register</button></a></li>
+            </li>
+            <li><a href="/api/register"><button class="Nav_Buttons" aria-label="Create new account">Register</button></a></li>
         </ul>
 
         <!-- Settings Icon -->
-        <ul class="Settings_logo">
+        <ul class="Settings_logo" role="list">
             <li>
-                <a href="/api/settings">
-                    <img class="Settings_logo" src="/ImagesUsed/SettingsIcon.png" alt="Settings logo, linking to settings page">
+                <a href="/api/settings" aria-label="Adjust application settings">
+                    <img class="Settings_logo" src="/ImagesUsed/SettingsIcon.png" alt="Settings icon">
                 </a>
             </li>
         </ul>
@@ -57,121 +57,153 @@
 </header>
 <!-- NAV BAR END -->
 
-<!-- BODY START -->
-<body>
-    <!-- Projects Container... add as many divs as you want Projects -->
-    <div class="Projects-container">
-        <ul class="Projects-list">
-            <!-- The two li's below are for the course description and the course image-->
-             <!-- They may be flipped depending on the desired design -->
+<!-- MAIN CONTENT -->
+<main role="main" aria-label="Project List">
+    <!-- Hello World Project -->
+    <section class="Projects-container" role="region" aria-labelledby="project1-title">
+        <ul class="Projects-list" role="list">
             <li class="project-description">
-                <h2>Hello World!</h2>
-                <p>This course teaches users how to print "Hello World!" using block code.
+                <h2 id="project1-title">Hello World!</h2>
+                <p id="project1-desc">This course teaches users how to print "Hello World!" using block code.
                 Equally, the corresponding text code is provided for users to learn.</p>
+                
                 <% if (locals.user && locals.user !== null) { %>
-                <a href="/api/project-tutorials/hello-world">
-                    <button class="project-button">
-                        Start Project!
-                    </button>
-                </a>
-                <% } else { %> <!-- If the user is not logged in, the button will be 
-                                disabled and the user will be redirected to the login page -->
-                    <a href="/api/login">
-                        <button class="project-button" aria-disabled="true">
+                    <a href="/api/project-tutorials/hello-world">
+                        <button class="project-button" 
+                                aria-labelledby="project1-title"
+                                aria-describedby="project1-desc">
                             Start Project!
                         </button>
                     </a>
+                <% } else { %>
+                    <a href="/api/login">
+                        <button class="project-button" 
+                                aria-label="Sign in to start Hello World project"
+                                aria-describedby="login-required">
+                            Start Project!
+                        </button>
+                    </a>
+                    <span id="login-required" hidden>Please sign in to access this project</span>
                 <% } %>
-                <!-- Implementing progress bar -->
-                <div class="progress_container">
+                <!-- Progress bar -->
+                <div class="progress_container" role="region" aria-label="Project Progress">
                     <div class="progress_bar" 
                          role="progressbar"
-                         aria-valuenow="<%= user_progress.project1_progress %>"
+                         aria-valuenow="<%= Math.round(user_progress.project1_progress) %>"
                          aria-valuemin="0"
                          aria-valuemax="100"
+                         aria-label="Project completion: <%= Math.round(user_progress.project1_progress) %>%"
                          style="width: <%= user_progress.project1_progress %>%">
                         <%= Math.round(user_progress.project1_progress) %>%
                     </div>
                 </div>
             </li>
             <li class="project-image">
-                <img src="../Public/ImagesUsed/HelloWorld.jpeg" alt="Hello World! course image">
+                <img src="../Public/ImagesUsed/HelloWorld.jpeg" 
+                     alt="Visual representation of Hello World programming concept"
+                     aria-labelledby="project1-title">
             </li>
         </ul>
-    </div>
-    <div class="Projects-container">
+    </section>
+
+    <div class="Projects-container" role="region" aria-label="Future Project">
         <ul class="Projects-list">
             <!-- The two li's below are for the course description and the course image-->
              <!-- They may be flipped depending on the desired design -->
             <li class="project-image">
-                <img src="../Public/ImagesUsed/HelloWorld.jpeg" alt="Hello World! course image">
+                <img src="../Public/ImagesUsed/HelloWorld.jpeg" 
+                     alt="Placeholder image for upcoming project"
+                     aria-labelledby="project2-title">
             </li>
             <li class="project-description">
-                <h2>Insert Title</h2>
-                <p>Insert Description<br>
+                <h2 id="project2-title">Insert Title</h2>
+                <p id="project2-desc">Insert Description</p>
                 <% if (locals.user && locals.user !== null) { %>
-                    <a href="#Comming Soon" aria-label="Coming Soon" aria-disabled="true">
-                        <button class="project-button">
+                    <a href="#Comming Soon">
+                        <button class="project-button" 
+                                aria-label="Project coming soon"
+                                disabled>
                             Start Project!
                         </button>
                     </a>
-                <% } else { %> <!-- If the user is not logged in, the button will be 
-                                    disabled and the user will be redirected to the login page -->
+                <% } else { %>
                     <a href="/api/login">
-                        <button class="project-button" aria-disabled="true">
+                        <button class="project-button" 
+                                aria-label="Sign in to access projects"
+                                aria-describedby="login-required-2">
                             Start Project!
                         </button>
                     </a>
+                    <span id="login-required-2" hidden>Please sign in to access this project</span>
                 <% } %>
-                <!-- Implementing progress bar -->
-                <div class="progress_container">
-                    <div class="progress_bar" style="width: <%= user_progress.project2_progress %>%" id="progress_bar">
+                <!-- Progress bar -->
+                <div class="progress_container" role="region" aria-label="Project Progress">
+                    <div class="progress_bar" 
+                         role="progressbar"
+                         aria-valuenow="<%= user_progress.project2_progress %>"
+                         aria-valuemin="0"
+                         aria-valuemax="100"
+                         aria-label="Project completion: <%= user_progress.project2_progress %>%"
+                         style="width: <%= user_progress.project2_progress %>%">
                         <%= user_progress.project2_progress %>%
                     </div>
                 </div>
             </li>
         </ul>
     </div>
-    <div class="Projects-container">
+
+    <!-- Third project container follows same pattern -->
+    <div class="Projects-container" role="region" aria-label="Future Project">
         <ul class="Projects-list">
             <!-- The two li's below are for the course description and the course image-->
              <!-- They may be flipped depending on the desired design -->
             <li class="project-description">
-                <h2>Insert Title</h2>
-                <p>Insert Description<br>
+                <h2 id="project3-title">Insert Title</h2>
+                <p id="project3-desc">Insert Description</p>
                 <% if (locals.user && locals.user !== null) { %>
-                    <a href="#Comming Soon" aria-label="Coming Soon" aria-disabled="true">
-                        <button class="project-button">
+                    <a href="#Comming Soon">
+                        <button class="project-button" 
+                                aria-label="Project coming soon"
+                                disabled>
                             Start Project!
                         </button>
                     </a>
-                <% } else { %> <!-- If the user is not logged in, the button will be 
-                                        disabled and the user will be redirected to the login page -->
+                <% } else { %>
                     <a href="/api/login">
-                        <button class="project-button" aria-disabled="true">
+                        <button class="project-button" 
+                                aria-label="Sign in to access projects"
+                                aria-describedby="login-required-3">
                             Start Project!
                         </button>
                     </a>
+                    <span id="login-required-3" hidden>Please sign in to access this project</span>
                 <% } %>
-                <!-- Implementing progress bar -->
-                <div class="progress_container">
-                    <div class="progress_bar" style="width: <%= user_progress.project3_progress %>%" id="progress_bar">
+                <!-- Progress bar -->
+                <div class="progress_container" role="region" aria-label="Project Progress">
+                    <div class="progress_bar" 
+                         role="progressbar"
+                         aria-valuenow="<%= user_progress.project3_progress %>"
+                         aria-valuemin="0"
+                         aria-valuemax="100"
+                         aria-label="Project completion: <%= user_progress.project3_progress %>%"
+                         style="width: <%= user_progress.project3_progress %>%">
                         <%= user_progress.project3_progress %>%
                     </div>
                 </div>
             </li>
             <li class="project-image">
-                <img src="../Public/ImagesUsed/HelloWorld.jpeg" alt="Hello World! course image">
+                <img src="../Public/ImagesUsed/HelloWorld.jpeg" 
+                     alt="Placeholder image for upcoming project"
+                     aria-labelledby="project3-title">
             </li>
         </ul>
     </div>
-</body>
+</main>
 <!-- BODY END -->
 
 <!-- FOOTER START -->
 <footer role="contentinfo">
-    <!-- Logo -->
-    <ul class="navbar_logo">
+    <ul class="navbar_logo" role="list">
         <li>
             <a href="/api/home">
                 <img class="logo" src="/ImagesUsed/pyBlocks_Updated.png" alt="PyBlocks logo, linking back to home page">
@@ -179,11 +211,24 @@
         </li>
     </ul>
 
-    <!-- Footer Links -->
-    <ul class="footer_buttons">
-        <li><a href="#resources" aria-label="Access resources">Resources</a></li>
-        <li><a href="#tutorials" aria-label="Access tutorials">Tutorials</a></li>
-        <li><a href="#editors" aria-label="Open blank editors (Coming soon)">Open Blank Editors</a></li>
+    <ul class="footer_buttons" role="list">
+        <li><a href="#resources" aria-label="Access learning resources">Resources</a></li>
+        <li><a href="#tutorials" aria-label="View available tutorials">Tutorials</a></li>
+        <li><a href="#editors" aria-label="Open blank code editors">Open Blank Editors</a></li>
     </ul>
 </footer>
-<!-- FOOTER END -->
+
+<script>
+    // Load saved settings on page load
+    window.onload = function() {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        const isHighContrast = localStorage.getItem('highContrast') === 'true';
+        const savedFontSize = localStorage.getItem('fontSize') || 14;
+
+        if (isDarkMode) document.body.classList.add('dark-mode');
+        if (isHighContrast) document.body.classList.add('high-contrast');
+        document.body.style.fontSize = savedFontSize + 'px';
+    };
+</script>
+</body>
+</html>

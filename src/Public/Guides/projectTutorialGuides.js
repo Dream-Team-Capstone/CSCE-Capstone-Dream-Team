@@ -81,11 +81,15 @@ class TutorialGuide {
         // Create tutorial overlay
         const overlay = document.createElement('div');
         overlay.id = 'tutorial-overlay';
+        overlay.setAttribute('role', 'region');
+        overlay.setAttribute('aria-label', 'Tutorial Instructions');
         overlay.innerHTML = `
-            <div class="tutorial-content">
-                <h2 id="step-title"></h2>
-                <p id="step-instruction"></p>
-                <button id="next-step">Next</button>
+            <div class="tutorial-content" role="dialog" aria-live="polite">
+                <h2 id="step-title" aria-label="Tutorial Step Title"></h2>
+                <p id="step-instruction" role="status" aria-label="Step Instructions"></p>
+                <button id="next-step" 
+                    aria-label="Next Tutorial Step"
+                    role="button">Next</button>
             </div>
         `;
         document.body.appendChild(overlay);
@@ -121,9 +125,9 @@ class TutorialGuide {
 
     completeTutorial() {
         document.getElementById('tutorial-overlay').innerHTML = `
-            <div class="tutorial-content">
-                <h2 id="step-title">Congratulations!</h2>
-                <p id="step-instruction">You've completed the Hello World tutorial!</p>
+            <div class="tutorial-content" role="dialog" aria-live="polite">
+                <h2 id="step-title" aria-label="Tutorial Complete">Congratulations!</h2>
+                <p id="step-instruction" role="status" aria-label="Completion Message">You've completed the Hello World tutorial!</p>
             </div>
         `;
     }

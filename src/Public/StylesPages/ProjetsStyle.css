@@ -105,21 +105,21 @@ p{
     top: 0;
 }
 
-.Projects-container:nth-child(2) .Projects-list {
+.Projects-container:nth-child(1) .Projects-list {
   background-color: #c8ecfa;  /* Second container */
   border-color: #21b0fe;
   border-width: 2px;
   border-style: solid;
 }
 
-.Projects-container:nth-child(3) .Projects-list {
+.Projects-container:nth-child(2) .Projects-list {
   background-color: #faf1c1;  /* Second container */
   border-color: #FED702;
   border-width: 2px;
   border-style: solid;
 }
 
-.Projects-container:nth-child(4) .Projects-list {
+.Projects-container:nth-child(3) .Projects-list {
   background-color: #ffdede;  /* Second container */
   border-color: #fd3636;
   border-width: 2px;

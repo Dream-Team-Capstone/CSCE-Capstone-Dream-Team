@@ -41,7 +41,7 @@ exports.deleteAccount = async (req, res) => {
 
         if (!isPasswordValid) {
             return res.status(400).render('DeleteAccountPage', {
-                errors: [{ msg: 'Password is incorrect.' }]
+                errors: [{ msg: 'Incorrect Credentials.' }]
             });
         }
 
