@@ -15,7 +15,7 @@ const app = express();
 const bodyParser = require('body-parser'); // Import body-parser
 const path = require('path'); // to work with file and directory paths
 const sessionConfig = require('./src/Config/config_session'); // imported from config_session file
-const { connectToDatabase } = require('./src/Config/dbh'); // imported from dbh file
+const { connectToDatabase, pool } = require('./src/Config/dbh'); // imported from dbh file
 const registerRoutes = require('./src/Routes/registerRoutes'); // routes for user registration functionality
 const loginRoutes = require('./src/Routes/loginRoutes'); // routes for user login functionality
 const deleteRoutes = require('./src/Routes/deleteRoutes');
@@ -24,6 +24,7 @@ const deleteController = require('./src/Controllers/deleteController');
 const PORT = process.env.PORT || 4000; 
 const ejs = require('ejs'); // ejs is a templating engine for rendering HTML
 const cookieParser = require('cookie-parser'); 
+const { clearUserProgress } = require('./src/Controllers/clearProgressController');
 
 
 // setting up views and template engine
@@ -149,14 +150,48 @@ app.get('/api/projectTutorial', async (req, res) => {
     
     const userId = req.session.userId;
     
-    // Fetch user info and progress data
-    const user_info = await user_info.findByPk(userId);
-    const user_progress = await user_progress.findOne({ where: { user_id: userId } });
+    try {
+        // Fetch progress data with default values
+        const result = await pool.query(
+            `SELECT COALESCE(project1_progress, 0) as project1_progress,
+                    COALESCE(project2_progress, 0) as project2_progress,
+                    COALESCE(project3_progress, 0) as project3_progress
+             FROM user_progress 
+             WHERE user_id = $1`,
+            [userId]
+        );
 
-    res.render('ProjectsPage', {
-        user_info: user_info,
-        user_progress: user_progress
-    });
+        const user_progress = result.rows[0] || {
+            project1_progress: 0,
+            project2_progress: 0,
+            project3_progress: 0
+        };
+
+        res.render('ProjectsPage', {
+            user: req.session.first_name,
+            user_progress: user_progress
+        });
+    } catch (err) {
+        console.error('Error fetching progress:', err);
+        res.status(500).send('Server error while fetching progress');
+    }
+});
+app.post('/api/project-tutorials/clear-progress', async (req, res) => {
+    const userId = req.session.userId;
+    if (!userId) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    try {
+        const result = await clearUserProgress(userId);
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ 
+            error: err.message,
+            details: err.message,
+            code: err.code
+        });
+    }
 });
     
 

@@ -272,4 +272,71 @@ justify-content: space-between; /* Spaces content between left and right */
 align-items: center;
 }
   
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.modal-content h2 {
+    margin-bottom: 10px;
+}
+
+.modal-content p {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.modal-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: small;
+}
+
+/* Yes Button */
+.modal-btn:first-child {
+    border: 2.5px solid #fd3636;
+    background-color: #FFC6C6;
+    color: black;
+}
+
+.modal-btn:first-child:hover {
+    background-color: #fd3636;
+    color: white;
+    font-weight: bolder;
+}
+
+/* Cancel Button */
+.modal-btn:last-child {
+    background-color: gray;
+    color: white;
+}
+
+.modal-btn:last-child:hover {
+    background-color: darkgray;
+}
+  
 

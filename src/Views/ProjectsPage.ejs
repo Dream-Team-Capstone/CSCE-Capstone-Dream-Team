@@ -208,7 +208,18 @@
         </ul>
     </div>
 </main>
-<!-- BODY END -->
+
+<!-- Add this after the main content, before the footer -->
+<div id="clearProgressModal" class="modal" role="dialog" aria-labelledby="clearProgressModalTitle" aria-describedby="clearProgressModalDesc">
+    <div class="modal-content">
+        <h2 id="clearProgressModalTitle">Clear Progress?</h2>
+        <p id="clearProgressModalDesc">Are you sure you want to clear your progress? This action cannot be undone.</p>
+        <div class="modal-actions">
+            <button class="modal-btn" id="confirmClearBtn" aria-label="Confirm clearing progress">Yes, Clear</button>
+            <button class="modal-btn" id="cancelClearBtn" aria-label="Cancel clearing progress">Cancel</button>
+        </div>
+    </div>
+</div>
 
 <!-- FOOTER START -->
 <footer role="contentinfo">
@@ -238,6 +249,62 @@
         if (isHighContrast) document.body.classList.add('high-contrast');
         document.body.style.fontSize = savedFontSize + 'px';
     };
+
+    document.querySelectorAll('.clearProgressButton').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const modal = document.getElementById('clearProgressModal');
+            modal.style.display = 'flex';
+            modal.setAttribute('aria-hidden', 'false');
+            document.getElementById('confirmClearBtn').focus();
+        });
+    });
+
+    // Add modal control functions
+    document.getElementById('cancelClearBtn').addEventListener('click', function() {
+        const modal = document.getElementById('clearProgressModal');
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+    });
+
+    document.getElementById('confirmClearBtn').addEventListener('click', async function() {
+        const modal = document.getElementById('clearProgressModal');
+        try {
+            const response = await fetch('/api/project-tutorials/clear-progress', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to clear progress');
+            }
+
+            const data = await response.json();
+            modal.style.display = 'none';
+            window.location.reload();
+        } catch (error) {
+            console.error('Error clearing progress:', error);
+            let errorMessage = error.message;
+            try {
+                const errorData = await error.response.json();
+                errorMessage = errorData.details || errorData.error || error.message;
+            } catch (e) {
+                // If we can't parse the error response, use the original error message
+            }
+            alert('Error clearing progress: ' + errorMessage);
+        }
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('clearProgressModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+            modal.setAttribute('aria-hidden', 'true');
+        }
+    });
 </script>
 </body>
 </html>
