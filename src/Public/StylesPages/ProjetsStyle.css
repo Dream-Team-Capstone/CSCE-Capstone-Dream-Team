@@ -216,6 +216,22 @@ p{
     min-width: 2em;
 }
 
+.clearProgressButton {
+  background-color: Black;
+  height: 22px;
+  width: 120px;
+  margin-top: 15px;     /* Add some space above the button */
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+  position: relative;
+}
+.clearProgressButton:hover {
+  background-color: white;
+  color: Black;
+  border: 2px solid Black;
+}
 /* !! BODY END !! */
 
 
