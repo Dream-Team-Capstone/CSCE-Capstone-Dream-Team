@@ -110,6 +110,18 @@
                    aria-checked="false" />
             <span class="slider" aria-hidden="true"></span>
         </label>
+
+        <!-- High Contrast Toggle -->
+        <span class="category-header" id="contrastModeLabel" aria-live="polite">High Contrast Mode</span>
+        <label class="toggleSwitch" aria-labelledby="contrastModeLabel">
+            <input type="checkbox" 
+                   id="themeToggle" 
+                   aria-label="Toggle high contrast mode"
+                   role="switch"
+                   aria-checked="false" />
+            <span class="slider" aria-hidden="true"></span>
+        </label>
+
         <% if (locals.tutorialMode) { %>
             <button id="saveProgressBtn" 
                     class="save-progress-btn" 

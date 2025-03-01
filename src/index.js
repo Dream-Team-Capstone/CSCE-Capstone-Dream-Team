@@ -9,6 +9,7 @@ import {blocks} from '../node_modules/blockly/blocks';
 import {pythonGenerator} from '../node_modules/blockly/python';  // Use Blockly's Python generator
 import {save, load} from './serialization';
 import {toolbox} from './toolbox';
+import Theme from '../node_modules/@blockly/theme-highcontrast'; // Import high contrast theme
 import './Public/StylesPages/index.css';
 
 // Define the start function here
@@ -66,6 +67,25 @@ document.getElementById('toggleSwitch').addEventListener('change', function() {
     outputPane.style.display = 'block';
     blocklyDiv.style.display = 'none';
   }
+});
+
+// Toggle High Contrast theme
+document.getElementById('themeToggle').addEventListener('change', function() {
+  const theme = this.checked ? Theme : Blockly.Themes.Classic;  // Classic is the default theme
+
+  // Toggle high contrast mode class on the body
+  document.body.classList.toggle('high-contrast', this.checked);
+
+  // Change the theme dynamically by calling inject again with the new theme
+  ws.dispose();  // Dispose of the current workspace
+  ws = Blockly.inject('blocklyDiv', {
+    toolbox,
+    theme: theme,  // Toggle between High Contrast and Classic theme
+  });
+
+  // Reapply any necessary settings or event listeners
+  load(ws);
+  runCode();
 });
 
 // Wait for DOM to be ready and then call start()

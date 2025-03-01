@@ -232,6 +232,91 @@ p{
   color: Black;
   border: 2px solid Black;
 }
+
+/* Styling the category header */
+.category-header {
+  font-size: 1.5em;
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  color: #333; /* Default text color */
+  margin-bottom: 15px;
+  text-align: center;
+  display: block;
+}
+
+/* High Contrast Mode Text Styling */
+body.high-contrast .category-header {
+  color: white; /* White text for high contrast */
+}
+
+/* Styling the toggle switch label */
+.toggleSwitch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin-left: 20px; /* Add some space between the text and the toggle */
+}
+
+/* Hide the checkbox (input) but keep it accessible */
+.toggleSwitch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Styling the slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 50px; /* Rounded edges */
+}
+
+/* Before state of the toggle switch */
+.slider:before {
+  content: "";
+  position: absolute;
+  height: 26px;
+  width: 26px;
+  border-radius: 50%;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+}
+
+/* When the checkbox is checked */
+input:checked + .slider {
+  background-color: #4caf50; /* Green when active */
+}
+
+/* Move the slider when the checkbox is checked */
+input:checked + .slider:before {
+  transform: translateX(26px); /* Move the circle to the right */
+}
+
+/* High contrast mode switch styling */
+body.high-contrast .slider {
+  background-color: white; /* White background in high contrast mode */
+}
+
+body.high-contrast .slider:before {
+  background-color: black; /* Black circle in high contrast mode */
+}
+
+/* Hover effect for the slider */
+.slider:hover {
+  background-color: #999; /* Darker grey on hover */
+}
+
+body.high-contrast .slider:hover {
+  background-color: #ddd; /* Lighter grey for high contrast */
+}
 /* !! BODY END !! */
 
 
