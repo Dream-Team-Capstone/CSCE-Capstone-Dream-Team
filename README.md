@@ -2,6 +2,7 @@
 
 ## To run accessibility for blockly:
 npm install @blockly/theme-highcontrast --save
+
 npm install @blockly/theme-dark --save
 
 
