@@ -9,7 +9,8 @@ import {blocks} from '../node_modules/blockly/blocks';
 import {pythonGenerator} from '../node_modules/blockly/python';  // Use Blockly's Python generator
 import {save, load} from './serialization';
 import {toolbox} from './toolbox';
-import Theme from '../node_modules/@blockly/theme-highcontrast'; // Import high contrast theme
+import HighContrastTheme from '../node_modules/@blockly/theme-highcontrast'; // Import high contrast theme
+import DarkTheme from '../node_modules/@blockly/theme-dark';
 import './Public/StylesPages/index.css';
 
 // Define the start function here
@@ -18,7 +19,10 @@ function start() {
   const codeDiv = document.getElementById('generatedCode').firstChild;
   const outputDiv = document.getElementById('output');
   const blocklyDiv = document.getElementById('blocklyDiv');
-  const ws = Blockly.inject(blocklyDiv, {toolbox});
+  const ws = Blockly.inject(blocklyDiv, {
+    toolbox,
+    theme: Blockly.Themes.Classic, //setting the page to Classic
+  });
 
   // Run the initial setup of the page (like loading and running code)
   load(ws);
@@ -69,24 +73,39 @@ document.getElementById('toggleSwitch').addEventListener('change', function() {
   }
 });
 
-// Toggle High Contrast theme
-document.getElementById('themeToggle').addEventListener('change', function() {
-  const theme = this.checked ? Theme : Blockly.Themes.Classic;  // Classic is the default theme
+// Theme toggling for Dark Mode and High Contrast Mode
+document.getElementById('highContrastToggle').addEventListener('change', function () {
+  if (this.checked) {
+    document.getElementById('darkModeToggle').checked = false;
+    setTheme(HighContrastTheme);
+  } else {
+    setTheme(Blockly.Themes.Classic);
+  }
+});
 
-  // Toggle high contrast mode class on the body
-  document.body.classList.toggle('high-contrast', this.checked);
+document.getElementById('darkModeToggle').addEventListener('change', function () {
+  if (this.checked) {
+    document.getElementById('highContrastToggle').checked = false;
+    setTheme(DarkTheme);
+  } else {
+    setTheme(Blockly.Themes.Classic);
+  }
+});
 
-  // Change the theme dynamically by calling inject again with the new theme
-  ws.dispose();  // Dispose of the current workspace
+// Function to change Blockly themes dynamically
+function setTheme(theme) {
+  document.body.classList.toggle('high-contrast', theme === HighContrastTheme);
+  document.body.classList.toggle('dark-mode', theme === DarkTheme);
+
+  ws.dispose();
   ws = Blockly.inject('blocklyDiv', {
     toolbox,
-    theme: theme,  // Toggle between High Contrast and Classic theme
+    theme: theme,
   });
 
-  // Reapply any necessary settings or event listeners
   load(ws);
   runCode();
-});
+}
 
 // Wait for DOM to be ready and then call start()
 document.addEventListener('DOMContentLoaded', () => {

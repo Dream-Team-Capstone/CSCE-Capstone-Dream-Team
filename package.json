@@ -17,6 +17,7 @@
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
+    "@blockly/theme-dark": "^7.0.10",
     "@blockly/theme-highcontrast": "^6.0.10",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",

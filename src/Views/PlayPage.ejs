@@ -122,6 +122,17 @@
             <span class="slider" aria-hidden="true"></span>
         </label>
 
+        <!-- Dark Mode Toggle -->
+        <span class="category-header" id="darkModeLabel" aria-live="polite">Dark Mode</span>
+        <label class="toggleSwitch" aria-labelledby="darkModeLabel">
+            <input type="checkbox" 
+                   id="darkModeToggle" 
+                   aria-label="Toggle dark mode"
+                   role="switch"
+                   aria-checked="false" />
+            <span class="slider" aria-hidden="true"></span>
+        </label>
+
         <% if (locals.tutorialMode) { %>
             <button id="saveProgressBtn" 
                     class="save-progress-btn" 
