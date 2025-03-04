@@ -116,11 +116,6 @@
                 <input type="range" id="blockSizeSetting" min="1" max="3" step="1" aria-label="Adjust block size">
             </div>
 
-            <!-- Screen Reader Toggle -->
-            <div class="Form_Group">
-                <label for="screenReaderToggle">Screen Reader Mode:</label>
-                <input type="checkbox" id="screenReaderToggle" aria-label="Toggle screen reader mode">
-            </div>
 
             <!-- High Contrast check, Not currently operational -->
             <div class="Form_Group">
@@ -212,14 +207,6 @@ document.getElementById('fontSizeSetting').addEventListener('input', function ()
       document.documentElement.style.setProperty('--block-size', this.value);
   });
 
-  // Screen Reader Toggle
-  document.getElementById('screenReaderToggle').addEventListener('change', function() {
-      if (this.checked) {
-          document.body.setAttribute('aria-hidden', 'false');
-      } else {
-          document.body.removeAttribute('aria-hidden');
-      }
-  });
 </script>
 </body>
 </html>
