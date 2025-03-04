@@ -27,6 +27,7 @@
                  role="alert" 
                  aria-live="assertive"
                  aria-atomic="true"
+                 tabindex="-1"
                  id="deleteAccountErrorContainer">
                 <% errors.forEach(function(error) { %>
                     <p class="error_popup_text"><%= error.msg || error %></p>
