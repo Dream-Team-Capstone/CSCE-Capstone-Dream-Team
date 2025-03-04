@@ -10,7 +10,7 @@ body {
 
 /* NAVIGATION BAR STYLES */
 header {
-  background-color: #21b0fe;
+  background-color: #1e90ff;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -26,13 +26,10 @@ nav {
 /* Logo styles */
 .navbar_logo {
   list-style: none;
-  margin: 0;
+  margin: 5px;
   padding: 0;
 }
 .Settings_logo {
-  list-style: none;
-  margin: -5px;
-  padding: 0;
   width: 50px; /* Adjust width as needed */
   height: auto; /* Keeps aspect ratio */
 }
@@ -58,14 +55,14 @@ nav {
 /* Common style for all navigation buttons */
 .Nav_Buttons{
   color: black;
-  width: 108px;
+  width: 110px;
   padding: 15px;
   text-align: center;
   margin: 0 20px;
   border-radius: 15px;
   font-weight: bold;
-  border: 2.5px solid #fd3636;
-  background-color: #FFC6C6;
+  border: 2.5px solid #e63946;
+  background-color: #f8d7da;
   cursor: pointer;
   transition: background-color 0.3s;
   text-decoration: none;
@@ -73,7 +70,7 @@ nav {
 
 /* Hover effect for all buttons */
 .Nav_Buttons:hover {
-  background-color: #fd3636;
+  background-color: #e63946;
   color: white;
 }
 /* !! BODY OF PAGE START!! */
@@ -85,7 +82,7 @@ nav {
   font-family: 'Trebuchet MS', Helvetica, sans-serif;
   font-size: xx-large;
   overflow: hidden; /* Hides overflowed content */
-  display: flex-auto;
+  display: flex;
   flex-direction: column; /* Stacks elements vertically */
   justify-content: center; /* Centers content vertically */
   align-items: center; /* Centers content horizontally */
@@ -103,7 +100,7 @@ nav {
   background-image: url('../ImagesUsed/homepage_backgroud.jpg'); /* Adds background image */
   background-size: cover; /* Ensures the image covers the container */
   background-position: center; /* Centers the background image */
-  opacity: 0.25; /* Makes the image semi-transparent */
+  opacity: 0.3; /* Makes the image semi-transparent */
   z-index: -1; /* Places the image behind other elements */
 }
 
@@ -111,7 +108,7 @@ nav {
 
 /* Style box around the registration form */
 .Register_Form{
-  border: 3px solid #fd3636;
+  border: 3px solid #e63946;
   border-radius: 15px; /* Rounded corners */
   background-color: white;
   width: 400px; 
@@ -120,7 +117,7 @@ nav {
 }
 /* Centers the form */
 form{
-  display: block;
+  display: flex;
 }
 
 /* Ensures each label-input pair is aligned properly */
@@ -129,14 +126,13 @@ form{
   margin-bottom: 15px; /* Space below each form group */
   text-align: left;
   padding: 10px; /* Adds padding around each form group */
-  position: relative;
 }
 
 /*sets the font, weight, and color of the form labels */
 .Form_Group label {
   width: 150px; 
   margin-right: 20px; /* Space between label and input */
-  color: rgb(93, 93, 93);
+  color: #5d5d5d;
   font-weight: 100;
   font-size: 25px;
   font-family: Arial, sans-serif;
@@ -154,7 +150,7 @@ form input[type="password"], form input[type="text"], form input[type="email"] {
   width: 325px;
   height: 35px;
   background: white;
-  border: 2px solid #D9D9D9;
+  border: 2px solid #bdbdbd;
   border-radius: 5px; /* Rounded corners */
   padding: 5px; /* Padding inside input fields */
 }
@@ -167,8 +163,8 @@ form input[type="password"], form input[type="text"], form input[type="email"] {
 /*sets the formatting of the form's sumit button */
 form input[type="submit"], form button {
   color: black;
-  background-color: #FFC6C6;
-  border-color: #fd3636;
+  background-color: #f8d7da;
+  border-color: #e63946;
   padding: 10px 20px; /* Padding inside the button */
   border-radius: 15px; /* Rounded corners */
   cursor: pointer; /* Changes cursor to pointer on hover */
@@ -179,7 +175,7 @@ form input[type="submit"], form button {
 
 /*sets the color of the form's sumbit button when hovered over */
 form input[type="submit"]:hover, form button:hover {
-  background-color: #fd3636; /* New background color */
+  background-color: #e63946; /* New background color */
   color: white; /* New text color */
   font-weight: bolder;
 }
@@ -199,8 +195,8 @@ legend {
   position: absolute; /* Set the container to fixed positioning */
   margin-left: 45%;
   margin-top: 0px;
-  border: 2px solid red;
-  background-color: #ffe6e6;
+  border: 2px solid #e63946;
+  background-color: #f8d7da;
   border-radius: 5px;
   padding: 5px;
   left: 300px;
@@ -218,10 +214,10 @@ legend {
   bottom: 125%;
   left: 50%;
   transform: translateX(-50%);
-  color: red;
+  color: #e63946;
   font-weight: bold;
   padding: 10px;
-  background-color: #ffe6e6;
+  background-color: #f8d7da;
   font-size: 20px;
   position: relative;
 }
@@ -266,7 +262,7 @@ legend {
 
 /* Styles the footer container */
 footer {
-  background-color: #FED702;
+  background-color: #f1c40f;
   padding: 20px;
   width: 100%;
   height: 20%;
