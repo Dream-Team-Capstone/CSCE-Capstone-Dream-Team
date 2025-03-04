@@ -5,26 +5,111 @@
     <title>pyBlock</title>
     <link type="text/css" href="/StylesPages/PlayStyle.css" rel="stylesheet">
 
-    <!-- Include Blockly core library and blocks -->
+    <!-- Use CDN for Blockly resources instead of module imports -->
     <script src="https://unpkg.com/blockly/blockly.min.js"></script>
-    <script src="https://unpkg.com/blockly/python.min.js"></script>
+    <script src="https://unpkg.com/blockly/python_compressed.js"></script>
     
-    <!-- Local copies of Blockly libraries as fallback -->
-    <script src="../../node_modules/blockly/blockly_compressed.js"></script>
-    <script src="../../node_modules/blockly/blocks_compressed.js"></script>
-    <script src="../../node_modules/blockly/python_compressed.js"></script>
-    
-    <!-- Load Blockly messages -->
-    <script src="../../node_modules/blockly/msg/en.js"></script>
-    
-    <!-- Toolbox and main JavaScript file -->
-    <script type="module" src="../toolbox.js"></script>
-    <script type="module" src="../index.js"></script>
+    <!-- Remove these problematic imports -->
+    <!-- <script type="module" src="../toolbox.js"></script> -->
+    <!-- <script type="module" src="../index.js"></script> -->
     
     <!-- Add this in the head section -->
-    <script src="/Public/Guides/projectTutorialGuides.js"></script>
+    <script src="/Guides/projectTutorialGuides.js"></script>
+    
+    <!-- Define custom blocks -->
+    <script>
+        // This will run after Blockly is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Blockly !== 'undefined') {
+                // Define custom print block
+                Blockly.Blocks['custom_print'] = {
+                    init: function() {
+                        this.appendValueInput('TEXT')
+                            .setCheck(null)
+                            .appendField('print');
+                        this.setPreviousStatement(true, null);
+                        this.setNextStatement(true, null);
+                        this.setColour(160);
+                        this.setTooltip('Print the specified text.');
+                        this.setHelpUrl('');
+                    }
+                };
+
+                // Define the Python generator for the custom print block
+                Blockly.Python['custom_print'] = function(block) {
+                    var value_text = Blockly.Python.valueToCode(block, 'TEXT', Blockly.Python.ORDER_ATOMIC);
+                    var code = 'print(' + value_text + ')\n';
+                    return code;
+                };
+                
+                console.log('Custom blocks defined successfully');
+            } else {
+                console.error('Blockly is not loaded!');
+            }
+        });
+    </script>
+    
+    <!-- Add styles for high contrast and dark mode -->
+    <style>
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #121212;
+            color: #f0f0f0;
+        }
+        
+        body.dark-mode .blocklyMainBackground {
+            fill: #2a2a2a !important;
+        }
+        
+        body.dark-mode .blocklyToolboxDiv {
+            background-color: #333 !important;
+            color: #fff !important;
+        }
+        
+        body.dark-mode .blocklyTreeLabel {
+            color: #fff !important;
+        }
+        
+        /* High contrast mode styles */
+        body.high-contrast {
+            background-color: #000;
+            color: #fff;
+        }
+        
+        body.high-contrast .blocklyMainBackground {
+            fill: #000 !important;
+        }
+        
+        body.high-contrast .blocklyToolboxDiv {
+            background-color: #000 !important;
+            color: #fff !important;
+            border-right: 3px solid yellow !important;
+        }
+        
+        body.high-contrast .blocklyTreeLabel {
+            color: yellow !important;
+        }
+        
+        body.high-contrast .blocklyText {
+            fill: yellow !important;
+        }
+        
+        body.high-contrast .blocklyPath {
+            stroke-width: 2px !important;
+        }
+    </style>
 </head>
 <body>
+
+<!-- Add this right after the opening <body> tag -->
+<script>
+  // Force high contrast mode for testing
+  localStorage.setItem('highContrast', 'true');
+  localStorage.setItem('darkMode', 'false');
+  document.body.classList.add('high-contrast');
+  document.body.classList.remove('dark-mode');
+  console.log('High contrast mode enabled for testing');
+</script>
 
 <!-- NAV BAR START -->
 <header class="navigation" role="banner">
@@ -428,72 +513,97 @@
         setTimeout(() => ariaAnnouncement.remove(), 1000);
     });
 
-    document.getElementById('saveProgressBtn').addEventListener('click', async function() {
-        try {
-            const workspace = Blockly.getMainWorkspace();
-            
-            // Get the workspace state
-            const workspaceState = Blockly.serialization.workspaces.save(workspace);
-            console.log('Saving workspace state:', workspaceState); // Debug log
+    const saveProgressBtn = document.getElementById('saveProgressBtn');
+    if (saveProgressBtn) {
+        saveProgressBtn.addEventListener('click', async function() {
+            try {
+                const workspace = Blockly.getMainWorkspace();
+                
+                // Get the workspace state
+                const workspaceState = Blockly.serialization.workspaces.save(workspace);
+                console.log('Saving workspace state:', workspaceState); // Debug log
 
-            let currentStep = 0;
-            if (window.tutorialGuide) {
-                currentStep = window.tutorialGuide.getCurrentStep() + 1;
-                console.log('Saving progress - Current step:', currentStep);
+                let currentStep = 0;
+                if (window.tutorialGuide) {
+                    currentStep = window.tutorialGuide.getCurrentStep() + 1;
+                    console.log('Saving progress - Current step:', currentStep);
+                }
+
+                const tutorialId = '<%= locals.tutorialId %>' || '';
+                console.log('Tutorial ID:', tutorialId); // Debug log
+
+                const payload = {
+                    tutorialId: tutorialId,
+                    currentStep: currentStep,
+                    workspaceState: workspaceState
+                };
+
+                console.log('Sending payload:', {
+                    ...payload,
+                    workspaceState: 'Workspace data included'
+                });
+
+                const response = await fetch('/api/project-tutorials/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}, response: ${errorText}`);
+                }
+
+                const responseData = await response.json();
+                console.log('Server response:', responseData);
+
+                if (responseData.status === 'success') {
+                    window.location.href = '/api/project-tutorials';
+                } else {
+                    alert('Failed to save progress: ' + (responseData.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error saving progress:', error);
+                alert('Error saving progress: ' + error.message);
             }
-
-            const tutorialId = '<%= locals.tutorialId %>' || '';
-            console.log('Tutorial ID:', tutorialId); // Debug log
-
-            const payload = {
-                tutorialId: tutorialId,
-                currentStep: currentStep,
-                workspaceState: workspaceState
-            };
-
-            console.log('Sending payload:', {
-                ...payload,
-                workspaceState: 'Workspace data included'
-            });
-
-            const response = await fetch('/api/project-tutorials/save', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload)
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`HTTP error! status: ${response.status}, response: ${errorText}`);
-            }
-
-            const responseData = await response.json();
-            console.log('Server response:', responseData);
-
-            if (responseData.status === 'success') {
-                window.location.href = '/api/project-tutorials';
-            } else {
-                alert('Failed to save progress: ' + (responseData.error || 'Unknown error'));
-            }
-        } catch (error) {
-            console.error('Error saving progress:', error);
-            alert('Error saving progress: ' + error.message);
-        }
-    });
+        });
+    }
 
     // Add this function to load the saved state when the page loads
     async function loadSavedState() {
         try {
             console.log('Starting to load saved state...');
             
-            const response = await fetch('/api/project-tutorials/fetch');
-            if (!response.ok) {
-                throw new Error('Failed to fetch saved state');
+            // Check if user is logged in
+            const isLoggedIn = '<%= locals.user %>' !== '';
+            if (!isLoggedIn) {
+                console.log('User not logged in, skipping state load');
+                return;
             }
             
-            const data = await response.json();
+            const response = await fetch('/api/project-tutorials/fetch');
+            
+            // Check content type to see if we got HTML instead of JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('text/html')) {
+                console.log('Received HTML response instead of JSON, likely not authenticated');
+                return;
+            }
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch saved state: ' + response.status);
+            }
+            
+            let data;
+            try {
+                data = await response.json();
+            } catch (e) {
+                console.error('Error parsing JSON:', e);
+                return;
+            }
+            
             console.log('Full data received from server:', data);
             
             const tutorialId = '<%= locals.tutorialId %>' || '';
@@ -594,6 +704,70 @@
             selection.addRange(range);
         }
     });
+
+    // Apply theme to Blockly workspace
+    function applyThemeToBlockly() {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        const isHighContrast = localStorage.getItem('highContrast') === 'true';
+        
+        if (isHighContrast) {
+            // Create a high contrast theme
+            const highContrastTheme = Blockly.Theme.defineTheme('highContrast', {
+                'base': Blockly.Themes.Classic,
+                'componentStyles': {
+                    'workspaceBackgroundColour': '#000',
+                    'toolboxBackgroundColour': '#000',
+                    'toolboxForegroundColour': '#fff',
+                    'flyoutBackgroundColour': '#000',
+                    'flyoutForegroundColour': '#fff',
+                    'flyoutOpacity': 1,
+                    'scrollbarColour': '#fff',
+                    'insertionMarkerColour': '#fff',
+                    'insertionMarkerOpacity': 0.3,
+                    'scrollbarOpacity': 0.4,
+                    'cursorColour': '#fff'
+                }
+            });
+            
+            // Apply the theme
+            const ws = Blockly.getMainWorkspace();
+            if (ws) {
+                ws.setTheme(highContrastTheme);
+                console.log('Applied high contrast theme to Blockly');
+            }
+        } else if (isDarkMode) {
+            // Create a dark theme
+            const darkTheme = Blockly.Theme.defineTheme('dark', {
+                'base': Blockly.Themes.Classic,
+                'componentStyles': {
+                    'workspaceBackgroundColour': '#1e1e1e',
+                    'toolboxBackgroundColour': '#333',
+                    'toolboxForegroundColour': '#fff',
+                    'flyoutBackgroundColour': '#252526',
+                    'flyoutForegroundColour': '#ccc',
+                    'flyoutOpacity': 1,
+                    'scrollbarColour': '#797979',
+                    'insertionMarkerColour': '#fff',
+                    'insertionMarkerOpacity': 0.3,
+                    'scrollbarOpacity': 0.4,
+                    'cursorColour': '#fff'
+                }
+            });
+            
+            // Apply the theme
+            const ws = Blockly.getMainWorkspace();
+            if (ws) {
+                ws.setTheme(darkTheme);
+                console.log('Applied dark theme to Blockly');
+            }
+        }
+    }
+    
+    // Call this after workspace is initialized
+    document.addEventListener('DOMContentLoaded', function() {
+        // Wait a bit for Blockly to fully initialize
+        setTimeout(applyThemeToBlockly, 500);
+    });
 </script>
 <!-- BODY END -->
 
@@ -632,6 +806,92 @@
 
     // Trigger code generation whenever the workspace changes
     workspace.addChangeListener(generateCode);
+</script>
+
+<!-- Add this right before the closing </body> tag -->
+<script>
+    // Load settings from localStorage with high contrast as default
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set high contrast as default if no setting exists
+        if (localStorage.getItem('highContrast') === null) {
+            localStorage.setItem('highContrast', 'true');
+        }
+        
+        // Apply high contrast mode if enabled (should be default now)
+        if (localStorage.getItem('highContrast') === 'true') {
+            document.body.classList.add('high-contrast');
+            console.log('High contrast mode applied');
+        }
+        
+        // Apply dark mode if enabled and high contrast is not
+        if (localStorage.getItem('darkMode') === 'true' && 
+            localStorage.getItem('highContrast') !== 'true') {
+            document.body.classList.add('dark-mode');
+        }
+        
+        // Apply font size if set
+        const fontSize = localStorage.getItem('fontSize');
+        if (fontSize) {
+            document.body.style.fontSize = fontSize + 'px';
+        }
+        
+        // Make sure the theme is applied to Blockly
+        setTimeout(function() {
+            if (typeof applyThemeToBlockly === 'function') {
+                applyThemeToBlockly();
+            }
+        }, 1000);
+    });
+
+    // Debug high contrast mode
+    console.log('High contrast setting:', localStorage.getItem('highContrast'));
+    console.log('Body has high-contrast class:', document.body.classList.contains('high-contrast'));
+    
+    // Check if Blockly is loaded
+    console.log('Blockly loaded:', typeof Blockly !== 'undefined');
+    
+    // Check if workspace exists
+    console.log('Workspace exists:', !!Blockly.getMainWorkspace());
+    
+    // Force high contrast theme application after 2 seconds
+    setTimeout(function() {
+        try {
+            const ws = Blockly.getMainWorkspace();
+            if (ws) {
+                // Create a high contrast theme with more extreme settings
+                const extremeContrastTheme = Blockly.Theme.defineTheme('extremeContrast', {
+                    'base': Blockly.Themes.Classic,
+                    'blockStyles': {
+                        'logic_blocks': { 'colourPrimary': '#FFFF00' },
+                        'loop_blocks': { 'colourPrimary': '#00FF00' },
+                        'math_blocks': { 'colourPrimary': '#FF00FF' },
+                        'text_blocks': { 'colourPrimary': '#00FFFF' },
+                        'list_blocks': { 'colourPrimary': '#FF0000' },
+                        'variable_blocks': { 'colourPrimary': '#FFFFFF' },
+                        'procedure_blocks': { 'colourPrimary': '#00FF00' }
+                    },
+                    'componentStyles': {
+                        'workspaceBackgroundColour': '#000000',
+                        'toolboxBackgroundColour': '#000000',
+                        'toolboxForegroundColour': '#FFFFFF',
+                        'flyoutBackgroundColour': '#000000',
+                        'flyoutForegroundColour': '#FFFFFF',
+                        'flyoutOpacity': 1,
+                        'scrollbarColour': '#FFFFFF',
+                        'insertionMarkerColour': '#FFFFFF',
+                        'insertionMarkerOpacity': 0.8,
+                        'scrollbarOpacity': 0.8,
+                        'cursorColour': '#FFFFFF'
+                    }
+                });
+                
+                ws.setTheme(extremeContrastTheme);
+                console.log('Forced extreme high contrast theme');
+            }
+        } catch (e) {
+            console.error('Error forcing high contrast theme:', e);
+        }
+    }, 2000);
 </script>
   </body>
   </html>  
