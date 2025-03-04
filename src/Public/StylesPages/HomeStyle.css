@@ -10,7 +10,7 @@ body {
 
 /* NAVIGATION BAR STYLES */
 header {
-  background-color: #21b0fe;
+  background-color: #1e90ff;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -26,13 +26,10 @@ nav {
 /* Logo styles */
 .navbar_logo {
   list-style: none;
-  margin: 0;
+  margin: 5px;
   padding: 0;
 }
 .Settings_logo {
-  list-style: none;
-  margin: -5px;
-  padding: 0;
   width: 50px; /* Adjust width as needed */
   height: auto; /* Keeps aspect ratio */
 }
@@ -58,14 +55,14 @@ nav {
 /* Common style for all navigation buttons */
 .Nav_Buttons{
   color: black;
-  width: 108px;
+  width: 110px;
   padding: 15px;
   text-align: center;
   margin: 0 20px;
   border-radius: 15px;
   font-weight: bold;
-  border: 2.5px solid #fd3636;
-  background-color: #FFC6C6;
+  border: 2.5px solid #e63946;
+  background-color: #f8d7da;
   cursor: pointer;
   transition: background-color 0.3s;
   text-decoration: none;
@@ -73,7 +70,7 @@ nav {
 
 /* Hover effect for all buttons */
 .Nav_Buttons:hover {
-  background-color: #fd3636;
+  background-color: #e63946;
   color: white;
 }
 /* !! BODY OF PAGE START!! */
@@ -103,7 +100,7 @@ nav {
   background-image: url('../ImagesUsed/homepage_backgroud.jpg'); /* Adds background image */
   background-size: cover; /* Ensures the image covers the container */
   background-position: center; /* Centers the background image */
-  opacity: 0.25; /* Makes the image semi-transparent */
+  opacity: 0.3; /* Makes the image semi-transparent */
   z-index: -1; /* Places the image behind other elements */
 }
 
@@ -134,8 +131,8 @@ h2{
   margin: 0px 0px;
   border-radius: 15px;
   font-weight: bold;
-  border: 2.5px solid #fd3636;
-  background-color: #FFC6C6; 
+  border: 2.5px solid #e63946;
+  background-color: #f8d7da; 
   cursor: pointer;
 }
 
@@ -172,7 +169,7 @@ h2{
 
 /* Styles the footer container */
 footer {
-  background-color: #FED702;
+  background-color: #f1c40f;
   padding: 20px;
   width: 100%;
   height: 20%;
