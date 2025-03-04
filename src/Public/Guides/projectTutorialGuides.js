@@ -81,12 +81,14 @@ class TutorialGuide {
         // Create tutorial overlay
         const overlay = document.createElement('div');
         overlay.id = 'tutorial-overlay';
-        overlay.setAttribute('role', 'region');
-        overlay.setAttribute('aria-label', 'Tutorial Instructions');
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-labelledby', 'step-title');
+        overlay.setAttribute('aria-describedby', 'step-instruction');
         overlay.innerHTML = `
-            <div class="tutorial-content" role="dialog" aria-live="polite">
-                <h2 id="step-title" aria-label="Tutorial Step Title"></h2>
-                <p id="step-instruction" role="status" aria-label="Step Instructions"></p>
+            <div class="tutorial-content">
+                <h2 id="step-title" tabindex="0" aria-live="polite"></h2>
+                <p id="step-instruction" tabindex="0" role="status" aria-live="polite"></p>
                 <button id="next-step" 
                     aria-label="Next Tutorial Step"
                     role="button">Next</button>
@@ -99,12 +101,29 @@ class TutorialGuide {
         
         // Show first step
         this.showCurrentStep();
+        
+        // Force focus to the overlay to help screen readers
+        setTimeout(() => {
+            document.getElementById('step-title').focus();
+        }, 100);
     }
 
     showCurrentStep() {
         const step = this.steps[this.currentStep];
         document.getElementById('step-title').textContent = step.title;
         document.getElementById('step-instruction').textContent = step.instruction;
+        
+        // Announce changes to screen readers
+        const announcement = document.createElement('div');
+        announcement.setAttribute('role', 'status');
+        announcement.setAttribute('aria-live', 'assertive');
+        announcement.textContent = `Step ${this.currentStep + 1}: ${step.title}`;
+        document.body.appendChild(announcement);
+        
+        // Remove the announcement after it's been read
+        setTimeout(() => {
+            document.body.removeChild(announcement);
+        }, 3000);
     }
 
     validateAndProgress() {

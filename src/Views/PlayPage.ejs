@@ -509,13 +509,11 @@
 
         <!-- Right panel: Code output -->
         <div id="code-pane" 
-             role="complementary" 
-             aria-label="Generated Python code">
-            <h2 id="codeOutputLabel">Generated Python Code</h2>
-            <pre id="output" 
-                 aria-labelledby="codeOutputLabel" 
-                 aria-live="polite"
-                 tabindex="0"></pre>
+             role="region" 
+             aria-label="Generated Python code"
+             aria-live="polite">
+            <h2 id="code-title">Generated Python Code:</h2>
+            <pre id="output" aria-labelledby="code-title"></pre>
         </div>
     </div>
 </div>
@@ -565,14 +563,9 @@
     function generateCode() {
         try {
             const code = Blockly.Python.workspaceToCode(workspace);
-            const outputElement = document.getElementById('output');
-            outputElement.textContent = code || "No code generated.";
-            outputElement.setAttribute('aria-label', 'Generated Python code: ' + (code || "No code generated."));
+            document.getElementById('output').textContent = code || "No code generated.";
         } catch (e) {
-            const outputElement = document.getElementById('output');
-            const errorMessage = "Error generating code: " + e.message;
-            outputElement.textContent = errorMessage;
-            outputElement.setAttribute('aria-label', errorMessage);
+            document.getElementById('output').textContent = "Error generating code: " + e.message;
         }
     }
 
@@ -973,6 +966,44 @@
                 ariaAnnouncement.textContent = announcement;
                 document.body.appendChild(ariaAnnouncement);
                 setTimeout(() => ariaAnnouncement.remove(), 1000);
+            });
+        }
+    });
+
+    // Add this script to update ARIA states
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get toggle elements
+        const toggleSwitch = document.getElementById('toggleSwitch');
+        const highContrastToggle = document.getElementById('highContrastToggle');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        
+        // Set initial ARIA states based on localStorage
+        if (localStorage.getItem('highContrast') === 'true') {
+            highContrastToggle.checked = true;
+            highContrastToggle.setAttribute('aria-checked', 'true');
+        }
+        
+        if (localStorage.getItem('darkMode') === 'true') {
+            darkModeToggle.checked = true;
+            darkModeToggle.setAttribute('aria-checked', 'true');
+        }
+        
+        // Update ARIA states when toggles change
+        if (toggleSwitch) {
+            toggleSwitch.addEventListener('change', function() {
+                this.setAttribute('aria-checked', this.checked);
+            });
+        }
+        
+        if (highContrastToggle) {
+            highContrastToggle.addEventListener('change', function() {
+                this.setAttribute('aria-checked', this.checked);
+            });
+        }
+        
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('change', function() {
+                this.setAttribute('aria-checked', this.checked);
             });
         }
     });
