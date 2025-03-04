@@ -13,9 +13,6 @@
     <script src="../../node_modules/blockly/blockly_compressed.js"></script>
     <script src="../../node_modules/blockly/blocks_compressed.js"></script>
     <script src="../../node_modules/blockly/python_compressed.js"></script>
-
-    <!-- Include custom blocks and generators -->
-    <!--<script src="/src/blocks/custom_blocks.js"></script>-->
     
     <!-- Load Blockly messages -->
     <script src="../../node_modules/blockly/msg/en.js"></script>
@@ -23,7 +20,7 @@
     <!-- Toolbox and main JavaScript file -->
     <script type="module" src="../toolbox.js"></script>
     <script type="module" src="../index.js"></script>
-
+    
     <!-- Add this in the head section -->
     <script src="/Public/Guides/projectTutorialGuides.js"></script>
 </head>
@@ -621,5 +618,20 @@
     <!-- holds links and some navigation, may add more later -->
   </footer>
   <!-- FOOTER END -->
+   
+
+    // Function to generate Python code from blocks and display it
+    function generateCode() {
+        try {
+            const code = Blockly.Python.workspaceToCode(workspace);
+            document.getElementById('output').textContent = code || "No code generated.";
+        } catch (e) {
+            document.getElementById('output').textContent = "Error generating code: " + e.message;
+        }
+    }
+
+    // Trigger code generation whenever the workspace changes
+    workspace.addChangeListener(generateCode);
+</script>
   </body>
   </html>  
