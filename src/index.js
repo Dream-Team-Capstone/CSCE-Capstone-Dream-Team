@@ -9,9 +9,9 @@ import {blocks} from '../node_modules/blockly/blocks';
 import {pythonGenerator} from '../node_modules/blockly/python';  // Use Blockly's Python generator
 import {save, load} from './serialization';
 import {toolbox} from './toolbox';
-import HighContrastTheme from '../node_modules/@blockly/theme-highcontrast'; // Import high contrast theme
+import Theme from '../node_modules/@blockly/theme-highcontrast'; // Import high contrast theme
 import DarkTheme from '../node_modules/@blockly/theme-dark';
-import '../src/Public/StylesPages/index.css';
+import './Public/StylesPages/index.css';
 
 let ws; // Making ws a global variable
 
@@ -79,7 +79,7 @@ document.getElementById('toggleSwitch').addEventListener('change', function() {
 document.getElementById('highContrastToggle').addEventListener('change', function () {
   if (this.checked) {
     document.getElementById('darkModeToggle').checked = false;
-    setTheme(HighContrastTheme);
+    setTheme(Theme);
   } else {
     setTheme(Blockly.Themes.Classic);
   }
@@ -96,7 +96,7 @@ document.getElementById('darkModeToggle').addEventListener('change', function ()
 
 // Function to change Blockly themes dynamically
 function setTheme(theme) {
-  document.body.classList.toggle('high-contrast', theme === HighContrastTheme);
+  document.body.classList.toggle('high-contrast', theme === Theme);
   document.body.classList.toggle('dark-mode', theme === DarkTheme);
 
   ws.dispose();
