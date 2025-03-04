@@ -11,7 +11,9 @@ import {save, load} from './serialization';
 import {toolbox} from './toolbox';
 import HighContrastTheme from '../node_modules/@blockly/theme-highcontrast'; // Import high contrast theme
 import DarkTheme from '../node_modules/@blockly/theme-dark';
-import './Public/StylesPages/index.css';
+import '../src/Public/StylesPages/index.css';
+
+let ws; // Making ws a global variable
 
 // Define the start function here
 function start() {
@@ -19,7 +21,7 @@ function start() {
   const codeDiv = document.getElementById('generatedCode').firstChild;
   const outputDiv = document.getElementById('output');
   const blocklyDiv = document.getElementById('blocklyDiv');
-  const ws = Blockly.inject(blocklyDiv, {
+  ws = Blockly.inject(blocklyDiv, {
     toolbox,
     theme: Blockly.Themes.Classic, //setting the page to Classic
   });
