@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>PyBlock</title>
         <link href='/StylesPages/LoginStyles.css' rel='stylesheet'>
+        <link href='/StylesPages/errorStyles.css' rel='stylesheet'>
         <style>
           /* Additional styles for settings */
           .dark-mode { background-color: #121212b3; color: #f0f0f0; }
@@ -86,10 +87,14 @@
 
             <!-- Displays errors on the website. -->
             <% if (errors && errors.length > 0) { %>
-              <div class="error_box">
-                <% errors.forEach(error => { %>
-                  <p class="error_popup_text"><%= error.msg %></p>
-                <% }); %>
+                <div class="error_box" 
+                     role="alert" 
+                     aria-live="assertive"
+                     aria-atomic="true"
+                     id="loginErrorContainer">
+                    <% errors.forEach(function(error) { %>
+                        <p class="error_popup_text"><%= error.msg || error %></p>
+                    <% }); %>
                 </div>
             <% } %>
             
