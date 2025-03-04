@@ -5,24 +5,15 @@
     <title>pyBlock</title>
     <link type="text/css" href="/StylesPages/PlayStyle.css" rel="stylesheet">
 
-    <!-- Include Blockly core library and blocks -->
-    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
-    <script src="https://unpkg.com/blockly/python.min.js"></script>
+    <!-- Use CDN for Blockly resources -->
+    <script src="https://unpkg.com/blockly/blockly_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/blocks_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/msg/en.js"></script>
     
-    <!-- Local copies of Blockly libraries as fallback -->
-    <script src="../../node_modules/blockly/blockly_compressed.js"></script>
-    <script src="../../node_modules/blockly/blocks_compressed.js"></script>
-    <script src="../../node_modules/blockly/python_compressed.js"></script>
-
-    <!-- Include custom blocks and generators -->
-    <!--<script src="/src/blocks/custom_blocks.js"></script>-->
-    
-    <!-- Load Blockly messages -->
-    <script src="../../node_modules/blockly/msg/en.js"></script>
-    
-    <!-- Toolbox and main JavaScript file -->
-    <script type="module" src="../toolbox.js"></script>
-    <script type="module" src="../index.js"></script>
+    <!-- Remove these problematic module imports -->
+    <!-- <script type="module" src="../toolbox.js"></script> -->
+    <!-- <script type="module" src="../index.js"></script> -->
 
     <!-- Add this in the head section -->
     <script src="/Public/Guides/projectTutorialGuides.js"></script>
@@ -401,102 +392,131 @@
     });
 
     // Switch for going from Block to Python and vice versa
-    document.getElementById('toggleSwitch').addEventListener('change', function() {
-        const outputPane = document.getElementById('code-pane');
-        const blocklyDiv = document.getElementById('blocklyDiv');
-        const viewModeLabel = document.getElementById('viewModeLabel');
-        const isCodeView = this.checked;
-        
-        if (isCodeView) {
-            outputPane.style.display = 'block';
-            blocklyDiv.style.display = 'none';
-            viewModeLabel.textContent = 'Code View';
-        } else {
-            outputPane.style.display = 'none';
-            blocklyDiv.style.display = 'block';
-            viewModeLabel.textContent = 'Block View';
-        }
-        
-        // Update ARIA states
-        this.setAttribute('aria-checked', isCodeView);
-        this.setAttribute('aria-label', `Switch to ${isCodeView ? 'block' : 'code'} view`);
-        
-        // Announce view change
-        const announcement = `Switched to ${isCodeView ? 'code' : 'block'} view`;
-        const ariaAnnouncement = document.createElement('div');
-        ariaAnnouncement.setAttribute('role', 'status');
-        ariaAnnouncement.setAttribute('aria-live', 'polite');
-        ariaAnnouncement.textContent = announcement;
-        document.body.appendChild(ariaAnnouncement);
-        setTimeout(() => ariaAnnouncement.remove(), 1000);
-    });
-
-    document.getElementById('saveProgressBtn').addEventListener('click', async function() {
-        try {
-            const workspace = Blockly.getMainWorkspace();
+    const toggleSwitch = document.getElementById('toggleSwitch');
+    if (toggleSwitch) {
+        toggleSwitch.addEventListener('change', function() {
+            const outputPane = document.getElementById('code-pane');
+            const blocklyDiv = document.getElementById('blocklyDiv');
+            const viewModeLabel = document.getElementById('viewModeLabel');
+            const isCodeView = this.checked;
             
-            // Get the workspace state
-            const workspaceState = Blockly.serialization.workspaces.save(workspace);
-            console.log('Saving workspace state:', workspaceState); // Debug log
-
-            let currentStep = 0;
-            if (window.tutorialGuide) {
-                currentStep = window.tutorialGuide.getCurrentStep() + 1;
-                console.log('Saving progress - Current step:', currentStep);
-            }
-
-            const tutorialId = '<%= locals.tutorialId %>' || '';
-            console.log('Tutorial ID:', tutorialId); // Debug log
-
-            const payload = {
-                tutorialId: tutorialId,
-                currentStep: currentStep,
-                workspaceState: workspaceState
-            };
-
-            console.log('Sending payload:', {
-                ...payload,
-                workspaceState: 'Workspace data included'
-            });
-
-            const response = await fetch('/api/project-tutorials/save', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload)
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`HTTP error! status: ${response.status}, response: ${errorText}`);
-            }
-
-            const responseData = await response.json();
-            console.log('Server response:', responseData);
-
-            if (responseData.status === 'success') {
-                window.location.href = '/api/project-tutorials';
+            if (isCodeView) {
+                outputPane.style.display = 'block';
+                blocklyDiv.style.display = 'none';
+                viewModeLabel.textContent = 'Code View';
             } else {
-                alert('Failed to save progress: ' + (responseData.error || 'Unknown error'));
+                outputPane.style.display = 'none';
+                blocklyDiv.style.display = 'block';
+                viewModeLabel.textContent = 'Block View';
             }
-        } catch (error) {
-            console.error('Error saving progress:', error);
-            alert('Error saving progress: ' + error.message);
-        }
-    });
+            
+            // Update ARIA states
+            this.setAttribute('aria-checked', isCodeView);
+            this.setAttribute('aria-label', `Switch to ${isCodeView ? 'block' : 'code'} view`);
+            
+            // Announce view change
+            const announcement = `Switched to ${isCodeView ? 'code' : 'block'} view`;
+            const ariaAnnouncement = document.createElement('div');
+            ariaAnnouncement.setAttribute('role', 'status');
+            ariaAnnouncement.setAttribute('aria-live', 'polite');
+            ariaAnnouncement.textContent = announcement;
+            document.body.appendChild(ariaAnnouncement);
+            setTimeout(() => ariaAnnouncement.remove(), 1000);
+        });
+    }
 
-    // Add this function to load the saved state when the page loads
+    // Add event listener to saveProgressBtn only if it exists
+    const saveProgressBtn = document.getElementById('saveProgressBtn');
+    if (saveProgressBtn) {
+        saveProgressBtn.addEventListener('click', async function() {
+            try {
+                const workspace = Blockly.getMainWorkspace();
+                
+                // Get the workspace state
+                const workspaceState = Blockly.serialization.workspaces.save(workspace);
+                console.log('Saving workspace state:', workspaceState); // Debug log
+
+                let currentStep = 0;
+                if (window.tutorialGuide) {
+                    currentStep = window.tutorialGuide.getCurrentStep() + 1;
+                    console.log('Saving progress - Current step:', currentStep);
+                }
+
+                const tutorialId = '<%= locals.tutorialId %>' || '';
+                console.log('Tutorial ID:', tutorialId); // Debug log
+
+                const payload = {
+                    tutorialId: tutorialId,
+                    currentStep: currentStep,
+                    workspaceState: workspaceState
+                };
+
+                console.log('Sending payload:', {
+                    ...payload,
+                    workspaceState: 'Workspace data included'
+                });
+
+                const response = await fetch('/api/project-tutorials/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}, response: ${errorText}`);
+                }
+
+                const responseData = await response.json();
+                console.log('Server response:', responseData);
+
+                if (responseData.status === 'success') {
+                    window.location.href = '/api/project-tutorials';
+                } else {
+                    alert('Failed to save progress: ' + (responseData.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error saving progress:', error);
+                alert('Error saving progress: ' + error.message);
+            }
+        });
+    }
+
+    // Update the loadSavedState function to handle HTML responses
     async function loadSavedState() {
         try {
             console.log('Starting to load saved state...');
             
-            const response = await fetch('/api/project-tutorials/fetch');
-            if (!response.ok) {
-                throw new Error('Failed to fetch saved state');
+            // Check if user is logged in
+            const isLoggedIn = '<%= locals.user %>' !== '';
+            if (!isLoggedIn) {
+                console.log('User not logged in, skipping state load');
+                return;
             }
             
-            const data = await response.json();
+            const response = await fetch('/api/project-tutorials/fetch');
+            
+            // Check content type to see if we got HTML instead of JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('text/html')) {
+                console.log('Received HTML response instead of JSON, likely not authenticated');
+                return;
+            }
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch saved state: ' + response.status);
+            }
+            
+            let data;
+            try {
+                data = await response.json();
+            } catch (e) {
+                console.error('Error parsing JSON:', e);
+                return;
+            }
+            
             console.log('Full data received from server:', data);
             
             const tutorialId = '<%= locals.tutorialId %>' || '';
