@@ -75,6 +75,21 @@ document.getElementById('toggleSwitch').addEventListener('change', function() {
   }
 });
 
+// Function to change Blockly themes dynamically
+function setTheme(theme) {
+  document.body.classList.toggle('high-contrast', theme === Theme);
+  document.body.classList.toggle('dark-mode', theme === DarkTheme);
+
+  ws.dispose();
+  ws = Blockly.inject('blocklyDiv', {
+    toolbox,
+    theme: theme,
+  });
+
+  load(ws);
+  runCode();
+}
+
 // Theme toggling for Dark Mode and High Contrast Mode
 document.getElementById('highContrastToggle').addEventListener('change', function () {
   if (this.checked) {
@@ -93,21 +108,6 @@ document.getElementById('darkModeToggle').addEventListener('change', function ()
     setTheme(Blockly.Themes.Classic);
   }
 });
-
-// Function to change Blockly themes dynamically
-function setTheme(theme) {
-  document.body.classList.toggle('high-contrast', theme === Theme);
-  document.body.classList.toggle('dark-mode', theme === DarkTheme);
-
-  ws.dispose();
-  ws = Blockly.inject('blocklyDiv', {
-    toolbox,
-    theme: theme,
-  });
-
-  load(ws);
-  runCode();
-}
 
 // Wait for DOM to be ready and then call start()
 document.addEventListener('DOMContentLoaded', () => {
