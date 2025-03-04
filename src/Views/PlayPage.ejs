@@ -97,6 +97,86 @@
         body.high-contrast .blocklyPath {
             stroke-width: 2px !important;
         }
+        
+        /* Improve category header layout */
+        .category-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 15px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        /* Style for toggle labels */
+        .toggle-label {
+            font-weight: bold;
+            margin-right: 5px;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        
+        /* Improve toggle switch container */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+        
+        /* Style the toggle switches */
+        .toggleSwitch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin: 0 10px;
+        }
+        
+        /* Hide default checkbox */
+        .toggleSwitch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        /* Style the slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+        
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
     </style>
 </head>
 <body>
@@ -183,37 +263,42 @@
 <div class="PlayPage_Body" role="main" aria-label="Play page main content">
     <!-- Header above everything -->
     <div class="category-header" role="region" aria-label="Workspace Controls">
-        <span class="category-title" id="viewModeLabel" aria-live="polite">Block View</span>
-        <label class="toggleSwitch" aria-labelledby="viewModeLabel">
-            <input type="checkbox" 
-                   id="toggleSwitch" 
-                   aria-label="Toggle between block and code view"
-                   role="switch"
-                   aria-checked="false" />
-            <span class="slider" aria-hidden="true"></span>
-        </label>
+        <div class="toggle-container">
+            <span class="toggle-label" id="viewModeLabel" aria-live="polite">Block View</span>
+            <label class="toggleSwitch" aria-labelledby="viewModeLabel">
+                <input type="checkbox" 
+                       id="toggleSwitch" 
+                       aria-label="Toggle between block and code view"
+                       role="switch"
+                       aria-checked="false" />
+                <span class="slider" aria-hidden="true"></span>
+            </label>
+        </div>
 
-        <!-- High Contrast Toggle -->
-        <span class="category-header" id="contrastModeLabel" aria-live="polite">High Contrast Mode</span>
-        <label class="toggleSwitch" aria-labelledby="contrastModeLabel">
-            <input type="checkbox" 
-                   id="highContrastToggle" 
-                   aria-label="Toggle high contrast mode"
-                   role="switch"
-                   aria-checked="false" />
-            <span class="slider" aria-hidden="true"></span>
-        </label>
+        <div class="toggle-container">
+            <span class="toggle-label" id="contrastModeLabel" aria-live="polite">High Contrast</span>
+            <label class="toggleSwitch" aria-labelledby="contrastModeLabel">
+                <input type="checkbox" 
+                       id="highContrastToggle" 
+                       aria-label="Toggle high contrast mode"
+                       role="switch"
+                       aria-checked="false" />
+                <span class="slider" aria-hidden="true"></span>
+            </label>
+        </div>
 
-        <!-- Dark Mode Toggle -->
-        <span class="category-header" id="darkModeLabel" aria-live="polite">Dark Mode</span>
-        <label class="toggleSwitch" aria-labelledby="darkModeLabel">
-            <input type="checkbox" 
-                   id="darkModeToggle" 
-                   aria-label="Toggle dark mode"
-                   role="switch"
-                   aria-checked="false" />
-            <span class="slider" aria-hidden="true"></span>
-        </label>
+        <div class="toggle-container">
+            <span class="toggle-label" id="darkModeLabel" aria-live="polite">Dark Mode</span>
+            <label class="toggleSwitch" aria-labelledby="darkModeLabel">
+                <input type="checkbox" 
+                       id="darkModeToggle" 
+                       aria-label="Toggle dark mode"
+                       role="switch"
+                       aria-checked="false" />
+                <span class="slider" aria-hidden="true"></span>
+            </label>
+        </div>
+        
         <% if (locals.tutorialMode) { %>
             <button id="saveProgressBtn" 
                     class="save-progress-btn" 
@@ -789,6 +874,104 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Wait a bit for Blockly to fully initialize
         setTimeout(applyThemeToBlockly, 500);
+    });
+
+    // Add event listeners for the high contrast and dark mode toggles
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get toggle elements
+        const highContrastToggle = document.getElementById('highContrastToggle');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        
+        // Set initial state based on localStorage
+        if (localStorage.getItem('highContrast') === 'true') {
+            highContrastToggle.checked = true;
+            highContrastToggle.setAttribute('aria-checked', 'true');
+        }
+        
+        if (localStorage.getItem('darkMode') === 'true') {
+            darkModeToggle.checked = true;
+            darkModeToggle.setAttribute('aria-checked', 'true');
+        }
+        
+        // Add event listener for high contrast toggle
+        if (highContrastToggle) {
+            highContrastToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    // Enable high contrast mode
+                    document.body.classList.add('high-contrast');
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('highContrast', 'true');
+                    localStorage.setItem('darkMode', 'false');
+                    
+                    // Update dark mode toggle
+                    if (darkModeToggle) {
+                        darkModeToggle.checked = false;
+                        darkModeToggle.setAttribute('aria-checked', 'false');
+                    }
+                    
+                    // Apply high contrast theme to Blockly
+                    if (typeof applyThemeToBlockly === 'function') {
+                        applyThemeToBlockly();
+                    }
+                } else {
+                    // Disable high contrast mode
+                    document.body.classList.remove('high-contrast');
+                    localStorage.setItem('highContrast', 'false');
+                }
+                
+                // Update ARIA state
+                this.setAttribute('aria-checked', this.checked);
+                
+                // Announce change
+                const announcement = `High contrast mode ${this.checked ? 'enabled' : 'disabled'}`;
+                const ariaAnnouncement = document.createElement('div');
+                ariaAnnouncement.setAttribute('role', 'status');
+                ariaAnnouncement.setAttribute('aria-live', 'polite');
+                ariaAnnouncement.textContent = announcement;
+                document.body.appendChild(ariaAnnouncement);
+                setTimeout(() => ariaAnnouncement.remove(), 1000);
+            });
+        }
+        
+        // Add event listener for dark mode toggle
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    // Enable dark mode
+                    document.body.classList.add('dark-mode');
+                    document.body.classList.remove('high-contrast');
+                    localStorage.setItem('darkMode', 'true');
+                    localStorage.setItem('highContrast', 'false');
+                    
+                    // Update high contrast toggle
+                    if (highContrastToggle) {
+                        highContrastToggle.checked = false;
+                        highContrastToggle.setAttribute('aria-checked', 'false');
+                    }
+                    
+                    // Apply dark theme to Blockly
+                    if (typeof applyThemeToBlockly === 'function') {
+                        applyThemeToBlockly();
+                    }
+                } else {
+                    // Disable dark mode
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('darkMode', 'false');
+                }
+                
+                // Update ARIA state
+                this.setAttribute('aria-checked', this.checked);
+                
+                // Announce change
+                const announcement = `Dark mode ${this.checked ? 'enabled' : 'disabled'}`;
+                const ariaAnnouncement = document.createElement('div');
+                ariaAnnouncement.setAttribute('role', 'status');
+                ariaAnnouncement.setAttribute('aria-live', 'polite');
+                ariaAnnouncement.textContent = announcement;
+                document.body.appendChild(ariaAnnouncement);
+                setTimeout(() => ariaAnnouncement.remove(), 1000);
+            });
+        }
     });
 </script>
 <!-- BODY END -->
