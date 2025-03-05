@@ -172,7 +172,11 @@
       if (isHighContrast) document.body.classList.add('high-contrast');
 
       // Apply font size
-      document.body.style.fontSize = savedFontSize + 'px';
+      document.body.style.fontSize = `${savedFontSize}px`;
+
+      document.querySelectorAll('input, button, label, .Register_Button, .Form_Group, p, a, .navbar_buttons_list button').forEach(el => {
+          el.style.fontSize = `${savedFontSize}px`;
+        });
   };
 </script>
 </body>
