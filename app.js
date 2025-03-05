@@ -24,6 +24,7 @@ const PORT = process.env.PORT || 4000;
 const ejs = require('ejs'); // ejs is a templating engine for rendering HTML
 const cookieParser = require('cookie-parser'); 
 const { clearUserProgress } = require('./src/Controllers/clearProgressController');
+const settingsController = require('./src/Controllers/settingsController');
 
 
 // setting up views and template engine
@@ -51,6 +52,32 @@ sessionConfig(app);
 
 // Connect to the database
 connectToDatabase();
+
+// Middleware to load user settings if available
+app.use(async (req, res, next) => {
+  if (req.session && req.session.userId) {
+    try {
+      const result = await pool.query(
+        'SELECT dark_mode, high_contrast, font_size FROM user_settings WHERE user_id = $1',
+        [req.session.userId]
+      );
+      
+      if (result.rows.length > 0) {
+        res.locals.userSettings = {
+          darkMode: result.rows[0].dark_mode,
+          highContrast: result.rows[0].high_contrast,
+          fontSize: result.rows[0].font_size
+        };
+      }
+    } catch (error) {
+      console.error('Error loading user settings:', error);
+    }
+  }
+  
+  // Make user data available to all views
+  res.locals.user = req.session.userId ? req.session.first_name : null;
+  next();
+});
 
 // Define the home route
 app.get("/api/home", (req, res) => {
@@ -85,7 +112,10 @@ app.get("/api/play", (req, res) => {
 
 // Define the settings route
 app.get("/api/settings", (req, res) => {
-  res.render("SettingsPage"); // Renders SettingsPage.ejs
+  res.render("SettingsPage", {
+    user: req.session.userId ? req.session.first_name : null,
+    userSettings: res.locals.userSettings
+  });
 });
 
 // Define the dashboard route
@@ -188,6 +218,12 @@ app.post('/api/project-tutorials/clear-progress', async (req, res) => {
         });
     }
 });
+
+// Define the settings route
+app.post("/api/save-settings", ensureAuthenticated, settingsController.saveSettings);
+
+// Add route to fetch user settings
+app.get("/api/settings/fetch", ensureAuthenticated, settingsController.fetchSettings);
 
 // API routes
 app.use("/api", registerRoutes);

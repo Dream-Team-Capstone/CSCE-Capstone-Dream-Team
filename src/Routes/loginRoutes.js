@@ -7,6 +7,7 @@ const { body, validationResult } = require('express-validator'); // validate and
 const router = express.Router(); // used to define routes
 const userModel = require('../Models/loginModel'); // model handling user data interactions with the database
 const bodyParser = require('body-parser'); // Middleware to parse incoming request bodies
+const { pool } = require('../Config/dbh'); // PostgreSQL client for database interactions
 
 // Define login route
 router.post('/login', 
@@ -54,11 +55,26 @@ router.post('/login',
                 req.session.first_name = user.first_name;
                 req.session.last_name = user.last_name;
                 req.session.password = user.password;
-                res.redirect('/api/dashboard');
+                
+                // Load user settings
+                const settingsResult = await pool.query(
+                    'SELECT dark_mode, high_contrast, font_size FROM user_settings WHERE user_id = $1',
+                    [user.id]
+                );
+                
+                if (settingsResult.rows.length > 0) {
+                    // Store settings in session
+                    req.session.userSettings = {
+                        darkMode: settingsResult.rows[0].dark_mode,
+                        highContrast: settingsResult.rows[0].high_contrast,
+                        fontSize: settingsResult.rows[0].font_size
+                    };
+                }
             } else {
                 errors.push({ msg: 'Invalid email or password.' });
                 return res.status(400).render('LoginPage', { errors });
             }
+            res.redirect('/api/dashboard');
 
         } catch (error) {
             console.error("Error logging in:", error);

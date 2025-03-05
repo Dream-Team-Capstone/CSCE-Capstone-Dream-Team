@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PyBlocks Settings</title>
     <link href='/StylesPages/SettingsStyle.css' rel='stylesheet'>
-    <style>
-        /* Additional styles for toggles */
-        .dark-mode { background-color: #121212b3; color: #f0f0f0; }
-        .high-contrast { color: black; background-color: rgba(242, 0, 255, 0.428); }
-    </style>
+    <link rel="stylesheet" href="/StylesPages/accessibilityStyles.css">
+    <!-- Include the settings handler script -->
+    <script src="/Scripts/settingsHandler.js" defer></script>
+    <script src="/Scripts/ErrorHandler.js" defer></script>
 </head>    
 <body>
 <!-- NAV BAR START -->
@@ -86,7 +85,10 @@
       <main class="page_body">
         <h1 class="page_title">Settings</h1>
         
-        <form class="Settings_Form" aria-labelledby="settingsForm">
+        <!-- Hidden input to indicate if user is logged in -->
+        <input type="hidden" name="isLoggedIn" value="<%= locals.user ? 'true' : 'false' %>">
+        
+        <form class="Settings_Form" aria-labelledby="settingsForm" id="settingsForm">
           <fieldset>
             <legend id="settingsForm" class="visually-hidden">Settings Form</legend>
 
@@ -106,19 +108,6 @@
             <div class="Form_Group">
                 <label for="fontSizeSetting">Font Size:</label>
                 <input type="range" id="fontSizeSetting" min="12" max="24" step="2" aria-label="Adjust font size">
-            </div>
-
-            <!-- Block Size Setting -->
-            <div class="Form_Group">
-                <label for="blockSizeSetting">Block Size:</label>
-                <input type="range" id="blockSizeSetting" min="1" max="3" step="1" aria-label="Adjust block size">
-            </div>
-
-
-            <!-- High Contrast check, Not currently operational -->
-            <div class="Form_Group">
-              <label for="HighContrastBlock">High Contrast Block:</label>
-              <input type="checkbox" id="HighContrastBlock" aria-label="Check box for high contrast blocks on the Play Page">
             </div>
             
             <div class="Form_Group Button_Center">
@@ -143,66 +132,51 @@
 <!-- FOOTER END -->
 
 <script>
-
-window.onload = function () {
-      const savedFontSize = localStorage.getItem('fontSize') || 14; // Default font size
-      document.getElementById('fontSizeSetting').value = savedFontSize;
-      applyFontSize(savedFontSize);
-
-    // Load and apply dark mode
-    const isDarkMode = localStorage.getItem('darkMode') === 'true';
-    document.getElementById('darkModeToggle').checked = isDarkMode;
-    if (isDarkMode) document.body.classList.add('dark-mode');
-
-    // Load and apply high contrast mode
-    const isHighContrast = localStorage.getItem('highContrast') === 'true';
-    document.getElementById('colorContrastToggle').checked = isHighContrast;
-    if (isHighContrast) document.body.classList.add('high-contrast');
-  };
-
-// Dark Mode Toggle
-document.getElementById('darkModeToggle').addEventListener('change', function () {
-    const isChecked = this.checked;
-    document.body.classList.toggle('dark-mode', isChecked);
-    localStorage.setItem('darkMode', isChecked);
-});
-
-// Color Contrast Toggle
-document.getElementById('colorContrastToggle').addEventListener('change', function () {
-    const isChecked = this.checked;
-    document.body.classList.toggle('high-contrast', isChecked);
-    localStorage.setItem('highContrast', isChecked);
-});
-
-// Font Size Setting
-document.getElementById('fontSizeSetting').addEventListener('input', function () {
-    const fontSize = this.value;
-    applyFontSize(fontSize);
-    localStorage.setItem('fontSize', fontSize);
-});
-
-  // Function to apply font size globally
-  function applyFontSize(fontSize) {
-      const textElements = document.querySelectorAll('h2, h3, h4, h5, h6, p, span, li, a, button'); 
-      textElements.forEach(element => {
-          element.style.fontSize = fontSize + 'px';
-      });
-  }
-
-  // Event Listener for Font Size Setting
-  document.getElementById('fontSizeSelector').addEventListener('change', function() {
-    const selectedFontSize = this.value;
-    localStorage.setItem('fontSize', selectedFontSize);
-});
-
-  // Load saved font size on page load
-
-
-  // Block Size Setting
-  document.getElementById('blockSizeSetting').addEventListener('input', function() {
-      document.documentElement.style.setProperty('--block-size', this.value);
+  // Add form submission handler
+  document.getElementById('settingsForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const settings = {
+      darkMode: document.getElementById('darkModeToggle').checked,
+      highContrast: document.getElementById('colorContrastToggle').checked,
+      fontSize: document.getElementById('fontSizeSetting').value
+    };
+    
+    // Save to sessionStorage
+    sessionStorage.setItem('darkMode', settings.darkMode);
+    sessionStorage.setItem('highContrast', settings.highContrast);
+    sessionStorage.setItem('fontSize', settings.fontSize);
+    
+    // Apply settings immediately
+    applySettings(settings);
+    
+    // Check if user is logged in
+    const isLoggedIn = document.querySelector('input[name="isLoggedIn"]').value === 'true';
+    
+    if (isLoggedIn) {
+      try {
+        // If user is logged in, save to their account
+        const response = await fetch('/api/save-settings', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(settings)
+        });
+        
+        if (response.ok) {
+          showAccessibleErrorMessage('Settings saved successfully!', 'settingsErrorContainer');
+        } else {
+          showAccessibleErrorMessage('Failed to save settings to your account.', 'settingsErrorContainer');
+        }
+      } catch (error) {
+        console.error('Error saving settings:', error);
+        showAccessibleErrorMessage('An error occurred while saving settings.', 'settingsErrorContainer');
+      }
+    } else {
+      showAccessibleErrorMessage('Settings saved to this browser only. Log in to save settings to your account.', 'settingsErrorContainer');
+    }
   });
-
 </script>
 </body>
 </html>

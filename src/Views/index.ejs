@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>pyBlock</title>
     <link href='/StylesPages/HomeStyle.css' rel='stylesheet'>
-    <style>
-      /* Additional styles for settings */
-      .dark-mode { background-color: #121212b3; color: #f0f0f0; }
-      .dark-mode .subheading { color: #f0f0f0; }
-      .high-contrast { color: black; background-color: rgba(242, 0, 255, 0.428); }
-  </style>
+    <script src="/Scripts/settingsHandler.js" defer></script>
+    <!-- Hidden input to indicate if user is logged in -->
+   <input type="hidden" name="isLoggedIn" value="<%= locals.user ? 'true' : 'false' %>">
+   <link rel="stylesheet" href="/StylesPages/accessibilityStyles.css">
 </head>    
 <body>
 <!-- NAV BAR START -->
@@ -122,27 +120,5 @@
       <!-- holds links and some navigation, may add more later -->
     </footer>
 <!-- FOOTER END -->
-<script>
-  // Load saved settings on page load
-  window.onload = function () {
-      const isDarkMode = localStorage.getItem('darkMode') === 'true';
-      const isHighContrast = localStorage.getItem('highContrast') === 'true';
-      const savedFontSize = localStorage.getItem('fontSize') || '14'; // Default to 14px
-
-      // Apply dark mode
-      if (isDarkMode) document.body.classList.add('dark-mode');
-
-      // Apply high contrast mode
-      if (isHighContrast) document.body.classList.add('high-contrast');
-
-      // Apply font size to all relevant elements except the title
-      document.body.style.fontSize = `${savedFontSize}px`;
-
-      document.querySelectorAll('input, button, label, .Register_Button, .Form_Group, p, a, .navbar_buttons_list button').forEach(el => {
-          el.style.fontSize = `${savedFontSize}px`;
-      });
-
-  };
-</script>
 </body>
 </html>

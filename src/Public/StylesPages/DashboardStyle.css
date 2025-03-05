@@ -116,8 +116,15 @@ section.dashboard {
 }
 
 h1{
+  margin-bottom: 0px; 
+  margin-top: -30px; /* This is the value we want to maintain in all modes */
   font-family: 'Trebuchet MS', Helvetica, sans-serif;
   font-size: xx-large;
+  padding: 10px 0; /* Add padding instead of margin */
+  line-height: 1.2; /* Ensure proper line height */
+  position: relative; /* Establish positioning context */
+  display: block; /* Ensure proper display */
+  overflow: visible; /* Prevent text from being cut off */
 }
 p{
   font-family: 'Trebuchet MS', Helvetica, sans-serif;
@@ -265,11 +272,6 @@ p{
     margin: 10px;
     font-family: 'Trebuchet MS', Helvetica, sans-serif;
 
-  }
-  
-  h1 {
-    margin-bottom: 0px; 
-    margin-top: -30px;
   }
   
   .subheading{

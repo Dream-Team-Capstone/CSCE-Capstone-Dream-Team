@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PyBlocks Projects</title>
     <link href='/StylesPages/ProjetsStyle.css' rel='stylesheet'>
-    <style>
-        /* Additional styles for settings */
-        .dark-mode { background-color: #121212b3; color: #f0f0f0; }
-        .high-contrast { color: black; background-color: rgba(242, 0, 255, 0.428); }
-    </style>
+    <script src="/Scripts/settingsHandler.js" defer></script>
+    <!-- Hidden input to indicate if user is logged in -->
+    <input type="hidden" name="isLoggedIn" value="<%= locals.user ? 'true' : 'false' %>">
+    <link rel="stylesheet" href="/StylesPages/accessibilityStyles.css">
 </head>    
 <body>
 <!-- NAV BAR START -->
@@ -89,12 +88,12 @@
                 <div class="progress_container" role="region" aria-label="Project Progress">
                     <div class="progress_bar" 
                          role="progressbar"
-                         aria-valuenow="<%= Math.round(user_progress.project1_progress) %>"
+                         aria-valuenow="<%= locals.user_progress ? Math.round(user_progress.project1_progress) : 0 %>"
                          aria-valuemin="0"
                          aria-valuemax="100"
-                         aria-label="Project completion: <%= Math.round(user_progress.project1_progress) %>%"
-                         style="width: <%= user_progress.project1_progress %>%">
-                        <%= Math.round(user_progress.project1_progress) %>%
+                         aria-label="Project completion: <%= locals.user_progress ? Math.round(user_progress.project1_progress) : 0 %>%"
+                         style="width: <%= locals.user_progress ? user_progress.project1_progress + '%' : '0%' %>">
+                        <%= locals.user_progress ? Math.round(user_progress.project1_progress) : 0 %>%
                     </div>
                 </div>
                 <a class="clearProgress" role="region" aria-label="Clear progress" href="#">
@@ -143,12 +142,12 @@
                 <div class="progress_container" role="region" aria-label="Project Progress">
                     <div class="progress_bar" 
                          role="progressbar"
-                         aria-valuenow="<%= user_progress.project2_progress %>"
+                         aria-valuenow="<%= locals.user_progress ? Math.round(user_progress.project2_progress) : 0 %>"
                          aria-valuemin="0"
                          aria-valuemax="100"
-                         aria-label="Project completion: <%= user_progress.project2_progress %>%"
-                         style="width: <%= user_progress.project2_progress %>%">
-                        <%= user_progress.project2_progress %>%
+                         aria-label="Project completion: <%= locals.user_progress ? Math.round(user_progress.project2_progress) : 0 %>%"
+                         style="width: <%= locals.user_progress ? user_progress.project2_progress + '%' : '0%' %>">
+                        <%= locals.user_progress ? Math.round(user_progress.project2_progress) : 0 %>%
                     </div>
                 </div>
                 <a class="clearProgress" role="region" aria-label="Clear progress" href="#">
@@ -188,12 +187,12 @@
                 <div class="progress_container" role="region" aria-label="Project Progress">
                     <div class="progress_bar" 
                          role="progressbar"
-                         aria-valuenow="<%= user_progress.project3_progress %>"
+                         aria-valuenow="<%= locals.user_progress ? Math.round(user_progress.project3_progress) : 0 %>"
                          aria-valuemin="0"
                          aria-valuemax="100"
-                         aria-label="Project completion: <%= user_progress.project3_progress %>%"
-                         style="width: <%= user_progress.project3_progress %>%">
-                        <%= user_progress.project3_progress %>%
+                         aria-label="Project completion: <%= locals.user_progress ? Math.round(user_progress.project3_progress) : 0 %>%"
+                         style="width: <%= locals.user_progress ? user_progress.project3_progress + '%' : '0%' %>">
+                        <%= locals.user_progress ? Math.round(user_progress.project3_progress) : 0 %>%
                     </div>
                 </div>
                 <a class="clearProgress" role="region" aria-label="Clear progress" href="#">
@@ -239,26 +238,6 @@
 </footer>
 
 <script>
-    // Load saved settings on page load
-    window.onload = function() {
-        const isDarkMode = localStorage.getItem('darkMode') === 'true';
-        const isHighContrast = localStorage.getItem('highContrast') === 'true';
-        const savedFontSize = localStorage.getItem('fontSize') || 14;
-
-      // Apply dark mode
-      if (isDarkMode) document.body.classList.add('dark-mode');
-
-      // Apply high contrast mode
-      if (isHighContrast) document.body.classList.add('high-contrast');
-
-      // Apply font size to all relevant elements except the title
-      document.body.style.fontSize = `${savedFontSize}px`;
-
-      document.querySelectorAll('input, button, label, .Register_Button, .Form_Group, p, a, .navbar_buttons_list button').forEach(el => {
-          el.style.fontSize = `${savedFontSize}px`;
-      });
-    };
-
     document.querySelectorAll('.clearProgressButton').forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
