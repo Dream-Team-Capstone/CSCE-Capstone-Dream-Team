@@ -192,12 +192,10 @@ document.getElementById('fontSizeSetting').addEventListener('input', function ()
   }
 
   // Event Listener for Font Size Setting
-  document.getElementById('fontSizeSetting').addEventListener('input', function () {
-      const fontSize = this.value;
-      applyFontSize(fontSize);
-      // Save the font size to localStorage
-      localStorage.setItem('fontSize', fontSize);
-  });
+  document.getElementById('fontSizeSelector').addEventListener('change', function() {
+    const selectedFontSize = this.value;
+    localStorage.setItem('fontSize', selectedFontSize);
+});
 
   // Load saved font size on page load
 
