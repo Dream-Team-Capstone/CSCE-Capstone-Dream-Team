@@ -43,6 +43,27 @@
             window.location.href = '/api/home'; // Redirect after 2 seconds
         }, 3000); // 3 secs
     </script>
-
+<script>
+    // Load saved settings on page load
+    window.onload = function () {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        const isHighContrast = localStorage.getItem('highContrast') === 'true';
+        const savedFontSize = localStorage.getItem('fontSize') || '14'; // Default to 14px
+  
+        // Apply dark mode
+        if (isDarkMode) document.body.classList.add('dark-mode');
+  
+        // Apply high contrast mode
+        if (isHighContrast) document.body.classList.add('high-contrast');
+  
+        // Apply font size to all relevant elements except the title
+        document.body.style.fontSize = `${savedFontSize}px`;
+  
+        document.querySelectorAll('input, button, label, .Register_Button, .Form_Group, p, a, .navbar_buttons_list button').forEach(el => {
+            el.style.fontSize = `${savedFontSize}px`;
+        });
+  
+    };
+  </script>
 </body>
 </html>

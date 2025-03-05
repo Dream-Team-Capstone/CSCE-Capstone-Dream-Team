@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>pyBlock</title>
     <link type="text/css" href="/StylesPages/PlayStyle.css" rel="stylesheet">
+    <style>
+        .dark.mode { color: #f0f0f0; background-color: #121212b3; }
+        .high-contrast { color: black; background-color: rgba(242, 0, 255, 0.428); }
+    </style>
 
     <!-- Use CDN for Blockly resources -->
     <script src="https://unpkg.com/blockly/blockly_compressed.js"></script>
@@ -637,5 +641,28 @@
     <!-- holds links and some navigation, may add more later -->
   </footer>
   <!-- FOOTER END -->
+
+<script>
+    // Load saved settings on page load
+    window.onload = function () {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        const isHighContrast = localStorage.getItem('highContrast') === 'true';
+        const savedFontSize = localStorage.getItem('fontSize') || '14'; // Default to 14px
+  
+        // Apply dark mode
+        if (isDarkMode) document.body.classList.add('dark-mode');
+  
+        // Apply high contrast mode
+        if (isHighContrast) document.body.classList.add('high-contrast');
+  
+        // Apply font size to all relevant elements except the title
+        document.body.style.fontSize = `${savedFontSize}px`;
+  
+        document.querySelectorAll('input, button, label, .Register_Button, .Form_Group, p, a, .navbar_buttons_list button').forEach(el => {
+            el.style.fontSize = `${savedFontSize}px`;
+        });
+  
+    };
+  </script>
   </body>
   </html>  
