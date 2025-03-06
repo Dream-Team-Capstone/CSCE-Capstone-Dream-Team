@@ -53,6 +53,7 @@ body.dark-mode p {
 }
 
 /* Common button styles */
+body.dark-mode #next-step,
 body.dark-mode .Nav_Buttons,
 body.dark-mode .project-button,
 body.dark-mode .clearProgressButton,
@@ -67,6 +68,7 @@ body.dark-mode .Register_Button {
     border: 1px solid #666 !important;
 }
 
+body.dark-mode #next-step:hover,
 body.dark-mode .Nav_Buttons:hover,
 body.dark-mode .project-button:hover,
 body.dark-mode .clearProgressButton:hover,
@@ -78,6 +80,7 @@ body.dark-mode .Save_Button:hover,
 body.dark-mode .Register_Button:hover {
     background-color: #fff !important;
     color: #000 !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Modal styles */
@@ -150,6 +153,7 @@ body.dark-mode .form input::placeholder {
 /* ----------------------------------------
    Register Page
    ---------------------------------------- */
+body.dark-mode #tutorial-overlay,
 body.dark-mode .Register_Form {
     background-color: #121212 !important;
 }
@@ -245,7 +249,6 @@ body.dark-mode .project-image {
     color: #f0f0f0 !important;
     overflow: hidden;
     background-color: #2a2a2a !important;
-    border: 1px solid #444 !important;
     overflow: hidden !important;
 }
 
@@ -270,6 +273,45 @@ body.dark-mode .Projects-container:nth-child(3) .Projects-list {
 /* Progress bars */
 body.dark-mode .progress_container {
     background-color: #444 !important;
+}
+
+/*
+----------------------------------------
+Play Page
+----------------------------------------
+*/
+body.dark-mode .category-header {
+    background-color: #444 !important;
+}
+
+body.dark-mode .category-title {
+    color: #000 !important;
+}
+
+body.dark-mode .save-progress-btn {
+    background-color: #a7e5a8 !important;
+    color: black !important;
+}
+
+body.dark-mode .save-progress-btn:hover {
+    background-color: #fff !important;
+    color: black !important;
+}
+
+body.dark-mode .slider {
+    background-color: #ccc !important;
+}
+
+body.dark-mode .slider:before {
+    background-color: #fff !important;
+}
+
+body.dark-mode input:checked + .slider {
+    background-color: #4285f4 !important;
+}
+
+body.dark-mode input:checked + .slider:before {
+    background-color: #fff !important;
 }
 
 /* ----------------------------------------
@@ -312,7 +354,7 @@ body.dark-mode .error_box::after {
 /* Base high contrast styles */
 .high-contrast { 
     color: black; 
-    background-color: rgba(242, 0, 255, 0.428); 
+    background-color: #F652FF; 
 }
 
 body.high-contrast {
@@ -328,7 +370,7 @@ body.high-contrast header,
 body.high-contrast main,
 body.high-contrast footer {
     color: black !important;
-    background-color: rgba(242, 0, 255, 0.428) !important;
+    background-color: #F652FF !important;
 }
 
 /* Base elements */
@@ -336,7 +378,12 @@ body.high-contrast header,
 body.high-contrast main,
 body.high-contrast footer {
     background-color: #000 !important;
-    color: #fff !important;
+    color: #000 !important;
+    overflow: hidden !important;
+}
+
+body.high-contrast .footer_buttons li a{
+    color: #fbff12 !important;
 }
 
 /* Target the light blue side panels */
@@ -347,28 +394,25 @@ body.high-contrast::after {
     background-color: #000 !important;
 }
 
-/* Common text elements */
-body.high-contrast h2, 
-body.high-contrast p,
-body.high-contrast .navbar_buttons_list button,
-body.high-contrast .project-button,
-body.high-contrast .clearProgressButton,
-body.high-contrast .modal-btn,
-body.high-contrast .Register_Button {
-    color: black;
-}
-
 /* Common button styles */
+body.high-contrast #next-step,
+body.high-contrast .Register_Button,
+body.high-contrast .play_button,
+body.high-contrast .Save_Button,
 body.high-contrast .project-button,
 body.high-contrast .clearProgressButton,
 body.high-contrast .modal-btn,
 body.high-contrast .dashboard-button,
 body.high-contrast .Nav_Buttons {
     background-color: #000 !important;
-    color: #fff !important;
-    border: 2px solid #fff !important;
+    color: #fbff12 !important;
+    border: 2px solid #fbff12 !important;
 }
 
+body.high-contrast #next-step:hover,
+body.high-contrast .Register_Button:hover,
+body.high-contrast .play_button:hover,
+body.high-contrast .Save_Button:hover,
 body.high-contrast .project-button:hover,
 body.high-contrast .clearProgressButton:hover,
 body.high-contrast .modal-btn:hover,
@@ -376,6 +420,20 @@ body.high-contrast .dashboard-button:hover,
 body.high-contrast .Nav_Buttons:hover {
     background-color: #fff !important;
     color: #000 !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+body.high-contrast #tutorial-overlay,
+body.high-contrast .dashboard-item,
+body.high-contrast .SignIn_Form, 
+body.high-contrast .Register_Form,
+body.high-contrast .settings_form,
+body.high-contrast .Settings_Form,
+body.high-contrast .DeleteForm {
+    background-color: #121212 !important;
+    color: #fbff12 !important;
+    border: 2px solid #fff !important;
 }
 
 /* Modal styles */
@@ -385,21 +443,9 @@ body.high-contrast .modal-content {
     border: 2px solid #fff !important;
 }
 
-/* Spinner for loading animations */
-body.high-contrast .spinner,
-body.high-contrast .spinner:after {
-    border-color: #ffffff transparent #ffffff transparent !important;
-}
-
-body.high-contrast .spinner {
-    border-top-color: #ffffff !important;
-    border-bottom-color: #ffffff !important;
-}
-
 /* Project containers and content */
 body.high-contrast .Projects-container,
-body.high-contrast section,
-body.high-contrast div {
+body.high-contrast section {
     background-color: #000 !important;
     color: #fff !important;
     border: 2px solid #fff !important;
@@ -419,61 +465,71 @@ body.high-contrast .page_body::before {
     background-image: url('../ImagesUsed/homepage_backgroud.jpg') !important;
     background-size: cover !important;
     background-position: center !important;
-    opacity: 0.05 !important; /* Very low opacity */
     filter: grayscale(100%) contrast(1.5) !important; /* High contrast filter */
-    z-index: -1 !important;
+    z-index: -2 !important; /* Place behind the overlay */
 }
 
-/* Add a solid background color behind the image for high contrast mode */
+/* Add a separate overlay for the pink color */
+body.high-contrast .page_body::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: #F652FF !important;
+    opacity: 0.7 !important; /* Adjust opacity as needed */
+    z-index: -1 !important; /* Place above background image but below content */
+    pointer-events: none !important; /* Allows clicking through the overlay */
+}
+
+/* Fix the page_body to have a transparent background and proper positioning */
 body.high-contrast .page_body {
-    background-color: rgba(242, 0, 255, 0.428) !important;
+    background-color: transparent !important; /* Remove the background color from the element itself */
     position: relative !important;
+    z-index: 1 !important; /* Ensure content is above the background */
 }
 
 body.high-contrast .page_body h1,
 body.high-contrast .page_body h2 {
-    color: #ffffff !important;
-    text-shadow: 2px 2px 0px #000000 !important;
+    color: black !important;
     position: relative !important;
-    z-index: 1 !important;
+    z-index: 2 !important; /* Higher z-index to ensure text is visible */
+    font-weight: bold !important;
 }
 
 body.high-contrast .page_body .subheading {
-    color: #ffffff !important;
-    text-shadow: 1px 1px 0px #000000 !important;
+    color: #000 !important;
     position: relative !important;
-    z-index: 1 !important;
+    z-index: 2 !important; /* Higher z-index to ensure text is visible */
+    font-weight: bold !important;
 }
 
 /* ----------------------------------------
    Projects Page
    ---------------------------------------- */
+body.high-contrast .Projects-container,
 body.high-contrast .project-description,
-body.high-contrast .project-image,
-body.high-contrast .navbar_buttons_list button,
-body.high-contrast .project-button,
-body.high-contrast .clearProgressButton,
-body.high-contrast .modal-content,
-body.high-contrast .modal-btn,
-body.high-contrast footer,
-body.high-contrast .Register_Button {
-    background-color: rgba(242, 0, 255, 0.428);
-    color: black;
+body.high-contrast .project-image {
+    color: #000 !important;
+    overflow: hidden;
+    background-color: #F652FF  !important;
+    overflow: hidden !important;
 }
 
 /* Fix for Projects-list elements */
 body.high-contrast .Projects-list {
-    background-color: #000 !important;
+    background-color: #F652FF  !important;
     border-color: #fff !important;
     border-width: 2px !important;
     border-style: solid !important;
 }
 
 /* Specifically target the colored project containers */
-body.high-contrast .Projects-container:nth-child(1) .Projects-list,
+body.high-constrast .Projects-container:nth-child(1) .Projects-list,
 body.high-contrast .Projects-container:nth-child(2) .Projects-list,
 body.high-contrast .Projects-container:nth-child(3) .Projects-list {
-    background-color: #000 !important;
+    background-color: #F652FF !important;
     border-color: #fff !important;
     border-width: 2px !important;
     border-style: solid !important;
@@ -481,13 +537,14 @@ body.high-contrast .Projects-container:nth-child(3) .Projects-list {
 
 /* Progress bars */
 body.high-contrast .progress_container {
-    background-color: white !important;
+    background-color: #000 !important;
 }
 
 body.high-contrast .progress_bar {
-    background-color: black !important;
-    color: white !important;
+    background-color: #49FF4C !important;
+    color: #000 !important;
 }
+   
 
 /* ----------------------------------------
    Dashboard Page
@@ -495,21 +552,17 @@ body.high-contrast .progress_bar {
 body.high-contrast .dashboard,
 body.high-contrast main.dashboard,
 body.high-contrast div.dashboard {
-    background-color: #000 !important;
-    color: #fff !important;
-    border-color: #fff !important;
+    background-color: #F652FF!important;
+    color: #000 !important;
 }
 
 body.high-contrast .dash_header {
-    background-color: #000 !important;
-    color: #fff !important;
-    border-bottom: 2px solid #fff !important;
-    overflow: visible !important;
+    color: #000 !important;
+    padding: 20px !important;
+    background-color: #F652FF!important;
 }
 
 body.high-contrast .text_content {
-    background-color: #000 !important;
-    color: #fff !important;
     overflow: visible !important;
     padding: 20px 0 !important;
     margin: 0 !important;
@@ -517,7 +570,7 @@ body.high-contrast .text_content {
 }
 
 body.high-contrast .text_content h1 {
-    color: #fff !important;
+    color: #000 !important;
     margin: 0 !important;
     margin-top: -30px !important;
     padding: 10px 0 !important;
@@ -525,48 +578,45 @@ body.high-contrast .text_content h1 {
     position: relative !important;
     display: block !important;
     overflow: visible !important;
-    background-color: transparent !important;
 }
 
-body.high-contrast .dashboard-item {
-    background-color: #444 !important;
-    color: #fff !important;
-    border: 2px solid #fff !important;
+body.high-contrast .dashboard-container {
+    background-color:  #F652FF !important;
 }
 
-body.high-contrast .item-icon {
-    border: 2px solid #fff !important;
-}
-
-body.high-contrast .tutorial-icon,
-body.high-contrast .project-icon {
-    background-color: #000 !important;
-}
-
-/* Dashboard menu styles for high contrast */
+/* Dashboard menu styles */
 body.high-contrast .Profile_Options div {
-    background-color: #fff !important;
+    background-color: black !important;
 }
 
 body.high-contrast .Profile_Options:hover div {
-    background-color: #fff !important;
+    background-color: #fbff12 !important;
 }
 
 body.high-contrast .off_screen_menu {
     background-color: #000 !important;
-    border: 2px solid #fff !important;
+    border: 1px solid #fff !important;
 }
 
 body.high-contrast .off_screen_menu a,
 body.high-contrast .menu_button {
-    color: #fff !important;
+    color: #fbff12 !important;
 }
-
+   
 body.high-contrast .off_screen_menu a:hover,
 body.high-contrast .menu_button:hover {
     color: #fff !important;
-    text-decoration: underline !important;
 }
+
+body.high-contrast .tutorial-icon{
+    background-color: #fff !important;
+}
+
+body.high-contrast .project-icon{
+    background-color: #ff206e !important;
+}
+
+
 
 /* ----------------------------------------
    Error Pages
@@ -591,4 +641,59 @@ body.high-contrast .error-container .error-message {
 
 body.high-contrast .error-container .error-details {
     color: #ffffff !important;
+}
+
+/* ----------------------------------------
+   Sign In Page
+   ---------------------------------------- */
+
+body.high-contrast .Form_Group label{
+    color: #fbff12 !important;
+}
+
+body.high-contrast form input[type="password"], 
+body.high-contrast form input[type="text"], 
+body.high-contrast form input[type="email"] {
+    background-color: #aeaeae !important;
+}
+
+body.high-contrast .form input::placeholder {
+    color: #000 !important;
+}
+
+/* ----------------------------------------
+   Play Page
+   ---------------------------------------- */
+body.high-contrast .category-header {
+    background-color: #F980FF !important;
+}
+
+body.high-contrast .category-title {
+    color: #000 !important;
+}
+
+body.high-contrast .save-progress-btn {
+    background-color: #49FF4C !important;
+    color: black !important;
+}
+
+body.high-contrast .save-progress-btn:hover {
+    background-color: #fff !important;
+    color: black !important;
+}
+
+body.high-contrast .slider {
+    background-color: #ccc !important;
+}
+
+body.high-contrast .slider:before {
+    background-color: #fff !important;
+}
+
+body.high-contrast input:checked + .slider {
+    background-color: #000480 !important;
+}
+
+body.high-contrast input:checked + .slider:before {
+    background-color: #fff !important;
 }
