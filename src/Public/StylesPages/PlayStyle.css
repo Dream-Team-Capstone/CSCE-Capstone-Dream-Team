@@ -102,6 +102,7 @@ nav {
   display: flex;
   align-items: center;
   gap: 20px;
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
 }
 
 .workspace-container {

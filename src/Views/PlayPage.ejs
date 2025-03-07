@@ -50,143 +50,28 @@
             }
         });
     </script>
-    
-    <!-- Add styles for high contrast and dark mode -->
-    <style>
-        /* Dark mode styles */
-        
-        body.dark-mode .blocklyMainBackground {
-            fill: #2a2a2a !important;
-        }
-        
-        body.dark-mode .blocklyToolboxDiv {
-            background-color: #333 !important;
-            color: #fff !important;
-        }
-        
-        body.dark-mode .blocklyTreeLabel {
-            color: #fff !important;
-        }
-        
-        /* High contrast mode styles */
-        body.high-contrast {
-            background-color: #000;
-            color: #fff;
-        }
-        
-        body.high-contrast .blocklyMainBackground {
-            fill: #000 !important;
-        }
-        
-        body.high-contrast .blocklyToolboxDiv {
-            background-color: #000 !important;
-            color: #fff !important;
-            border-right: 3px solid yellow !important;
-        }
-        
-        body.high-contrast .blocklyTreeLabel {
-            color: yellow !important;
-        }
-        
-        body.high-contrast .blocklyText {
-            fill: yellow !important;
-        }
-        
-        body.high-contrast .blocklyPath {
-            stroke-width: 2px !important;
-        }
-        
-        /* Improve category header layout */
-        .category-header {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 15px;
-            padding: 10px 15px;
-            background-color: #f0f0f0;
-            border-radius: 5px;
-            margin-bottom: 15px;
-        }
-        
-        /* Style for toggle labels */
-        .toggle-label {
-            font-weight: bold;
-            margin-right: 5px;
-            font-size: 14px;
-            white-space: nowrap;
-        }
-        
-        /* Improve toggle switch container */
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            margin-right: 20px;
-        }
-        
-        /* Style the toggle switches */
-        .toggleSwitch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-            margin: 0 10px;
-        }
-        
-        /* Hide default checkbox */
-        .toggleSwitch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        /* Style the slider */
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 24px;
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .slider {
-            background-color: #2196F3;
-        }
-        
-        input:focus + .slider {
-            box-shadow: 0 0 1px #2196F3;
-        }
-        
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-    </style>
 </head>
 <body>
 
 <!-- Add this right after the opening <body> tag -->
 <script>
-  // Force high contrast mode for testing
-  localStorage.setItem('highContrast', 'true');
+  // Set initial theme state
+  localStorage.setItem('highContrast', 'false');
   localStorage.setItem('darkMode', 'false');
-  document.body.classList.add('high-contrast');
+  
+  // Remove any existing classes
+  document.body.classList.remove('high-contrast');
   document.body.classList.remove('dark-mode');
-  console.log('High contrast mode enabled for testing');
+  
+  // Wait for Blockly to initialize before applying theme
+  document.addEventListener('DOMContentLoaded', function() {
+    // Wait a bit for Blockly to fully initialize
+    setTimeout(function() {
+      if (typeof applyThemeToBlockly === 'function') {
+        applyThemeToBlockly();
+      }
+    }, 500);
+  });
 </script>
 
 <!-- NAV BAR START -->
@@ -545,6 +430,9 @@
             scrollbars: true,
             drag: true,
             wheel: true
+        },
+        fontStyle: {
+            Colour: '#000',
         }
     });
 
@@ -826,7 +714,9 @@
                     'insertionMarkerColour': '#fff',
                     'insertionMarkerOpacity': 0.3,
                     'scrollbarOpacity': 0.4,
-                    'cursorColour': '#fff'
+                    'cursorColour': '#fff',
+                    'trashcan': true,
+                    'trashcanColour': '#fff'
                 }
             });
             
@@ -853,13 +743,57 @@
                     'scrollbarOpacity': 0.4,
                     'cursorColour': '#fff'
                 }
+                
             });
             
             // Apply the theme
             const ws = Blockly.getMainWorkspace();
             if (ws) {
                 ws.setTheme(darkTheme);
-                console.log('Applied dark theme to Blockly');
+            }
+            if (ws && ws.getTheme()) {
+            ws.getGrid().setSpacing(20);
+            ws.getGrid().setColour('#000000'); // Darker gray grid for dark mode
+            ws.getGrid().setLength(20);
+        }
+        } else {
+            // Create a default light theme with explicit settings for all properties
+            const defaultTheme = Blockly.Theme.defineTheme('default', {
+                'base': Blockly.Themes.Classic,
+                'componentStyles': {
+                    'workspaceBackgroundColour': '#ffffff',
+                    'toolboxBackgroundColour': '#f0f0f0',
+                    'toolboxForegroundColour': '#000000',
+                    'flyoutBackgroundColour': '#f9f9f9',
+                    'flyoutForegroundColour': '#000000',
+                    'flyoutOpacity': 1,
+                    'scrollbarColour': '#cccccc',
+                    'insertionMarkerColour': '#000000',
+                    'insertionMarkerOpacity': 0.3,
+                    'scrollbarOpacity': 0.4,
+                    'cursorColour': '#000000'
+                },
+                'fontStyle': {
+                    'family': 'Arial, sans-serif',
+                    'weight': 'normal',
+                    'size': 12,
+                    'colour': '#000000'
+                }
+            });
+            
+            // Apply the default theme
+            const ws = Blockly.getMainWorkspace();
+            if (ws) {
+                ws.setTheme(defaultTheme);
+                
+                // Force refresh of text elements
+                ws.getAllBlocks(false).forEach(block => {
+                    if (block.workspace) {
+                        block.initSvg();
+                        block.render();
+                    }
+                });
+                
             }
         }
     }
@@ -911,6 +845,11 @@
                     // Disable high contrast mode
                     document.body.classList.remove('high-contrast');
                     localStorage.setItem('highContrast', 'false');
+                    
+                    // Apply default theme to Blockly
+                    if (typeof applyThemeToBlockly === 'function') {
+                        applyThemeToBlockly();
+                    }
                 }
                 
                 // Update ARIA state
@@ -951,6 +890,11 @@
                     // Disable dark mode
                     document.body.classList.remove('dark-mode');
                     localStorage.setItem('darkMode', 'false');
+                    
+                    // Apply default theme to Blockly
+                    if (typeof applyThemeToBlockly === 'function') {
+                        applyThemeToBlockly();
+                    }
                 }
                 
                 // Update ARIA state
@@ -1005,6 +949,8 @@
             });
         }
     });
+
+    console.log('Current theme:', Blockly.getMainWorkspace().getTheme()); // for debugging
 </script>
 
 <!-- Add this script to synchronize Blockly settings with our centralized settings -->
