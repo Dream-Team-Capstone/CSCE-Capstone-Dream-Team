@@ -82,7 +82,7 @@ class TutorialGuide {
         const overlay = document.createElement('div');
         overlay.id = 'tutorial-overlay';
         overlay.setAttribute('role', 'dialog');
-        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-modal', 'false');
         overlay.setAttribute('aria-labelledby', 'step-title');
         overlay.setAttribute('aria-describedby', 'step-instruction');
         overlay.innerHTML = `
@@ -99,13 +99,20 @@ class TutorialGuide {
         // Set up event listeners
         document.getElementById('next-step').addEventListener('click', () => this.validateAndProgress());
         
+        // Add keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            // Allow Tab key to navigate out of the tutorial
+            if (e.key === 'Tab') {
+                // No need to prevent default - allow focus to move naturally
+                // This ensures VoiceOver can navigate to other elements
+            }
+        });
+        
         // Show first step
         this.showCurrentStep();
         
-        // Force focus to the overlay to help screen readers
-        setTimeout(() => {
-            document.getElementById('step-title').focus();
-        }, 100);
+        // Don't force focus to the overlay - allow natural tab order
+        // This helps VoiceOver users navigate the page normally
     }
 
     showCurrentStep() {
@@ -117,7 +124,7 @@ class TutorialGuide {
         const announcement = document.createElement('div');
         announcement.setAttribute('role', 'status');
         announcement.setAttribute('aria-live', 'assertive');
-        announcement.textContent = `Step ${this.currentStep + 1}: ${step.title}`;
+        announcement.textContent = `Step ${this.currentStep + 1} of ${this.steps.length}: ${step.title}`;
         document.body.appendChild(announcement);
         
         // Remove the announcement after it's been read
@@ -147,8 +154,16 @@ class TutorialGuide {
             <div class="tutorial-content" role="dialog" aria-live="polite">
                 <h2 id="step-title" aria-label="Tutorial Complete">Congratulations!</h2>
                 <p id="step-instruction" role="status" aria-label="Completion Message">You've completed the Hello World tutorial!</p>
+                <button id="return-to-projects" 
+                    aria-label="Return to projects page"
+                    role="button">Return to Projects</button>
             </div>
         `;
+        
+        // Add event listener for the return button
+        document.getElementById('return-to-projects').addEventListener('click', () => {
+            window.location.href = '/api/project-tutorials';
+        });
     }
 
     // Add a getter for the current step
