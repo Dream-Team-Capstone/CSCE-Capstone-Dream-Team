@@ -11,8 +11,12 @@ exports.loginUser = async (req, res) => {
 
     // Validate input
     if (!email || !password) {
-        errors.push("Please fill in all fields!");
-        return res.render('LoginPage', { errors, user: req.session.email });
+        errors.push({ msg: "Please fill in all fields!" });
+        return res.render('LoginPage', { 
+            errors, 
+            user: req.session.email,
+            pageTitle: "Login - pyBlock" // Add page title for screen readers
+        });
     }
 
     try {

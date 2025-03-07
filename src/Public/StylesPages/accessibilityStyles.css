@@ -1,0 +1,813 @@
+/* ============================================
+   DARK MODE STYLES
+   ============================================ */
+
+/* Base dark mode styles */
+.dark-mode { 
+    background-color: #121212; 
+    color: #f0f0f0; 
+}
+
+body.dark-mode {
+    background-color: #1a1a1a !important;
+    color: #f0f0f0 !important;
+}
+
+/* ----------------------------------------
+   Global Elements (Multiple Files)
+   ---------------------------------------- */
+body.dark-mode,
+body.dark-mode header,
+body.dark-mode main,
+body.dark-mode footer {
+    color: #f0f0f0;
+}
+
+/* Base elements */
+body.dark-mode header,
+body.dark-mode footer,
+body.dark-mode .navigation {
+    background-color: #1a1a1a !important;
+    color: #f0f0f0 !important;
+    border-bottom: 1px solid #444 !important;
+}
+
+/* Target the light blue side panels */
+body.dark-mode main::before,
+body.dark-mode main::after,
+body.dark-mode::before,
+body.dark-mode::after {
+    background-color: #1a1a1a !important;
+}
+
+/* Footer links */
+body.dark-mode .footer_buttons li a{
+    background-color: transparent !important;
+    color: #f0f0f0 !important;
+}
+
+/* Common text elements */
+body.dark-mode h2, 
+body.dark-mode p {
+    color: #f0f0f0;
+}
+
+/* Common button styles */
+body.dark-mode #next-step,
+body.dark-mode .Nav_Buttons,
+body.dark-mode .project-button,
+body.dark-mode .clearProgressButton,
+body.dark-mode .modal-btn,
+body.dark-mode .dashboard-button,
+body.dark-mode .Delete_Button,
+body.dark-mode .play_button,
+body.dark-mode .Save_Button,
+body.dark-mode .Register_Button {
+    background-color: #444 !important;
+    color: #f0f0f0 !important;
+    border: 1px solid #666 !important;
+}
+
+body.dark-mode #next-step:hover,
+body.dark-mode .Nav_Buttons:hover,
+body.dark-mode .project-button:hover,
+body.dark-mode .clearProgressButton:hover,
+body.dark-mode .modal-btn:hover,
+body.dark-mode .dashboard-button:hover,
+body.dark-mode .Delete_Button:hover,
+body.dark-mode .play_button:hover,
+body.dark-mode .Save_Button:hover,
+body.dark-mode .Register_Button:hover {
+    background-color: #fff !important;
+    color: #000 !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Modal styles */
+body.dark-mode .modal {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+body.dark-mode .modal-content {
+    background-color: #2a2a2a !important;
+    color: #f0f0f0 !important;
+    border: 1px solid #444 !important;
+}
+
+/* Spinner for loading animations */
+body.dark-mode .spinner,
+body.dark-mode .spinner:after {
+    border-color: #f0f0f0 transparent #f0f0f0 transparent !important;
+}
+
+body.dark-mode .spinner {
+    border-top-color: #f0f0f0 !important;
+    border-bottom-color: #f0f0f0 !important;
+}
+
+/* Catch-all for any remaining elements */
+body.dark-mode * {
+    border-color: #444 !important;
+}
+
+/* ----------------------------------------
+   Home Page (index.ejs)
+   ---------------------------------------- */
+/* Index page text styles with increased contrast */
+body.dark-mode .page_body h1,
+body.dark-mode .page_body h2 {
+    color: #ffffff !important; /* Pure white for maximum contrast */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9) !important; /* Stronger shadow */
+    position: relative !important; /* Ensure it's above the overlay */
+    z-index: 1 !important;
+}
+
+body.dark-mode .page_body .subheading {
+    color: #e0e0e0 !important; /* Very light gray */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8) !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* ----------------------------------------
+   Login/Sign In Page
+   ---------------------------------------- */
+body.dark-mode .SignIn_Form {
+    background-color: #121212 !important;
+}
+
+body.dark-mode .Form_Group label{
+    color: #fff !important;
+}
+
+body.dark-mode form input[type="password"], 
+body.dark-mode form input[type="text"], 
+body.dark-mode form input[type="email"] {
+    background-color: #aeaeae !important;
+}
+
+body.dark-mode .form input::placeholder {
+    color: #000 !important;
+}
+
+/* ----------------------------------------
+   Register Page
+   ---------------------------------------- */
+body.dark-mode #tutorial-overlay,
+body.dark-mode .Register_Form {
+    background-color: #121212 !important;
+}
+
+/* ----------------------------------------
+   Dashboard Page
+   ---------------------------------------- */
+body.dark-mode .dashboard,
+body.dark-mode main.dashboard,
+body.dark-mode div.dashboard {
+    background-color: #1a1a1a !important;
+    color: #f0f0f0 !important;
+}
+
+body.dark-mode .dash_header {
+    color: #f0f0f0 !important;
+    padding: 20px !important;
+    background-color: #444 !important;
+}
+
+body.dark-mode .text_content {
+    overflow: visible !important;
+    padding: 20px 0 !important;
+    margin: 0 !important;
+    min-height: 60px !important;
+    background-color: #444 !important;
+}
+
+body.dark-mode .text_content h1 {
+    color: #f0f0f0 !important;
+    margin: 0 !important;
+    margin-top: -30px !important;
+    padding: 10px 0 !important;
+    line-height: 1.2 !important;
+    position: relative !important;
+    display: block !important;
+    overflow: visible !important;
+    background-color: transparent !important;
+}
+
+body.dark-mode .dashboard-item {
+    background-color: #2a2a2a !important;
+    color: #f0f0f0 !important;
+    border: 1px solid #444 !important;
+}
+
+body.dark-mode .dashboard-container {
+    background-color: #444 !important;
+}
+
+body.dark-mode .item-icon {
+    border: 1px solid #666 !important;
+}
+
+body.dark-mode .tutorial-icon {
+    background-color: #444 !important;
+}
+
+body.dark-mode .project-icon {
+    background-color: #444 !important;
+}
+
+/* Dashboard menu styles */
+body.dark-mode .Profile_Options div {
+    background-color: #f0f0f0 !important;
+}
+
+body.dark-mode .Profile_Options:hover div {
+    background-color: #fd3636 !important;
+}
+
+body.dark-mode .off_screen_menu {
+    background-color: #2a2a2a !important;
+    border: 1px solid #444 !important;
+}
+
+body.dark-mode .off_screen_menu a,
+body.dark-mode .menu_button {
+    color: #f0f0f0 !important;
+}
+
+body.dark-mode .off_screen_menu a:hover,
+body.dark-mode .menu_button:hover {
+    color: #fd3636 !important;
+}
+
+/* ----------------------------------------
+   Projects Page
+   ---------------------------------------- */
+body.dark-mode .Projects-container,
+body.dark-mode .project-description,
+body.dark-mode .project-image {
+    color: #f0f0f0 !important;
+    overflow: hidden;
+    background-color: #2a2a2a !important;
+    overflow: hidden !important;
+}
+
+/* Fix for Projects-list elements */
+body.dark-mode .Projects-list {
+    background-color: #2a2a2a !important;
+    border-color: #444 !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+}
+
+/* Specifically target the colored project containers */
+body.dark-mode .Projects-container:nth-child(1) .Projects-list,
+body.dark-mode .Projects-container:nth-child(2) .Projects-list,
+body.dark-mode .Projects-container:nth-child(3) .Projects-list {
+    background-color: #2a2a2a !important;
+    border-color: #444 !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+}
+
+/* Progress bars */
+body.dark-mode .progress_container {
+    background-color: #444 !important;
+}
+
+/*
+----------------------------------------
+Play Page
+----------------------------------------
+*/
+body.dark-mode .category-header {
+    background-color: #444 !important;
+}
+
+body.dark-mode .category-title {
+    color: #000 !important;
+}
+
+body.dark-mode .save-progress-btn {
+    background-color: #a7e5a8 !important;
+    color: black !important;
+}
+
+body.dark-mode .save-progress-btn:hover {
+    background-color: #fff !important;
+    color: black !important;
+}
+
+body.dark-mode .slider {
+    background-color: #ccc !important;
+}
+
+body.dark-mode .slider:before {
+    background-color: #fff !important;
+}
+
+body.dark-mode input:checked + .slider {
+    background-color: #4285f4 !important;
+}
+
+body.dark-mode input:checked + .slider:before {
+    background-color: #fff !important;
+}
+
+body.dark-mode .blocklyMainBackground {
+    fill: #2a2a2a !important;
+}
+
+body.dark-mode .blocklyToolboxDiv {
+    background-color: #333 !important;
+    color: #fff !important;
+}
+
+body.dark-mode .blocklyTreeLabel {
+    color: #fff !important;
+}
+
+
+/* ----------------------------------------
+   Settings Page
+   ---------------------------------------- */
+body.dark-mode .settings_form,
+body.dark-mode .Settings_Form,
+body.dark-mode .DeleteForm {
+    background-color: #121212 !important;
+}
+
+/* ----------------------------------------
+   Error Styles
+   ---------------------------------------- */
+
+body.dark-mode .error_box {
+    background-color: #121212 !important;
+}
+
+body.dark-mode .error_popup_text {
+    background-color: #121212 !important;
+    color: rgb(255, 130, 130);
+}
+
+body.dark-mode .error_box::after {
+    content: "";
+    position: absolute;
+    left: -20px; 
+    top: 50%; 
+    margin-top: -5px;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid transparent;
+    border-right: 10px solid #121212;
+  }
+/* ============================================
+   HIGH CONTRAST MODE STYLES
+   ============================================ */
+
+/* Base high contrast styles */
+.high-contrast { 
+    color: black; 
+    background-color: #F652FF; 
+}
+
+body.high-contrast {
+    background-color: #000 !important;
+    color: #fff !important;
+}
+
+/* ----------------------------------------
+   Global Elements (Multiple Files)
+   ---------------------------------------- */
+body.high-contrast,
+body.high-contrast header,
+body.high-contrast main,
+body.high-contrast footer {
+    color: black !important;
+    background-color: #F652FF !important;
+}
+
+/* Base elements */
+body.high-contrast header,
+body.high-contrast main,
+body.high-contrast footer {
+    background-color: #000 !important;
+    color: #000 !important;
+    overflow: hidden !important;
+}
+
+body.high-contrast .footer_buttons li a{
+    color: #fbff12 !important;
+}
+
+/* Target the light blue side panels */
+body.high-contrast main::before,
+body.high-contrast main::after,
+body.high-contrast::before,
+body.high-contrast::after {
+    background-color: #000 !important;
+}
+
+/* Common button styles */
+body.high-contrast .Delete_Button,
+body.high-contrast #next-step,
+body.high-contrast .Register_Button,
+body.high-contrast .play_button,
+body.high-contrast .Save_Button,
+body.high-contrast .project-button,
+body.high-contrast .clearProgressButton,
+body.high-contrast .modal-btn,
+body.high-contrast .dashboard-button,
+body.high-contrast .Nav_Buttons {
+    background-color: #000 !important;
+    color: #fbff12 !important;
+    border: 2px solid #fbff12 !important;
+}
+
+body.high-contrast .Delete_Button:hover,
+body.high-contrast #next-step:hover,
+body.high-contrast .Register_Button:hover,
+body.high-contrast .play_button:hover,
+body.high-contrast .Save_Button:hover,
+body.high-contrast .project-button:hover,
+body.high-contrast .clearProgressButton:hover,
+body.high-contrast .modal-btn:hover,
+body.high-contrast .dashboard-button:hover,
+body.high-contrast .Nav_Buttons:hover {
+    background-color: #fff !important;
+    color: #000 !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+body.high-contrast #tutorial-overlay,
+body.high-contrast .dashboard-item,
+body.high-contrast .SignIn_Form, 
+body.high-contrast .Register_Form,
+body.high-contrast .settings_form,
+body.high-contrast .Settings_Form,
+body.high-contrast .DeleteForm {
+    background-color: #121212 !important;
+    color: #fbff12 !important;
+    border: 2px solid #fff !important;
+}
+
+/* Modal styles */
+body.high-contrast .modal-content {
+    background-color: #000 !important;
+    color: #fff !important;
+    border: 2px solid #fff !important;
+}
+
+/* Project containers and content */
+body.high-contrast .Projects-container,
+body.high-contrast section {
+    background-color: #000 !important;
+    color: #fff !important;
+    border: 2px solid #fff !important;
+}
+
+/* ----------------------------------------
+   Home Page (index.ejs)
+   ---------------------------------------- */
+/* High contrast mode background for index page */
+body.high-contrast .page_body::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-image: url('../ImagesUsed/homepage_backgroud.jpg') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    filter: grayscale(100%) contrast(1.5) !important; /* High contrast filter */
+    z-index: -2 !important; /* Place behind the overlay */
+}
+
+/* Add a separate overlay for the pink color */
+body.high-contrast .page_body::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: #F652FF !important;
+    opacity: 0.7 !important; /* Adjust opacity as needed */
+    z-index: -1 !important; /* Place above background image but below content */
+    pointer-events: none !important; /* Allows clicking through the overlay */
+}
+
+/* Fix the page_body to have a transparent background and proper positioning */
+body.high-contrast .page_body {
+    background-color: transparent !important; /* Remove the background color from the element itself */
+    position: relative !important;
+    z-index: 1 !important; /* Ensure content is above the background */
+}
+
+body.high-contrast .page_body h1,
+body.high-contrast .page_body h2 {
+    color: black !important;
+    position: relative !important;
+    z-index: 2 !important; /* Higher z-index to ensure text is visible */
+    font-weight: bold !important;
+}
+
+body.high-contrast .page_body .subheading {
+    color: #000 !important;
+    position: relative !important;
+    z-index: 2 !important; /* Higher z-index to ensure text is visible */
+    font-weight: bold !important;
+}
+
+/* ----------------------------------------
+   Projects Page
+   ---------------------------------------- */
+body.high-contrast .Projects-container,
+body.high-contrast .project-description,
+body.high-contrast .project-image {
+    color: #000 !important;
+    overflow: hidden;
+    background-color: #F652FF  !important;
+    overflow: hidden !important;
+}
+
+/* Fix for Projects-list elements */
+body.high-contrast .Projects-list {
+    background-color: #F652FF  !important;
+    border-color: #fff !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+}
+
+/* Specifically target the colored project containers */
+body.high-constrast .Projects-container:nth-child(1) .Projects-list,
+body.high-contrast .Projects-container:nth-child(2) .Projects-list,
+body.high-contrast .Projects-container:nth-child(3) .Projects-list {
+    background-color: #F652FF !important;
+    border-color: #fff !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+}
+
+/* Progress bars */
+body.high-contrast .progress_container {
+    background-color: #000 !important;
+}
+
+body.high-contrast .progress_bar {
+    background-color: #49FF4C !important;
+    color: #000 !important;
+}
+   
+
+/* ----------------------------------------
+   Dashboard Page
+   ---------------------------------------- */
+body.high-contrast .dashboard,
+body.high-contrast main.dashboard,
+body.high-contrast div.dashboard {
+    background-color: #F652FF!important;
+    color: #000 !important;
+}
+
+body.high-contrast .dash_header {
+    color: #000 !important;
+    padding: 20px !important;
+    background-color: #F652FF!important;
+}
+
+body.high-contrast .text_content {
+    overflow: visible !important;
+    padding: 20px 0 !important;
+    margin: 0 !important;
+    min-height: 60px !important;
+}
+
+body.high-contrast .text_content h1 {
+    color: #000 !important;
+    margin: 0 !important;
+    margin-top: -30px !important;
+    padding: 10px 0 !important;
+    line-height: 1.2 !important;
+    position: relative !important;
+    display: block !important;
+    overflow: visible !important;
+}
+
+body.high-contrast .dashboard-container {
+    background-color:  #F652FF !important;
+}
+
+/* Dashboard menu styles */
+body.high-contrast .Profile_Options div {
+    background-color: black !important;
+}
+
+body.high-contrast .Profile_Options:hover div {
+    background-color: #fbff12 !important;
+}
+
+body.high-contrast .off_screen_menu {
+    background-color: #000 !important;
+    border: 1px solid #fff !important;
+}
+
+body.high-contrast .off_screen_menu a,
+body.high-contrast .menu_button {
+    color: #fbff12 !important;
+}
+   
+body.high-contrast .off_screen_menu a:hover,
+body.high-contrast .menu_button:hover {
+    color: #fff !important;
+}
+
+body.high-contrast .tutorial-icon{
+    background-color: #fff !important;
+}
+
+body.high-contrast .project-icon{
+    background-color: #ff206e !important;
+}
+
+
+
+/* ----------------------------------------
+   Error Pages
+   ---------------------------------------- */
+body.high-contrast .error-container {
+    background-color: #000 !important;
+    color: #fff !important;
+    border: 2px solid #fff !important;
+}
+
+body.high-contrast .error-container .error-code {
+    color: #ffffff !important;
+    text-shadow: 2px 2px 0px #000000 !important;
+    font-weight: bold !important;
+}
+
+body.high-contrast .error-container .error-message {
+    color: #ffffff !important;
+    border-bottom: 2px solid #fff !important;
+    padding-bottom: 10px !important;
+}
+
+body.high-contrast .error-container .error-details {
+    color: #ffffff !important;
+}
+
+/* ----------------------------------------
+   Sign In Page
+   ---------------------------------------- */
+
+body.high-contrast .Form_Group label{
+    color: #fbff12 !important;
+}
+
+body.high-contrast form input[type="password"], 
+body.high-contrast form input[type="text"], 
+body.high-contrast form input[type="email"] {
+    background-color: #aeaeae !important;
+}
+
+body.high-contrast .form input::placeholder {
+    color: #000 !important;
+}
+
+/* ----------------------------------------
+   Play Page
+   ---------------------------------------- */
+body.high-contrast .category-header {
+    background-color: #F980FF !important;
+}
+
+body.high-contrast .category-title {
+    color: #000 !important;
+}
+
+body.high-contrast .save-progress-btn {
+    background-color: #49FF4C !important;
+    color: black !important;
+}
+
+body.high-contrast .save-progress-btn:hover {
+    background-color: #fff !important;
+    color: black !important;
+}
+
+body.high-contrast .slider {
+    background-color: #ccc !important;
+}
+
+body.high-contrast .slider:before {
+    background-color: #fff !important;
+}
+
+body.high-contrast input:checked + .slider {
+    background-color: #000480 !important;
+}
+
+body.high-contrast input:checked + .slider:before {
+    background-color: #fff !important;
+}
+
+body.high-contrast .blocklyToolboxDiv {
+    background-color: #000 !important;
+    color: #fff !important;
+    border-right: 3px solid yellow !important;
+}
+
+body.high-contrast .blocklyTreeLabel {
+    color: yellow !important;
+}
+
+body.high-contrast .blocklyText {
+    fill: yellow !important;
+}
+
+body.high-contrast .blocklyPath {
+    stroke-width: 2px !important;
+}
+
+/* Improve category header layout */
+.category-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 15px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+/* Style for toggle labels */
+.toggle-label {
+    font-weight: bold;
+    margin-right: 5px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* Improve toggle switch container */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+/* Style the toggle switches */
+.toggleSwitch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+    margin: 0 10px;
+}
+
+/* Hide default checkbox */
+.toggleSwitch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Style the slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}

@@ -14,9 +14,13 @@ exports.getUser = async (email) => {
 // Function to delete user by ID
 const deleteUser = async (userId) => {
     try {
-        const query = 'DELETE FROM user_info WHERE id = $1';
-        const params = [userId];
-        return pool.query(query, params);
+        // First delete the user's settings to avoid foreign key constraint violation
+        const deleteSettingsQuery = 'DELETE FROM user_settings WHERE user_id = $1';
+        await pool.query(deleteSettingsQuery, [userId]);
+        
+        // Then delete the user
+        const deleteUserQuery = 'DELETE FROM user_info WHERE id = $1';
+        return pool.query(deleteUserQuery, [userId]);
     } catch (error) {
         console.error('Database deletion error:', error);
         throw error;

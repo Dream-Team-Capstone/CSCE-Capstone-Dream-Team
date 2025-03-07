@@ -4,20 +4,22 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as Blockly from '../node_modules/blockly';
-import {blocks} from '../node_modules/blockly/blocks';
-import {pythonGenerator} from '../node_modules/blockly/python';  // Use Blockly's Python generator
-import {save, load} from './serialization';
-import {toolbox} from './toolbox';
-import './Public/StylesPages/index.css';
+import * as Blockly from "blockly";
+import { blocks } from "../node_modules/blockly/blocks";
+import { pythonGenerator } from "../node_modules/blockly/python"; // Use Blockly's Python generator
+import { save, load } from "./serialization";
+import { toolbox } from "./toolbox";
+import "./Public/StylesPages/index.css";
+import Theme from "@blockly/theme-highcontrast";
+import "./customBlocks.js";
 
 // Define the start function here
 function start() {
   // Initialize the Blockly workspace after the DOM is fully loaded
-  const codeDiv = document.getElementById('generatedCode').firstChild;
-  const outputDiv = document.getElementById('output');
-  const blocklyDiv = document.getElementById('blocklyDiv');
-  const ws = Blockly.inject(blocklyDiv, {toolbox});
+  const codeDiv = document.getElementById("generatedCode").firstChild;
+  const outputDiv = document.getElementById("output");
+  const blocklyDiv = document.getElementById("blocklyDiv");
+  const ws = Blockly.inject(blocklyDiv, { toolbox, theme: Theme });
 
   // Run the initial setup of the page (like loading and running code)
   load(ws);
@@ -42,34 +44,36 @@ function start() {
 }
 
 // Register the blocks and generator with Blockly
-Blockly.common.defineBlocks(blocks);
-Object.assign(pythonGenerator.forBlock, forBlock);  // Use the Python generator
+Blockly.common.defineBlocks(blocks, {
+  custom_print: Blockly.Blocks["custom_print"],
+});
+Object.assign(pythonGenerator.forBlock, forBlock); // Use the Python generator
 Object.assign(pythonGenerator);
 
 // This function resets the code and output divs, shows the
 // generated code from the workspace, and displays the code.
 const runCode = () => {
-  const code = pythonGenerator.workspaceToCode(ws);  // Generate Python code
+  const code = pythonGenerator.workspaceToCode(ws); // Generate Python code
   codeDiv.innerText = code;
   // You would need to handle Python execution separately
 };
 
 // Switch for going from Block to Python and vice versa
-document.getElementById('toggleSwitch').addEventListener('change', function() {
-  const outputPane = document.getElementById('outputPane');
-  const blocklyDiv = document.getElementById('blocklyDiv');
-  
+document.getElementById("toggleSwitch").addEventListener("change", function () {
+  const outputPane = document.getElementById("outputPane");
+  const blocklyDiv = document.getElementById("blocklyDiv");
+
   if (this.checked) {
-    outputPane.style.display = 'none';
-    blocklyDiv.style.display = 'block';
+    outputPane.style.display = "none";
+    blocklyDiv.style.display = "block";
   } else {
-    outputPane.style.display = 'block';
-    blocklyDiv.style.display = 'none';
+    outputPane.style.display = "block";
+    blocklyDiv.style.display = "none";
   }
 });
 
 // Wait for DOM to be ready and then call start()
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   start();
   window.start = start;
 });

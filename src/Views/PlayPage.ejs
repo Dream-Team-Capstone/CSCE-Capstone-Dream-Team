@@ -4,21 +4,75 @@
     <meta charset="UTF-8">
     <title>pyBlock</title>
     <link type="text/css" href="/StylesPages/PlayStyle.css" rel="stylesheet">
-    <style>
-        .dark.mode { color: #f0f0f0; background-color: #121212b3; }
-        .high-contrast { color: black; background-color: rgba(242, 0, 255, 0.428); }
-    </style>
+    <!-- Add settings handler script -->
+    <script src="/Scripts/settingsHandler.js" defer></script>
+    <script src="/Scripts/errorHandling.js" defer></script>
+    <!-- Hidden input to indicate if user is logged in -->
+    <input type="hidden" name="isLoggedIn" value="<%= locals.user ? 'true' : 'false' %>">
+    <link type="text/css" href="/StylesPages/accessibilityStyles.css" rel="stylesheet">
 
-    <!-- Use CDN for Blockly resources -->
-    <script src="https://unpkg.com/blockly/blockly_compressed.js"></script>
-    <script src="https://unpkg.com/blockly/blocks_compressed.js"></script>
+    <!-- Use CDN for Blockly resources instead of module imports -->
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
     <script src="https://unpkg.com/blockly/python_compressed.js"></script>
-    <script src="https://unpkg.com/blockly/msg/en.js"></script>
-
+    
     <!-- Add this in the head section -->
-    <script src="/Public/Guides/projectTutorialGuides.js"></script>
+    <script src="/Guides/projectTutorialGuides.js"></script>
+    
+    <!-- Define custom blocks -->
+    <script>
+        // This will run after Blockly is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Blockly !== 'undefined') {
+                // Define custom print block
+                Blockly.Blocks['custom_print'] = {
+                    init: function() {
+                        this.appendValueInput('TEXT')
+                            .setCheck(null)
+                            .appendField('print');
+                        this.setPreviousStatement(true, null);
+                        this.setNextStatement(true, null);
+                        this.setColour(160);
+                        this.setTooltip('Print the specified text.');
+                        this.setHelpUrl('');
+                    }
+                };
+
+                // Define the Python generator for the custom print block
+                Blockly.Python['custom_print'] = function(block) {
+                    var value_text = Blockly.Python.valueToCode(block, 'TEXT', Blockly.Python.ORDER_ATOMIC);
+                    var code = 'print(' + value_text + ')\n';
+                    return code;
+                };
+                
+                console.log('Custom blocks defined successfully');
+            } else {
+                console.error('Blockly is not loaded!');
+            }
+        });
+    </script>
 </head>
 <body>
+
+<!-- Add this right after the opening <body> tag -->
+<script>
+  // Set initial theme state
+  localStorage.setItem('highContrast', 'false');
+  localStorage.setItem('darkMode', 'false');
+  
+  // Remove any existing classes
+  document.body.classList.remove('high-contrast');
+  document.body.classList.remove('dark-mode');
+  
+  // Wait for Blockly to initialize before applying theme
+  document.addEventListener('DOMContentLoaded', function() {
+    // Wait a bit for Blockly to fully initialize
+    setTimeout(function() {
+      if (typeof applyThemeToBlockly === 'function') {
+        applyThemeToBlockly();
+      }
+    }, 500);
+  });
+</script>
 
 <!-- NAV BAR START -->
 <header class="navigation" role="banner">
@@ -92,7 +146,8 @@
 <div class="PlayPage_Body" role="main" aria-label="Play page main content">
     <!-- Header above everything -->
     <div class="category-header" role="region" aria-label="Workspace Controls">
-        <span class="category-title" id="viewModeLabel" aria-live="polite">Block View</span>
+        <div class="toggle-container">
+            <span class="toggle-label" id="viewModeLabel" aria-live="polite">Block View</span>
         <label class="toggleSwitch" aria-labelledby="viewModeLabel">
             <input type="checkbox" 
                    id="toggleSwitch" 
@@ -101,6 +156,32 @@
                    aria-checked="false" />
             <span class="slider" aria-hidden="true"></span>
         </label>
+        </div>
+
+        <div class="toggle-container">
+            <span class="toggle-label" id="contrastModeLabel" aria-live="polite">High Contrast</span>
+        <label class="toggleSwitch" aria-labelledby="contrastModeLabel">
+            <input type="checkbox" 
+                   id="highContrastToggle" 
+                   aria-label="Toggle high contrast mode"
+                   role="switch"
+                   aria-checked="false" />
+            <span class="slider" aria-hidden="true"></span>
+        </label>
+        </div>
+
+        <div class="toggle-container">
+            <span class="toggle-label" id="darkModeLabel" aria-live="polite">Dark Mode</span>
+        <label class="toggleSwitch" aria-labelledby="darkModeLabel">
+            <input type="checkbox" 
+                   id="darkModeToggle" 
+                   aria-label="Toggle dark mode"
+                   role="switch"
+                   aria-checked="false" />
+            <span class="slider" aria-hidden="true"></span>
+        </label>
+        </div>
+
         <% if (locals.tutorialMode) { %>
             <button id="saveProgressBtn" 
                     class="save-progress-btn" 
@@ -311,13 +392,11 @@
 
         <!-- Right panel: Code output -->
         <div id="code-pane" 
-             role="complementary" 
-             aria-label="Generated Python code">
-            <h2 id="codeOutputLabel">Generated Python Code</h2>
-            <pre id="output" 
-                 aria-labelledby="codeOutputLabel" 
-                 aria-live="polite"
-                 tabindex="0"></pre>
+             role="region" 
+             aria-label="Generated Python code"
+             aria-live="polite">
+            <h2 id="code-title">Generated Python Code:</h2>
+            <pre id="output" aria-labelledby="code-title"></pre>
         </div>
     </div>
 </div>
@@ -351,6 +430,9 @@
             scrollbars: true,
             drag: true,
             wheel: true
+        },
+        fontStyle: {
+            Colour: '#000',
         }
     });
 
@@ -367,14 +449,9 @@
     function generateCode() {
         try {
             const code = Blockly.Python.workspaceToCode(workspace);
-            const outputElement = document.getElementById('output');
-            outputElement.textContent = code || "No code generated.";
-            outputElement.setAttribute('aria-label', 'Generated Python code: ' + (code || "No code generated."));
+            document.getElementById('output').textContent = code || "No code generated.";
         } catch (e) {
-            const outputElement = document.getElementById('output');
-            const errorMessage = "Error generating code: " + e.message;
-            outputElement.textContent = errorMessage;
-            outputElement.setAttribute('aria-label', errorMessage);
+            document.getElementById('output').textContent = "Error generating code: " + e.message;
         }
     }
 
@@ -395,93 +472,92 @@
     const toggleSwitch = document.getElementById('toggleSwitch');
     if (toggleSwitch) {
         toggleSwitch.addEventListener('change', function() {
-            const outputPane = document.getElementById('code-pane');
-            const blocklyDiv = document.getElementById('blocklyDiv');
-            const viewModeLabel = document.getElementById('viewModeLabel');
-            const isCodeView = this.checked;
-            
-            if (isCodeView) {
-                outputPane.style.display = 'block';
-                blocklyDiv.style.display = 'none';
-                viewModeLabel.textContent = 'Code View';
-            } else {
-                outputPane.style.display = 'none';
-                blocklyDiv.style.display = 'block';
-                viewModeLabel.textContent = 'Block View';
-            }
-            
-            // Update ARIA states
-            this.setAttribute('aria-checked', isCodeView);
-            this.setAttribute('aria-label', `Switch to ${isCodeView ? 'block' : 'code'} view`);
-            
-            // Announce view change
-            const announcement = `Switched to ${isCodeView ? 'code' : 'block'} view`;
-            const ariaAnnouncement = document.createElement('div');
-            ariaAnnouncement.setAttribute('role', 'status');
-            ariaAnnouncement.setAttribute('aria-live', 'polite');
-            ariaAnnouncement.textContent = announcement;
-            document.body.appendChild(ariaAnnouncement);
-            setTimeout(() => ariaAnnouncement.remove(), 1000);
-        });
+        const outputPane = document.getElementById('code-pane');
+        const blocklyDiv = document.getElementById('blocklyDiv');
+        const viewModeLabel = document.getElementById('viewModeLabel');
+        const isCodeView = this.checked;
+        
+        if (isCodeView) {
+            outputPane.style.display = 'block';
+            blocklyDiv.style.display = 'none';
+            viewModeLabel.textContent = 'Code View';
+        } else {
+            outputPane.style.display = 'none';
+            blocklyDiv.style.display = 'block';
+            viewModeLabel.textContent = 'Block View';
+        }
+        
+        // Update ARIA states
+        this.setAttribute('aria-checked', isCodeView);
+        this.setAttribute('aria-label', `Switch to ${isCodeView ? 'block' : 'code'} view`);
+        
+        // Announce view change
+        const announcement = `Switched to ${isCodeView ? 'code' : 'block'} view`;
+        const ariaAnnouncement = document.createElement('div');
+        ariaAnnouncement.setAttribute('role', 'status');
+        ariaAnnouncement.setAttribute('aria-live', 'polite');
+        ariaAnnouncement.textContent = announcement;
+        document.body.appendChild(ariaAnnouncement);
+        setTimeout(() => ariaAnnouncement.remove(), 1000);
+    });
     }
 
-    // Add event listener to saveProgressBtn only if it exists
     const saveProgressBtn = document.getElementById('saveProgressBtn');
     if (saveProgressBtn) {
         saveProgressBtn.addEventListener('click', async function() {
-            try {
-                const workspace = Blockly.getMainWorkspace();
-                
-                // Get the workspace state
-                const workspaceState = Blockly.serialization.workspaces.save(workspace);
-                console.log('Saving workspace state:', workspaceState); // Debug log
+        try {
+            const workspace = Blockly.getMainWorkspace();
+            
+            // Get the workspace state
+            const workspaceState = Blockly.serialization.workspaces.save(workspace);
+            console.log('Saving workspace state:', workspaceState); // Debug log
 
-                let currentStep = 0;
-                if (window.tutorialGuide) {
-                    currentStep = window.tutorialGuide.getCurrentStep() + 1;
-                    console.log('Saving progress - Current step:', currentStep);
-                }
-
-                const tutorialId = '<%= locals.tutorialId %>' || '';
-                console.log('Tutorial ID:', tutorialId); // Debug log
-
-                const payload = {
-                    tutorialId: tutorialId,
-                    currentStep: currentStep,
-                    workspaceState: workspaceState
-                };
-
-                console.log('Sending payload:', {
-                    ...payload,
-                    workspaceState: 'Workspace data included'
-                });
-
-                const response = await fetch('/api/project-tutorials/save', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`HTTP error! status: ${response.status}, response: ${errorText}`);
-                }
-
-                const responseData = await response.json();
-                console.log('Server response:', responseData);
-
-                if (responseData.status === 'success') {
-                    window.location.href = '/api/project-tutorials';
-                } else {
-                    alert('Failed to save progress: ' + (responseData.error || 'Unknown error'));
-                }
-            } catch (error) {
-                console.error('Error saving progress:', error);
-                alert('Error saving progress: ' + error.message);
+            let currentStep = 0;
+            if (window.tutorialGuide) {
+                currentStep = window.tutorialGuide.getCurrentStep() + 1;
+                console.log('Saving progress - Current step:', currentStep);
             }
-        });
+
+            const tutorialId = '<%= locals.tutorialId %>' || '';
+            console.log('Tutorial ID:', tutorialId); // Debug log
+
+            const payload = {
+                tutorialId: tutorialId,
+                currentStep: currentStep,
+                workspaceState: workspaceState
+            };
+
+            console.log('Sending payload:', {
+                ...payload,
+                workspaceState: 'Workspace data included'
+            });
+
+            const response = await fetch('/api/project-tutorials/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`HTTP error! status: ${response.status}, response: ${errorText}`);
+            }
+
+            const responseData = await response.json();
+            console.log('Server response:', responseData);
+
+            if (responseData.status === 'success') {
+                window.location.href = '/api/project-tutorials';
+            } else {
+                alert('Failed to save progress: ' + (responseData.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error saving progress:', error);
+            alert('Error saving progress: ' + error.message);
+        }
+    });
     }
 
     // Update the loadSavedState function to handle HTML responses
@@ -617,7 +693,361 @@
             selection.addRange(range);
         }
     });
+
+    // Apply theme to Blockly workspace
+    function applyThemeToBlockly() {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        const isHighContrast = localStorage.getItem('highContrast') === 'true';
+        
+        if (isHighContrast) {
+            // Create a high contrast theme
+            const highContrastTheme = Blockly.Theme.defineTheme('highContrast', {
+                'base': Blockly.Themes.Classic,
+                'componentStyles': {
+                    'workspaceBackgroundColour': '#000',
+                    'toolboxBackgroundColour': '#000',
+                    'toolboxForegroundColour': '#fff',
+                    'flyoutBackgroundColour': '#000',
+                    'flyoutForegroundColour': '#fff',
+                    'flyoutOpacity': 1,
+                    'scrollbarColour': '#fff',
+                    'insertionMarkerColour': '#fff',
+                    'insertionMarkerOpacity': 0.3,
+                    'scrollbarOpacity': 0.4,
+                    'cursorColour': '#fff',
+                    'trashcan': true,
+                    'trashcanColour': '#fff'
+                }
+            });
+            
+            // Apply the theme
+            const ws = Blockly.getMainWorkspace();
+            if (ws) {
+                ws.setTheme(highContrastTheme);
+                console.log('Applied high contrast theme to Blockly');
+            }
+        } else if (isDarkMode) {
+            // Create a dark theme
+            const darkTheme = Blockly.Theme.defineTheme('dark', {
+                'base': Blockly.Themes.Classic,
+                'componentStyles': {
+                    'workspaceBackgroundColour': '#1e1e1e',
+                    'toolboxBackgroundColour': '#333',
+                    'toolboxForegroundColour': '#fff',
+                    'flyoutBackgroundColour': '#252526',
+                    'flyoutForegroundColour': '#ccc',
+                    'flyoutOpacity': 1,
+                    'scrollbarColour': '#797979',
+                    'insertionMarkerColour': '#fff',
+                    'insertionMarkerOpacity': 0.3,
+                    'scrollbarOpacity': 0.4,
+                    'cursorColour': '#fff'
+                }
+                
+            });
+            
+            // Apply the theme
+            const ws = Blockly.getMainWorkspace();
+            if (ws) {
+                ws.setTheme(darkTheme);
+            }
+            if (ws && ws.getTheme()) {
+            ws.getGrid().setSpacing(20);
+            ws.getGrid().setColour('#000000'); // Darker gray grid for dark mode
+            ws.getGrid().setLength(20);
+        }
+        } else {
+            // Create a default light theme with explicit settings for all properties
+            const defaultTheme = Blockly.Theme.defineTheme('default', {
+                'base': Blockly.Themes.Classic,
+                'componentStyles': {
+                    'workspaceBackgroundColour': '#ffffff',
+                    'toolboxBackgroundColour': '#f0f0f0',
+                    'toolboxForegroundColour': '#000000',
+                    'flyoutBackgroundColour': '#f9f9f9',
+                    'flyoutForegroundColour': '#000000',
+                    'flyoutOpacity': 1,
+                    'scrollbarColour': '#cccccc',
+                    'insertionMarkerColour': '#000000',
+                    'insertionMarkerOpacity': 0.3,
+                    'scrollbarOpacity': 0.4,
+                    'cursorColour': '#000000'
+                },
+                'fontStyle': {
+                    'family': 'Arial, sans-serif',
+                    'weight': 'normal',
+                    'size': 12,
+                    'colour': '#000000'
+                }
+            });
+            
+            // Apply the default theme
+            const ws = Blockly.getMainWorkspace();
+            if (ws) {
+                ws.setTheme(defaultTheme);
+                
+                // Force refresh of text elements
+                ws.getAllBlocks(false).forEach(block => {
+                    if (block.workspace) {
+                        block.initSvg();
+                        block.render();
+                    }
+                });
+                
+            }
+        }
+    }
+    
+    // Call this after workspace is initialized
+    document.addEventListener('DOMContentLoaded', function() {
+        // Wait a bit for Blockly to fully initialize
+        setTimeout(applyThemeToBlockly, 500);
+    });
+
+    // Add event listeners for the high contrast and dark mode toggles
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get toggle elements
+        const highContrastToggle = document.getElementById('highContrastToggle');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        
+        // Set initial state based on localStorage
+        if (localStorage.getItem('highContrast') === 'true') {
+            highContrastToggle.checked = true;
+            highContrastToggle.setAttribute('aria-checked', 'true');
+        }
+        
+        if (localStorage.getItem('darkMode') === 'true') {
+            darkModeToggle.checked = true;
+            darkModeToggle.setAttribute('aria-checked', 'true');
+        }
+        
+        // Add event listener for high contrast toggle
+        if (highContrastToggle) {
+            highContrastToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    // Enable high contrast mode
+                    document.body.classList.add('high-contrast');
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('highContrast', 'true');
+                    localStorage.setItem('darkMode', 'false');
+                    
+                    // Update dark mode toggle
+                    if (darkModeToggle) {
+                        darkModeToggle.checked = false;
+                        darkModeToggle.setAttribute('aria-checked', 'false');
+                    }
+                    
+                    // Apply high contrast theme to Blockly
+                    if (typeof applyThemeToBlockly === 'function') {
+                        applyThemeToBlockly();
+                    }
+                } else {
+                    // Disable high contrast mode
+                    document.body.classList.remove('high-contrast');
+                    localStorage.setItem('highContrast', 'false');
+                    
+                    // Apply default theme to Blockly
+                    if (typeof applyThemeToBlockly === 'function') {
+                        applyThemeToBlockly();
+                    }
+                }
+                
+                // Update ARIA state
+                this.setAttribute('aria-checked', this.checked);
+                
+                // Announce change
+                const announcement = `High contrast mode ${this.checked ? 'enabled' : 'disabled'}`;
+                const ariaAnnouncement = document.createElement('div');
+                ariaAnnouncement.setAttribute('role', 'status');
+                ariaAnnouncement.setAttribute('aria-live', 'polite');
+                ariaAnnouncement.textContent = announcement;
+                document.body.appendChild(ariaAnnouncement);
+                setTimeout(() => ariaAnnouncement.remove(), 1000);
+            });
+        }
+        
+        // Add event listener for dark mode toggle
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    // Enable dark mode
+                    document.body.classList.add('dark-mode');
+                    document.body.classList.remove('high-contrast');
+                    localStorage.setItem('darkMode', 'true');
+                    localStorage.setItem('highContrast', 'false');
+                    
+                    // Update high contrast toggle
+                    if (highContrastToggle) {
+                        highContrastToggle.checked = false;
+                        highContrastToggle.setAttribute('aria-checked', 'false');
+                    }
+                    
+                    // Apply dark theme to Blockly
+                    if (typeof applyThemeToBlockly === 'function') {
+                        applyThemeToBlockly();
+                    }
+                } else {
+                    // Disable dark mode
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('darkMode', 'false');
+                    
+                    // Apply default theme to Blockly
+                    if (typeof applyThemeToBlockly === 'function') {
+                        applyThemeToBlockly();
+                    }
+                }
+                
+                // Update ARIA state
+                this.setAttribute('aria-checked', this.checked);
+                
+                // Announce change
+                const announcement = `Dark mode ${this.checked ? 'enabled' : 'disabled'}`;
+                const ariaAnnouncement = document.createElement('div');
+                ariaAnnouncement.setAttribute('role', 'status');
+                ariaAnnouncement.setAttribute('aria-live', 'polite');
+                ariaAnnouncement.textContent = announcement;
+                document.body.appendChild(ariaAnnouncement);
+                setTimeout(() => ariaAnnouncement.remove(), 1000);
+            });
+        }
+    });
+
+    // Add this script to update ARIA states
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get toggle elements
+        const toggleSwitch = document.getElementById('toggleSwitch');
+        const highContrastToggle = document.getElementById('highContrastToggle');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        
+        // Set initial ARIA states based on localStorage
+        if (localStorage.getItem('highContrast') === 'true') {
+            highContrastToggle.checked = true;
+            highContrastToggle.setAttribute('aria-checked', 'true');
+        }
+        
+        if (localStorage.getItem('darkMode') === 'true') {
+            darkModeToggle.checked = true;
+            darkModeToggle.setAttribute('aria-checked', 'true');
+        }
+        
+        // Update ARIA states when toggles change
+        if (toggleSwitch) {
+            toggleSwitch.addEventListener('change', function() {
+                this.setAttribute('aria-checked', this.checked);
+            });
+        }
+        
+        if (highContrastToggle) {
+            highContrastToggle.addEventListener('change', function() {
+                this.setAttribute('aria-checked', this.checked);
+            });
+        }
+        
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('change', function() {
+                this.setAttribute('aria-checked', this.checked);
+            });
+        }
+    });
+
+    console.log('Current theme:', Blockly.getMainWorkspace().getTheme()); // for debugging
 </script>
+
+<!-- Add this script to synchronize Blockly settings with our centralized settings -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // First load settings from our centralized system
+        loadAndApplySettings();
+        
+        // Function to observe when Blockly adds toggle switches to the DOM
+        function observeBlocklyUI() {
+            // Create a MutationObserver to watch for when Blockly adds its UI elements
+            const observer = new MutationObserver(function(mutations) {
+                // Look for the dark mode toggle that Blockly might have added
+                const darkModeToggle = document.querySelector('.blockly-dark-mode-toggle');
+                const highContrastToggle = document.querySelector('.blockly-high-contrast-toggle');
+                
+                if (darkModeToggle && !darkModeToggle.hasAttribute('data-observed')) {
+                    // Mark that we've observed this element
+                    darkModeToggle.setAttribute('data-observed', 'true');
+                    
+                    // Set initial state based on our settings
+                    const isDarkMode = sessionStorage.getItem('darkMode') === 'true';
+                    if (isDarkMode) {
+                        // If Blockly has a method to programmatically toggle dark mode, call it here
+                        // Otherwise, we might need to trigger a click on the toggle
+                        if (darkModeToggle.checked !== isDarkMode) {
+                            darkModeToggle.click();
+                        }
+                    }
+                    
+                    // Add our own event listener to sync with centralized settings
+                    darkModeToggle.addEventListener('change', function() {
+                        const isChecked = this.checked;
+                        
+                        // Save to our centralized settings
+                        const settings = {
+                            darkMode: isChecked,
+                            highContrast: document.body.classList.contains('high-contrast'),
+                            fontSize: parseInt(sessionStorage.getItem('fontSize')) || 14
+                        };
+                        
+                        // Save settings using our handler
+                        saveSettings(settings).then(result => {
+                            if (!result.success) {
+                                console.error('Failed to save dark mode setting:', result.message);
+                            }
+                        });
+                    });
+                }
+                
+                if (highContrastToggle && !highContrastToggle.hasAttribute('data-observed')) {
+                    // Mark that we've observed this element
+                    highContrastToggle.setAttribute('data-observed', 'true');
+                    
+                    // Set initial state based on our settings
+                    const isHighContrast = sessionStorage.getItem('highContrast') === 'true';
+                    if (isHighContrast) {
+                        // If Blockly has a method to programmatically toggle high contrast, call it here
+                        // Otherwise, we might need to trigger a click on the toggle
+                        if (highContrastToggle.checked !== isHighContrast) {
+                            highContrastToggle.click();
+                        }
+                    }
+                    
+                    // Add our own event listener to sync with centralized settings
+                    highContrastToggle.addEventListener('change', function() {
+                        const isChecked = this.checked;
+                        
+                        // Save to our centralized settings
+                        const settings = {
+                            darkMode: document.body.classList.contains('dark-mode'),
+                            highContrast: isChecked,
+                            fontSize: parseInt(sessionStorage.getItem('fontSize')) || 14
+                        };
+                        
+                        // Save settings using our handler
+                        saveSettings(settings).then(result => {
+                            if (!result.success) {
+                                console.error('Failed to save high contrast setting:', result.message);
+                            }
+                        });
+                    });
+                }
+            });
+            
+            // Start observing the document body for changes
+            observer.observe(document.body, { 
+                childList: true, 
+                subtree: true 
+            });
+        }
+        
+        // Start observing after a short delay to ensure Blockly has initialized
+        setTimeout(observeBlocklyUI, 1000);
+    });
+</script>
+
 <!-- BODY END -->
 
 <!-- FOOTER START -->

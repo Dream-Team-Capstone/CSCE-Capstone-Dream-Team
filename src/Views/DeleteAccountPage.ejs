@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delete PyBlocks Account</title>
     <link href='/StylesPages/DeleteStyle.css' rel='stylesheet'>
-    <style>
-      /* Additional styles for settings */
-      .dark-mode { background-color: #121212b3; color: #f0f0f0; }
-      .high-contrast { color: black; background-color: rgba(242, 0, 255, 0.428); }
-    </style>
+    <link href='/StylesPages/errorStyles.css' rel='stylesheet'>
+    <script src="/Scripts/settingsHandler.js" defer></script>
+    <!-- Hidden input to indicate if user is logged in -->
+    <input type="hidden" name="isLoggedIn" value="<%= locals.user ? 'true' : 'false' %>">
+    <link rel="stylesheet" href="/StylesPages/accessibilityStyles.css">
 </head>
 
 <body>
@@ -22,9 +22,14 @@
 
         <!-- Displays errors on the website. -->
         <% if (errors && errors.length > 0) { %>
-            <div class="error_box" role="alert" aria-live="assertive">
-                <% errors.forEach(error => { %>
-                    <p class="error_popup_text"><%= error.msg %></p>
+            <div class="error_box" 
+                 role="alert" 
+                 aria-live="assertive"
+                 aria-atomic="true"
+                 tabindex="-1"
+                 id="deleteAccountErrorContainer">
+                <% errors.forEach(function(error) { %>
+                    <p class="error_popup_text"><%= error.msg || error %></p>
                 <% }); %>
             </div>
         <% } %>
@@ -87,27 +92,5 @@
             </fieldset>
         </form>
     </main>
-    <script>
-        // Load saved settings on page load
-        window.onload = function () {
-            const isDarkMode = localStorage.getItem('darkMode') === 'true';
-            const isHighContrast = localStorage.getItem('highContrast') === 'true';
-            const savedFontSize = localStorage.getItem('fontSize') || '14'; // Default to 14px
-      
-            // Apply dark mode
-            if (isDarkMode) document.body.classList.add('dark-mode');
-      
-            // Apply high contrast mode
-            if (isHighContrast) document.body.classList.add('high-contrast');
-      
-            // Apply font size to all relevant elements except the title
-            document.body.style.fontSize = `${savedFontSize}px`;
-      
-            document.querySelectorAll('input, button, label, .Register_Button, .Form_Group, p, a, .navbar_buttons_list button').forEach(el => {
-                el.style.fontSize = `${savedFontSize}px`;
-            });
-      
-        };
-      </script>
 </body>
 </html>
