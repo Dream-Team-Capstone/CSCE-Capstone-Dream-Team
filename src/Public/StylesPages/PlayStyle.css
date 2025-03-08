@@ -2,6 +2,10 @@
 body {
   margin: 0;
   padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
 }
 
 * {
@@ -14,8 +18,12 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 2vw; /* Use viewport width for responsive padding */
   width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  min-height: 60px;
 }
 
 nav {
@@ -58,10 +66,10 @@ nav {
 /* Common style for all navigation buttons */
 .Nav_Buttons{
   color: black;
-  width: 108px;
-  padding: 15px;
+  width: clamp(90px, 10vw, 120px); /* Responsive width */
+  padding: 12px;
   text-align: center;
-  margin: 0 20px;
+  margin: 0 1vw;
   border-radius: 15px;
   font-weight: bold;
   border: 2.5px solid #fd3636;
@@ -69,8 +77,8 @@ nav {
   cursor: pointer;
   transition: background-color 0.3s;
   text-decoration: none;
+  font-size: clamp(12px, 1vw, 16px); /* Responsive font size */
 }
-
 
 /* Hover effect for all buttons */
 .Nav_Buttons:hover {
@@ -84,10 +92,10 @@ nav {
 .PlayPage_Body {
   display: flex;
   flex-direction: column;
+  flex: 1;
   padding: 20px;
-  height: 100vh;
-  margin-bottom: 40px;
-  overflow: scroll;
+  width: 100%;
+  min-height: calc(100vh - 140px); /* Account for header and footer */
 }
 
 .category-header {
@@ -104,12 +112,14 @@ nav {
   gap: 20px;
 }
 
+/* Update workspace container styles */
 .workspace-container {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr 0.3fr;
   gap: 20px;
-  flex: 1;
-  overflow: scroll;
+  width: 100%;
+  height: calc(100vh - 200px);
+  margin-bottom: 80px;
 }
 
 /* Blocks panel styling */
@@ -119,20 +129,23 @@ nav {
   border-right: 1px solid #ddd;
 }
 
-/* Update workspace styling */
+/* Update Blockly workspace styles */
 #blocklyDiv {
-  width: 100vh;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   min-height: 500px;
+  resize: both;
+  overflow: auto;
 }
 
 /* Update code pane styling */
 #code-pane {
-  width: 100vh;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   overflow-y: auto;
   background-color: #f5f5dc;
   padding: 10px;
+  resize: horizontal;
 }
 
 /* Style the "Generated Python Code" title*/
@@ -235,20 +248,33 @@ input:checked + .slider:before {
 
 /* Style the Blockly toolbox */
 .blocklyToolboxDiv {
-    width: 160px !important; /* Increase this value to make it wider */
-    background-color: #f0f0f0 !important;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ddd;
+    width: 200px;
+}
+
+/* Style for dark mode */
+.dark-mode .blocklyToolboxDiv {
+    background-color: #333333;
+    color: #ffffff;
 }
 
 /* Style the category items */
 .blocklyTreeRow {
-    padding: 5px 0 !important;
-    margin: 2px 0 !important;
-    height: auto !important;
+    padding: 5px 8px;
+    margin: 2px 0;
+    height: auto;
+}
+
+/* Style the category labels */
+.blocklyTreeLabel {
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+    font-size: 14px;
 }
 
 /* Style the category color indicators */
 .blocklyTreeIcon {
-    margin: 0 8px !important;
+    margin: 0 8px;
 }
 
 /* !!TUTORIAL START!! */
@@ -360,9 +386,28 @@ footer {
   background-color: #FED702;
   padding: 20px;
   width: 100%;
-  height: 20%;
-  text-align: right; /* Aligns footer content to the right */
-  display: flex; /* Flexbox layout */
-  justify-content: space-between; /* Spaces content between left and right */
+  min-height: 80px;
+  margin-top: auto; /* Push to bottom */
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  position: relative; /* Changed from fixed */
+  z-index: 1000;
+}
+
+/* Add responsive styles for smaller screens */
+@media screen and (max-width: 768px) {
+  .workspace-container {
+    grid-template-columns: 1fr; /* Stack columns on smaller screens */
+  }
+  
+  .navbar_buttons_list {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .Nav_Buttons {
+    margin: 5px;
+  }
 }
