@@ -327,6 +327,25 @@ body.dark-mode .blocklyTreeLabel {
     color: #fff !important;
 }
 
+/* Dark Mode for Terminal */
+.dark-mode #terminal {
+    background-color: #1e1e1e;
+    color: #c5c5c5;
+    border: 1px solid #444;
+}
+
+/* Dark Mode for Run Button */
+.dark-mode #runCodeBtn {
+    background-color: #444 !important;
+    color: #f0f0f0 !important;
+    border: 1px solid #666 !important;
+}
+
+.dark-mode #runCodeBtn:hover{
+    background-color: #fff !important;
+    color: #000 !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
 /* ----------------------------------------
    Settings Page
@@ -810,4 +829,24 @@ input:focus + .slider {
 
 input:checked + .slider:before {
     transform: translateX(26px);
+}
+
+/* High Contrast Mode for Terminal */
+.high-contrast #terminal {
+    background-color: black;
+    color: yellow;
+    border: 2px solid white;
+}
+
+/* High Contrast Mode for Run Button */
+.high-contrast #runCodeBtn {
+    background-color: #000 !important;
+    color: #fbff12 !important;
+    border: 2px solid #fbff12 !important;
+}
+
+.high-contrast #runCodeBtn:hover{
+    background-color: #fff !important;
+    color: #000 !important;
+    transition: background-color 0.3s ease, color 0.3s ease; 
 }
