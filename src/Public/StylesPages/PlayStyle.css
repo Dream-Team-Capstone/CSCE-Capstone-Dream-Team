@@ -156,6 +156,43 @@ nav {
   width: 100vh;
 }
 
+/* Terminal styling */
+#terminal {
+  width: 100%;
+  height: 200px;
+  background-color: #FFC6C6; /* Dark background for terminal */
+  color: #000000; /* Green text like a real terminal */
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-y: auto; /* Scroll if output is too long */
+  border: 1px solid #555;
+  white-space: pre-wrap; /* Preserve line breaks */
+}
+
+/* Button styling for better UI */
+#runCodeBtn {
+  color: black;
+  width: 108px;
+  padding: 15px;
+  text-align: center;
+  margin: 0 10px;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  font-weight: bold;
+  border: 2.5px solid #fd3636;
+  background-color: #FFC6C6;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-decoration: none;
+}
+
+#runCodeBtn:hover {
+  background-color: #fd3636;
+  color: white;
+}
+
 /* !!TOGGLE SWITCH START!! */
 /* Styles for the toggle switch */
 .toggleSwitch {

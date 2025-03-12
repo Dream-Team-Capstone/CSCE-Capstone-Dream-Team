@@ -401,6 +401,12 @@
     </div>
 </div>
 
+<!-- Run Button -->
+<button id="runCodeBtn">Run Code</button>
+
+<!-- Terminal Output -->
+<div id="terminal" class="terminal-output">Output will be displayed here!</div>
+
 <!-- Blockly workspace initialization script -->
 <script>
     // Initialize Blockly workspace with the toolbox and specific container
@@ -691,6 +697,24 @@
             range.selectNodeContents(this);
             selection.removeAllRanges();
             selection.addRange(range);
+        }
+    });
+
+    // Compiling Python code
+    document.getElementById('runCodeBtn').addEventListener('click', async function() {
+        const code = document.getElementById('output').textContent; // Get generated Python code
+
+        try {
+            const response = await fetch('/api/run-python', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code })
+            });
+
+            const result = await response.json();
+            document.getElementById('terminal').textContent = result.output || result.error;
+        } catch (error) {
+            document.getElementById('terminal').textContent = 'Error connecting to the server.';
         }
     });
 
@@ -1088,7 +1112,7 @@
         // Apply font size to all relevant elements except the title
         document.body.style.fontSize = `${savedFontSize}px`;
   
-        document.querySelectorAll('input, button, label, .Register_Button, .Form_Group, p, a, .navbar_buttons_list button').forEach(el => {
+        document.querySelectorAll('input, button, label, .Register_Button, .Form_Group, p, a, .navbar_buttons_list button, #terminal, #runCodeBtn').forEach(el => {
             el.style.fontSize = `${savedFontSize}px`;
         });
   

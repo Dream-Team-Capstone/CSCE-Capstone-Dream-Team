@@ -25,7 +25,8 @@ const ejs = require('ejs'); // ejs is a templating engine for rendering HTML
 const cookieParser = require('cookie-parser'); 
 const { clearUserProgress } = require('./src/Controllers/clearProgressController');
 const settingsController = require('./src/Controllers/settingsController');
-
+const { exec } = require("child_process");
+//const fs = require("fs");
 
 // setting up views and template engine
 app.set("views", path.join(__dirname, "src", "Views"));
@@ -224,6 +225,22 @@ app.post("/api/save-settings", ensureAuthenticated, settingsController.saveSetti
 
 // Add route to fetch user settings
 app.get("/api/settings/fetch", ensureAuthenticated, settingsController.fetchSettings);
+
+// Define the route for Python execution
+app.post("/api/run-python", (req, res) => {
+  const { code } = req.body; // Get Python code from request
+
+  if (!code) {
+      return res.status(400).json({ error: "No Python code to run" });
+  }
+
+  exec(`python -c "${code.replace(/"/g, '\\"')}"`, (error, stdout, stderr) => {
+      if (error) {
+          return res.json({ output: stderr });
+      }
+      res.json({ output: stdout });
+  });
+});
 
 // API routes
 app.use("/api", registerRoutes);

@@ -53,10 +53,21 @@ Object.assign(pythonGenerator);
 // This function resets the code and output divs, shows the
 // generated code from the workspace, and displays the code.
 const runCode = () => {
-  const code = pythonGenerator.workspaceToCode(ws); // Generate Python code
+  const code = pythonGenerator.workspaceToCode(ws); // Get Python code
   codeDiv.innerText = code;
-  // You would need to handle Python execution separately
+
+  fetch("/api/run-python", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code }),
+  })
+  .then(response => response.json())
+  .then(data => {
+      document.getElementById("terminal").innerText = data.output;
+  })
+  .catch(error => console.error("Error running Python code:", error));
 };
+
 
 // Switch for going from Block to Python and vice versa
 document.getElementById("toggleSwitch").addEventListener("change", function () {
