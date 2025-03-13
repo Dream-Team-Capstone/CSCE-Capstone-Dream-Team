@@ -330,7 +330,7 @@ body.dark-mode .blocklyTreeLabel {
 /* Dark Mode for Terminal */
 .dark-mode #terminal {
     background-color: #1e1e1e;
-    color: #c5c5c5;
+    color: #fff;
     border: 1px solid #444;
 }
 
