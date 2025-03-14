@@ -26,7 +26,7 @@ const cookieParser = require('cookie-parser');
 const { clearUserProgress } = require('./src/Controllers/clearProgressController');
 const settingsController = require('./src/Controllers/settingsController');
 const { exec } = require("child_process");
-//const fs = require("fs");
+const fs = require("fs");
 
 // setting up views and template engine
 app.set("views", path.join(__dirname, "src", "Views"));
@@ -230,17 +230,24 @@ app.get("/api/settings/fetch", ensureAuthenticated, settingsController.fetchSett
 app.post("/api/run-python", (req, res) => {
   const { code } = req.body; // Get Python code from request
 
-  if (!code) {
-      return res.status(400).json({ error: "No Python code to run" });
+  // Check if the received code is empty or contains a placeholder message
+  if (!code || code.trim() === "" || code.trim() === "No code generated.") {
+    return res.status(400).json({ output: "No code generated." });
   }
 
-  exec(`python -c "${code.replace(/"/g, '\\"')}"`, (error, stdout, stderr) => {
-      if (error) {
-          return res.json({ output: stderr });
-      }
-      res.json({ output: stdout });
+  const tempFilePath = path.join(__dirname, "temp_script.py");
+  fs.writeFileSync(tempFilePath, code); // Save the code to a file
+
+  exec(`python "${tempFilePath}"`, (error, stdout, stderr) => {
+    fs.unlinkSync(tempFilePath); // Delete the temp file after execution
+
+    if (error) {
+      return res.json({ output: stderr || "Error executing Python code." });
+    }
+    res.json({ output: stdout || "Python code executed successfully." });
   });
 });
+
 
 // API routes
 app.use("/api", registerRoutes);

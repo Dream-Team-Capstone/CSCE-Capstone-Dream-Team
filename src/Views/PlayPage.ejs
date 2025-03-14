@@ -402,10 +402,16 @@
 </div>
 
 <!-- Run Button -->
-<button id="runCodeBtn">Run Code</button>
+<button id="runCodeBtn" aria-label="Run the generated Python code">Run Code</button>
 
 <!-- Terminal Output -->
-<div id="terminal" class="terminal-output">Output will be displayed here!</div>
+<div id="terminal" class="terminal-output"
+    role="region" 
+    aria-live="polite" 
+    aria-label="Terminal output"
+    tabindex="-1">
+    Output will be displayed here!
+</div>
 
 <!-- Blockly workspace initialization script -->
 <script>
@@ -716,6 +722,9 @@
         } catch (error) {
             document.getElementById('terminal').textContent = 'Error connecting to the server.';
         }
+
+        // Move focus to terminal so screen readers announce the update
+        terminal.focus();
     });
 
     // Apply theme to Blockly workspace
