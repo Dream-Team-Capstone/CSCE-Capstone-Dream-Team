@@ -298,6 +298,11 @@ body.dark-mode .save-progress-btn:hover {
     color: black !important;
 }
 
+.dark-mode #output {
+    color: black !important;
+}
+
+
 body.dark-mode .slider {
     background-color: #ccc !important;
 }
