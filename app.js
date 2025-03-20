@@ -248,6 +248,15 @@ app.post("/api/run-python", (req, res) => {
   });
 });
 
+// Defining route for the resources page
+app.get("/api/resources", (req, res) => {
+  // You can pass any dynamic data to the view if necessary
+  res.render("ResourcesPage", {
+    user: req.session.first_name, // Send user data to the view
+    userSettings: res.locals.userSettings, // Send any user settings if necessary
+  });
+});
+
 
 // API routes
 app.use("/api", registerRoutes);

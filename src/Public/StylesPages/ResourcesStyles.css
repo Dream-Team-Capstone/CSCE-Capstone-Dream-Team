@@ -1,0 +1,214 @@
+/* General reset for body and elements */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  /* NAVIGATION BAR STYLES */
+  header {
+    background-color: #21b0fe;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    width: 100%;
+  }
+  
+  nav {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Logo styles */
+  .navbar_logo {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .Settings_logo {
+    list-style: none;
+    margin: -5px;
+    padding: 0;
+    width: 50px; /* Adjust width as needed */
+    height: auto; /* Keeps aspect ratio */
+  }
+  .logo {
+    display: block;
+    width: 200px;
+    height: auto;
+  }
+  
+  /* Navbar buttons list */
+  .navbar_buttons_list {
+    display: flex;
+    list-style: none;
+    margin-left: 20px;
+    padding: 0;
+    align-items: center;
+  }
+  .navbar_buttons_list li{
+    margin-left: -25px;
+  }
+  
+  /* Common style for all navigation buttons */
+  .Nav_Buttons{
+    color: black;
+    width: 108px;
+    padding: 15px;
+    text-align: center;
+    margin: 0 20px;
+    border-radius: 15px;
+    font-weight: bold;
+    border: 2.5px solid #fd3636;
+    background-color: #FFC6C6;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+  }
+  
+  /* Hover effect for all buttons */
+  .Nav_Buttons:hover {
+    background-color: #fd3636;
+    color: white;
+  }
+  /* !! BODY OF PAGE START!! */
+  /* Styles the main content area of the respective page */
+  .page_body{
+    position: relative; /* Positions the background image relative to its container */
+    width: 100%; /* Full width of the screen */
+    height: 100vh; /* Full viewport height */
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+    font-size: xx-large;
+    overflow: hidden; /* Hides overflowed content */
+    display: flex;
+    flex-direction: column; /* Stacks elements vertically */
+    justify-content: center; /* Centers content vertically */
+    align-items: center; /* Centers content horizontally */
+    text-align: center; /* Centers text */
+  }
+  
+  /* Adds a semi-transparent background image to the page */
+  .page_body::before{
+    content: ""; /* Creates an empty content block */
+    position: absolute; /* Positions it relative to the nearest positioned ancestor */
+    top: 0; /* Aligns it to the top of the container */
+    left: 0; /* Aligns it to the left of the container */
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-image: url('../ImagesUsed/homepage_backgroud.jpg'); /* Adds background image */
+    background-size: cover; /* Ensures the image covers the container */
+    background-position: center; /* Centers the background image */
+    opacity: 0.25; /* Makes the image semi-transparent */
+    z-index: -1; /* Places the image behind other elements */
+  }
+  
+  /* Main body Styling */
+  .page_body {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    font-size: 1.25rem; /* Slightly larger font for readability */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-top: 80px; /* To prevent content from being hidden behind the fixed navbar */
+    background-color: #f7f7f7;
+}
+
+.page_body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../ImagesUsed/homepage_backgroud.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.25;
+    z-index: -1;
+}
+
+/* Styling for the resource links */
+h1 {
+    color: #21b0fe;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.resources_section {
+    max-width: 800px;
+    margin: 20px;
+    text-align: left;
+}
+
+.resources_section h2 {
+    color: #fd3636;
+    font-size: 2rem;
+    margin-top: 20px;
+}
+
+.resources_section ul {
+    padding-left: 20px;
+}
+
+.resources_section ul li {
+    margin: 10px 0;
+}
+
+.resources_section ul li a {
+    color: #21b0fe;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1.5rem;
+}
+
+.resources_section ul li a:hover {
+    text-decoration: underline;
+}
+  
+  
+  /* !!FOOTER START!! */
+  /* Styles the footer buttons */
+  .footer_buttons {
+    display: inline; /* Inline display for footer buttons */
+    list-style: none; /* Removes bullets from the list */
+    margin: 0;
+    padding: 0; 
+    color: black;
+  }
+  
+  /* Styles the individual footer buttons */
+  .footer_buttons li {
+    margin-left: 20px; /* Adds space between footer buttons */
+    padding: 8px; /* Adds padding inside the buttons */
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  }
+  
+  /* Styles the links inside the footer buttons */
+  .footer_buttons li a {
+    text-decoration: none; /* Removes underline from links */
+    color: black; /* Set the desired text color */
+    font-weight: bold; /* Optionally make the text bold */
+  }
+  
+  
+  /* Styles the footer container */
+  footer {
+    background-color: #FED702;
+    padding: 20px;
+    width: 100%;
+    height: 20%;
+    text-align: right; /* Aligns footer content to the right */
+    display: flex; /* Flexbox layout */
+    justify-content: space-between; /* Spaces content between left and right */
+    align-items: center;
+  }
+  
