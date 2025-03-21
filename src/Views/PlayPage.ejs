@@ -75,6 +75,13 @@
   });
 </script>
 
+<!-- Add this right after the opening <body> tag, before the navigation -->
+    <div class="skip-links">
+        <a href="#blocklyDiv" class="skip-link">Skip to Workspace</a>
+        <a href="#terminal" class="skip-link">Skip to Output Terminal</a>
+        <a href="#runCodeBtn" class="skip-link">Skip to Run Code Button</a>
+    </div>
+
 <!-- NAV BAR START -->
 <header class="navigation" role="banner">
     
@@ -224,12 +231,12 @@
 <script>
     // Initialize Blockly workspace with the toolbox and specific container
     const workspace = Blockly.inject('blocklyDiv', {
-        toolbox: BLOCKLY_TOOLBOX,  // Now using the toolbox from toolbox.js
+        toolbox: BLOCKLY_TOOLBOX, 
         horizontalLayout: false,
         toolboxContainer: 'toolbox-container',
         scrollbars: true,
         trashcan: true,
-        sounds: true,  
+        sounds: true,
         grid: {
             spacing: 20,
             length: 20,
@@ -242,17 +249,41 @@
             startScale: 1.0,
             maxScale: 3,
             minScale: 0.3,
-            scaleSpeed: 1.2
+            scaleSpeed: 1.2,
+            // Add these options for passive wheel events
+            wheelOptions: {
+                passive: true
+            }
         },
         move: {
             scrollbars: true,
             drag: true,
-            wheel: true
+            wheel: true,
+            // Add these options for passive wheel events
+            wheelOptions: {
+                passive: true
+            }
         },
-        fontStyle: {
-            Colour: '#000',
+        // Add these accessibility options
+        accessibilityMode: true,
+        keyboardNav: true,
+        // Add general event options
+        eventOptions: {
+            passive: true
+        },
+        toolboxConfiguration: {
+            updateToolbox: function(toolboxDef) {
+                const toolbox = workspace.getToolbox();
+                if (toolbox) {
+                    verifyAndFixAccessibility();
+                }
+            }
         }
     });
+
+    if (Blockly.navigation) {
+    Blockly.navigation.enableKeyboardAccessibility();
+}
 
     const isTutorialMode = '<%= locals.tutorialMode %>' === 'true';
     const tutorialId = '<%= locals.tutorialId || "" %>';
@@ -279,7 +310,7 @@
     // Set initial display styles
     document.addEventListener('DOMContentLoaded', function() {
         const outputPane = document.getElementById('code-pane');
-        const blocklyDiv = document.getElementById('blocklyDiv');
+        const blocklyDiv = document.getElementById('blocklyDiv').setAttribute('aria-label', 'Blockly Workspace');
 
         // Initially show blocklyDiv and hide outputPane
         outputPane.style.display = 'none';
@@ -290,34 +321,42 @@
     const toggleSwitch = document.getElementById('toggleSwitch');
     if (toggleSwitch) {
         toggleSwitch.addEventListener('change', function() {
-        const outputPane = document.getElementById('code-pane');
-        const blocklyDiv = document.getElementById('blocklyDiv');
-        const viewModeLabel = document.getElementById('viewModeLabel');
-        const isCodeView = this.checked;
-        
-        if (isCodeView) {
-            outputPane.style.display = 'block';
-            blocklyDiv.style.display = 'none';
-            viewModeLabel.textContent = 'Code View';
-        } else {
-            outputPane.style.display = 'none';
-            blocklyDiv.style.display = 'block';
-            viewModeLabel.textContent = 'Block View';
-        }
-        
-        // Update ARIA states
-        this.setAttribute('aria-checked', isCodeView);
-        this.setAttribute('aria-label', `Switch to ${isCodeView ? 'block' : 'code'} view`);
-        
-        // Announce view change
-        const announcement = `Switched to ${isCodeView ? 'code' : 'block'} view`;
-        const ariaAnnouncement = document.createElement('div');
-        ariaAnnouncement.setAttribute('role', 'status');
-        ariaAnnouncement.setAttribute('aria-live', 'polite');
-        ariaAnnouncement.textContent = announcement;
-        document.body.appendChild(ariaAnnouncement);
-        setTimeout(() => ariaAnnouncement.remove(), 1000);
-    });
+            const outputPane = document.getElementById('code-pane');
+            const blocklyDiv = document.getElementById('blocklyDiv');
+            const viewModeLabel = document.getElementById('viewModeLabel');
+            const isCodeView = this.checked;
+            
+            if (isCodeView) {
+                outputPane.style.display = 'block';
+                if (blocklyDiv) {
+                    blocklyDiv.style.display = 'none';
+                }
+                viewModeLabel.textContent = 'Code View';
+            } else {
+                outputPane.style.display = 'none';
+                if (blocklyDiv) {
+                    blocklyDiv.style.display = 'block';
+                }
+                viewModeLabel.textContent = 'Block View';
+            }
+            
+            // Update ARIA states
+            this.setAttribute('aria-checked', isCodeView);
+            this.setAttribute('aria-label', `Switch to ${isCodeView ? 'block' : 'code'} view`);
+            
+            // Announce view change
+            announceToScreenReader(`Switched to ${isCodeView ? 'code' : 'block'} view`);
+        });
+    }
+
+    // Add this helper function if it doesn't exist
+    function announceToScreenReader(message) {
+        const announcement = document.createElement('div');
+        announcement.setAttribute('role', 'status');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.textContent = message;
+        document.body.appendChild(announcement);
+        setTimeout(() => announcement.remove(), 1000);
     }
 
     const saveProgressBtn = document.getElementById('saveProgressBtn');
@@ -790,6 +829,127 @@
     });
 
     console.log('Current theme:', Blockly.getMainWorkspace().getTheme()); // for debugging
+
+    // Add this function after workspace initialization
+    function verifyAndFixAccessibility() {
+        console.log('Verifying accessibility settings...');
+        
+        // Get the toolbox container
+        const toolboxContainer = document.querySelector('.blocklyToolboxContents');
+        console.log('Toolbox container:', toolboxContainer);
+        
+        if (toolboxContainer) {
+            toolboxContainer.setAttribute('role', 'tree');
+            toolboxContainer.setAttribute('aria-label', 'Block categories');
+            
+            // Get all categories
+            const toolboxCategories = document.querySelectorAll('.blocklyToolboxCategory');
+            console.log('Found categories:', toolboxCategories.length);
+            
+            toolboxCategories.forEach((category, index) => {
+                // Set proper role and attributes
+                category.setAttribute('role', 'treeitem');
+                category.setAttribute('aria-expanded', 'false');
+                category.setAttribute('tabindex', '0');
+                
+                // Create unique IDs for labels if they don't exist
+                const labelSpan = category.querySelector('.blocklyTreeLabel');
+                if (labelSpan) {
+                    const labelId = `category-label-${index}`;
+                    labelSpan.id = labelId;
+                    category.setAttribute('aria-labelledby', labelId);
+                    console.log(`Set label for category: ${labelSpan.textContent}`);
+                }
+                
+                // Remove any table-related roles
+                category.querySelectorAll('[role="row"], [role="gridcell"], [role="presentation"]').forEach(el => {
+                    el.removeAttribute('role');
+                });
+            });
+        }
+    }
+
+    // Add these event listeners
+    workspace.addChangeListener(function(e) {
+        if (e.type === Blockly.Events.FINISHED_LOADING) {
+            setTimeout(verifyAndFixAccessibility, 1000);
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Wait longer to ensure Blockly is fully initialized
+        setTimeout(verifyAndFixAccessibility, 2000);
+    });
+
+    // Update handleCategorySelection function
+    function handleCategorySelection(category) {
+        console.log('Handling category selection');
+        
+        const workspace = Blockly.getMainWorkspace();
+        if (!workspace) {
+            console.error('Workspace not found');
+            return;
+        }
+        
+        const toolbox = workspace.getToolbox();
+        if (!toolbox) {
+            console.error('Toolbox not found');
+            return;
+        }
+        
+        try {
+            // Force the toolbox to select this category
+            toolbox.setSelectedItem(category);
+            
+            // Show the flyout
+            const flyout = toolbox.getFlyout();
+            if (flyout) {
+                console.log('Showing flyout');
+                flyout.show(toolbox.getSelectedItem());
+                
+                // Make the flyout accessible
+                setTimeout(() => {
+                    const flyoutElement = document.querySelector('.blocklyFlyout');
+                    if (flyoutElement) {
+                        flyoutElement.style.display = 'block';
+                        flyoutElement.setAttribute('role', 'region');
+                        flyoutElement.setAttribute('aria-live', 'polite');
+                        const categoryLabel = category.querySelector('.blocklyTreeLabel')?.textContent || 'Selected category';
+                        flyoutElement.setAttribute('aria-label', `${categoryLabel} blocks available`);
+                        flyoutElement.setAttribute('tabindex', '0');
+                        
+                        // Announce the change
+                        announceToScreenReader(`${categoryLabel} category opened. Blocks are now available.`);
+                    }
+                }, 100);
+            }
+        } catch (error) {
+            console.error('Error selecting category:', error);
+        }
+    }
+
+    // Add this to verify the selection is working
+    function debugSelection() {
+        const workspace = Blockly.getMainWorkspace();
+        const toolbox = workspace.getToolbox();
+        console.log('Selected item:', toolbox.getSelectedItem());
+        console.log('Categories with aria-selected="true":', 
+            Array.from(document.querySelectorAll('.blocklyToolboxCategory[aria-selected="true"]'))
+                .map(cat => cat.getAttribute('aria-label'))
+        );
+    }
+
+    // Add this to your existing workspace initialization code
+    workspace.addChangeListener(function(e) {
+        if (e.type === Blockly.Events.FINISHED_LOADING) {
+            setTimeout(setupAccessibilityHandlers, 1000);
+        }
+    });
+
+    // Also add this to ensure it runs after initial load
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(setupAccessibilityHandlers, 1500);
+    });
 </script>
 
 <!-- Add this script to synchronize Blockly settings with our centralized settings -->
