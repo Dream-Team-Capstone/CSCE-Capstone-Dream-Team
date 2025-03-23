@@ -72,9 +72,13 @@ export function initializeWorkspace() {
     // Initial accessibility setup with a delay
     setTimeout(verifyAndFixAccessibility, 1000);
 
-    // Add a single mutation observer for accessibility
+    // Add workspace accessibility setup with a delay to ensure elements are loaded
+    setTimeout(setupWorkspaceAccessibility, 1000);
+
+    // Add observer to maintain accessibility attributes
     const observer = new MutationObserver(() => {
-        setTimeout(verifyAndFixAccessibility, 100);
+        verifyAndFixAccessibility();
+        setupWorkspaceAccessibility();
     });
 
     observer.observe(document.body, {
@@ -682,4 +686,66 @@ function verifyAndFixAccessibility() {
             });
         }
     });
+}
+
+// Add this new function
+function setupWorkspaceAccessibility() {
+    // Get workspace elements
+    const trashcan = document.querySelector('.blocklyTrash');
+    const zoomControls = document.querySelector('.blocklyZoom');
+    const horizontalScrollbar = document.querySelector('.blocklyScrollbarHorizontal');
+    const verticalScrollbar = document.querySelector('.blocklyScrollbarVertical');
+
+    // Setup trashcan
+    if (trashcan) {
+        trashcan.setAttribute('role', 'button');
+        trashcan.setAttribute('aria-label', 'Trash can. Drag blocks here to delete them');
+        trashcan.setAttribute('tabindex', '0');
+        
+        // Make the image decorative
+        const trashImage = trashcan.querySelector('image');
+        if (trashImage) {
+            trashImage.setAttribute('aria-hidden', 'true');
+        }
+    }
+
+    // Setup zoom controls
+    if (zoomControls) {
+        const zoomInButton = zoomControls.querySelector('.blocklyZoomInButton');
+        const zoomOutButton = zoomControls.querySelector('.blocklyZoomOutButton');
+        const zoomResetButton = zoomControls.querySelector('.blocklyZoomResetButton');
+
+        if (zoomInButton) {
+            zoomInButton.setAttribute('role', 'button');
+            zoomInButton.setAttribute('aria-label', 'Zoom in');
+            zoomInButton.setAttribute('tabindex', '0');
+        }
+
+        if (zoomOutButton) {
+            zoomOutButton.setAttribute('role', 'button');
+            zoomOutButton.setAttribute('aria-label', 'Zoom out');
+            zoomOutButton.setAttribute('tabindex', '0');
+        }
+
+        if (zoomResetButton) {
+            zoomResetButton.setAttribute('role', 'button');
+            zoomResetButton.setAttribute('aria-label', 'Reset zoom');
+            zoomResetButton.setAttribute('tabindex', '0');
+        }
+    }
+
+    // Setup scrollbars
+    if (horizontalScrollbar) {
+        horizontalScrollbar.setAttribute('role', 'scrollbar');
+        horizontalScrollbar.setAttribute('aria-label', 'Horizontal workspace scroll');
+        horizontalScrollbar.setAttribute('aria-orientation', 'horizontal');
+        horizontalScrollbar.setAttribute('tabindex', '0');
+    }
+
+    if (verticalScrollbar) {
+        verticalScrollbar.setAttribute('role', 'scrollbar');
+        verticalScrollbar.setAttribute('aria-label', 'Vertical workspace scroll');
+        verticalScrollbar.setAttribute('aria-orientation', 'vertical');
+        verticalScrollbar.setAttribute('tabindex', '0');
+    }
 }
