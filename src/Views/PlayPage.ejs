@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PyBlocks</title>
     <link type="text/css" href="/StylesPages/PlayStyle.css" rel="stylesheet">
-    <!-- Add settings handler script -->
     <script src="/Scripts/settingsHandler.js" defer></script>
     <script src="/Scripts/errorHandling.js" defer></script>
     <!-- Hidden input to indicate if user is logged in -->
@@ -17,12 +16,9 @@
     <script src="https://unpkg.com/blockly/python_compressed.js"></script>
     <script src="/Scripts/toolbox.js"></script>
     
-    <!-- Add this in the head section -->
     <script src="/Guides/projectTutorialGuides.js"></script>
 </head>
 <body>
-
-<!-- Add this right after the opening <body> tag -->
 <script>
   // Set initial theme state
   localStorage.setItem('highContrast', 'false');
@@ -43,7 +39,7 @@
   });
 </script>
 
-<!-- Add this right after the opening <body> tag, before the navigation -->
+<!-- Skip Links for easier navigation -->
     <div class="skip-links">
         <a href="#blocklyDiv" class="skip-link">Skip to Workspace</a>
         <a href="#terminal" class="skip-link">Skip to Output Terminal</a>

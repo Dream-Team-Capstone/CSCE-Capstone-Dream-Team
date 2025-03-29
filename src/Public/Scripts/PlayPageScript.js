@@ -5,6 +5,11 @@ function announceToScreenReader(message) {
     announcement.setAttribute('aria-live', 'polite');
     announcement.textContent = message;
     document.body.appendChild(announcement);
+    
+    // Log the announcement for debugging
+    console.log('Screen reader announcement:', message);
+    
+    // Remove the announcement after it's read
     setTimeout(() => announcement.remove(), 1000);
 }
 
@@ -13,7 +18,7 @@ export function initializeWorkspace() {
     // Define custom blocks first
     defineCustomBlocks();
 
-    // Initialize Blockly workspace with the toolbox and specific container
+    // Initialize Blockly workspace
     const workspace = Blockly.inject('blocklyDiv', {
         toolbox: BLOCKLY_TOOLBOX,
         horizontalLayout: false,
@@ -33,30 +38,9 @@ export function initializeWorkspace() {
             startScale: 1.0,
             maxScale: 3,
             minScale: 0.3,
-            scaleSpeed: 1.2,
-            wheelOptions: {
-                passive: true
-            }
-        },
-        move: {
-            scrollbars: true,
-            drag: true,
-            wheel: true,
-            wheelOptions: {
-                passive: true
-            }
-        },
-        accessibilityMode: true,
-        keyboardNav: true,
-        eventOptions: {
-            passive: true
+            scaleSpeed: 1.2
         }
     });
-
-    // Enable keyboard navigation if available
-    if (Blockly.navigation) {
-        Blockly.navigation.enableKeyboardAccessibility();
-    }
 
     // Add code generation listener
     workspace.addChangeListener(generateCode);
@@ -69,26 +53,52 @@ export function initializeWorkspace() {
     setupSettingsSynchronization();
     applyFontSizes();
 
-    // Initial accessibility setup with a delay
-    setTimeout(verifyAndFixAccessibility, 1000);
-
-    // Add workspace accessibility setup with a delay to ensure elements are loaded
-    setTimeout(setupWorkspaceAccessibility, 1000);
-
-    // Add observer to maintain accessibility attributes
-    const observer = new MutationObserver(() => {
-        verifyAndFixAccessibility();
+    // Add workspace navigation setup
+    setTimeout(() => {
+        setupWorkspaceNavigation();
         setupWorkspaceAccessibility();
+        verifyAndFixAccessibility();
+        setupBlockMovementAccessibility(workspace);
+    }, 1000);
+
+    // Add movement listener for all blocks
+    workspace.addChangeListener(function(event) {
+        if (event.type === Blockly.Events.BLOCK_MOVE) {
+            const block = workspace.getBlockById(event.blockId);
+            if (block) {
+                tryConnectToNearbyBlocks(block, workspace);
+            }
+        }
     });
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
+    // Enable auto-connect for the workspace
+    enableAutoConnect(workspace);
+
+    // Add debug logging for block movements
+    workspace.addChangeListener(event => {
+        if (event.type === Blockly.Events.BLOCK_MOVE) {
+            console.log('Block moved:', event.blockId);
+            const block = workspace.getBlockById(event.blockId);
+            if (block) {
+                console.log('Block position:', {
+                    x: block.getRelativeToSurfaceXY().x,
+                    y: block.getRelativeToSurfaceXY().y
+                });
+            }
+        }
     });
+
+    // Set up flyout accessibility
+    setupFlyoutAccessibility();
+
+    // Wait a bit longer before setting up accessibility
+    setTimeout(setupFlyoutAccessibility, 2000);
+
+    // Add continuous connection checking
+    setupConnectionChecking(workspace);
 
     return workspace;
 }
-
 // Helper function for code generation
 function generateCode() {
     try {
@@ -599,53 +609,74 @@ export { generateCode, applyThemeToBlockly, loadSavedState };
 function verifyAndFixAccessibility() {
     console.log('Verifying accessibility settings...');
     
-    // Get the toolbox container
     const toolboxContainer = document.querySelector('.blocklyToolboxContents');
     if (!toolboxContainer) return;
 
-    // Set up the toolbox container
     toolboxContainer.setAttribute('role', 'tree');
     toolboxContainer.setAttribute('aria-label', 'Block categories');
 
-    // Get all category containers
     const categoryContainers = document.querySelectorAll('.blocklyToolboxCategory');
     categoryContainers.forEach((container, index) => {
-        // Set up the main category container
+        // Set up container attributes
         container.setAttribute('role', 'treeitem');
+        container.setAttribute('aria-expanded', 'false');
         container.setAttribute('aria-level', '1');
         container.setAttribute('aria-posinset', (index + 1).toString());
         container.setAttribute('aria-setsize', categoryContainers.length.toString());
         
-        // Find the tree row and label
         const treeRow = container.querySelector('.blocklyTreeRow');
         const label = container.querySelector('.blocklyTreeLabel');
         
         if (treeRow && label) {
-            // Remove role from tree row as it's redundant
-            treeRow.removeAttribute('role');
+            // Ensure the row is clickable
+            treeRow.style.pointerEvents = 'auto';
+            treeRow.style.cursor = 'pointer';
             
-            // Set up unique IDs
+            // Set up labeling
             const labelId = `category-${index}-label`;
             label.id = labelId;
-            
-            // Connect the label to the category container
             container.setAttribute('aria-labelledby', labelId);
             
-            // Make the tree row focusable but not a separate ARIA element
+            // Make focusable
             treeRow.setAttribute('tabindex', '0');
             
-            // Remove any other redundant ARIA attributes
-            treeRow.removeAttribute('aria-labelledby');
-            treeRow.removeAttribute('aria-level');
-            treeRow.removeAttribute('aria-selected');
+            // Remove any existing listeners
+            const newRow = treeRow.cloneNode(true);
+            treeRow.parentNode.replaceChild(newRow, treeRow);
+            
+            // Add click handler
+            newRow.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleCategoryClick(container);
+            });
+            
+            // Add keyboard handler
+            newRow.addEventListener('keydown', (e) => {
+                switch (e.key) {
+                    case 'Enter':
+                    case ' ':
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleCategoryClick(container);
+                        break;
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        const nextCategory = categoryContainers[index + 1];
+                        if (nextCategory) {
+                            nextCategory.querySelector('.blocklyTreeRow')?.focus();
+                        }
+                        break;
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        const prevCategory = categoryContainers[index - 1];
+                        if (prevCategory) {
+                            prevCategory.querySelector('.blocklyTreeRow')?.focus();
+                        }
+                        break;
+                }
+            });
         }
-
-        // Remove any other role attributes from child elements
-        container.querySelectorAll('[role]').forEach(el => {
-            if (el !== container) {
-                el.removeAttribute('role');
-            }
-        });
     });
 
     // Set up flyout
@@ -655,37 +686,328 @@ function verifyAndFixAccessibility() {
         flyout.setAttribute('aria-label', 'Available blocks');
     }
 
-    // Add keyboard navigation
-    categoryContainers.forEach(container => {
-        const treeRow = container.querySelector('.blocklyTreeRow');
-        if (treeRow) {
-            treeRow.addEventListener('keydown', function(e) {
-                const currentIndex = Array.from(categoryContainers).indexOf(container);
+    // Add flyout accessibility setup
+    setupFlyoutAccessibility();
+
+    // Set up observer for flyout changes
+    const flyoutObserver = new MutationObserver(() => {
+        setupFlyoutAccessibility();
+    });
+
+    if (flyout) {
+        flyoutObserver.observe(flyout, {
+            childList: true,
+            subtree: true
+        });
+    }
+}
+
+// Make sure this function is defined BEFORE it's used in event listeners
+function handleCategoryClick(category) {
+    const workspace = Blockly.getMainWorkspace();
+    if (!workspace || !workspace.toolbox_) return;
+
+    try {
+        // Find the category name for screen reader announcement
+        const label = category.querySelector('.blocklyTreeLabel');
+        const categoryName = label ? label.textContent : 'category';
+
+        // Let Blockly handle the selection
+        const toolbox = workspace.toolbox_;
+        const categoryId = category.getAttribute('id');
+        const toolboxItem = toolbox.getToolboxItemById(categoryId);
+        
+        if (toolboxItem) {
+            // This will handle both selection and deselection of categories
+            toolbox.setSelectedItem(toolboxItem);
+            announceToScreenReader(`${categoryName} category selected. Blocks available.`);
+        }
+    } catch (err) {
+        console.error('Error selecting category:', err);
+    }
+}
+
+// Also add this helper function if not already present
+function handleFlyoutBlockKeydown(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        e.stopPropagation();
+        handleFlyoutBlockClick(this);
+    }
+}
+
+// Update the handleFlyoutBlockClick function
+function handleFlyoutBlockClick(block) {
+    const workspace = Blockly.getMainWorkspace();
+    if (!workspace) return;
+
+    try {
+        const blockType = block.getAttribute('type') ||
+                         block.getAttribute('data-type') ||
+                         block.getAttribute('data-id')?.split('_')[0];
+
+        if (!blockType) {
+            console.error('Could not determine block type');
+            return;
+        }
+
+        // Get a readable description of the block
+        const blockText = Array.from(block.querySelectorAll('.blocklyText'))
+            .map(text => text.textContent)
+            .join(' ');
+        const blockDescription = blockText || blockType;
+
+        const newBlock = workspace.newBlock(blockType);
+        newBlock.initSvg();
+        newBlock.render();
+
+        // Position block
+        const metrics = workspace.getMetrics();
+        const x = metrics.viewWidth / 2;
+        const y = metrics.viewHeight / 2;
+        newBlock.moveBy(x, y);
+
+        // Make the new block accessible
+        const svgRoot = newBlock.getSvgRoot();
+        if (svgRoot) {
+            svgRoot.setAttribute('role', 'button');
+            svgRoot.setAttribute('aria-label', `${blockDescription} block. Use arrow keys to move.`);
+            svgRoot.setAttribute('tabindex', '0');
+        }
+
+        // Announce block creation
+        announceToScreenReader(`Added ${blockDescription} block to workspace`);
+
+        // Try to connect to nearby blocks
+        tryConnectToNearbyBlocks(newBlock, workspace);
+
+    } catch (err) {
+        console.error('Error in handleFlyoutBlockClick:', err);
+    }
+}
+
+function enableAutoConnect(workspace) {
+    // Remove any existing move listeners
+    if (workspace.moveListener) {
+        workspace.removeChangeListener(workspace.moveListener);
+    }
+
+    // Add new move listener
+    workspace.moveListener = function(event) {
+        if (event.type === Blockly.Events.BLOCK_MOVE) {
+            const movedBlock = workspace.getBlockById(event.blockId);
+            if (movedBlock) {
+                checkAndConnectBlocks(movedBlock, workspace);
+            }
+        }
+    };
+
+    workspace.addChangeListener(workspace.moveListener);
+}
+
+function checkAndConnectBlocks(movedBlock, workspace) {
+    const SNAP_RADIUS = 30; // Pixels - adjust this value as needed
+
+    // Get all blocks except the moved one
+    const otherBlocks = workspace.getAllBlocks().filter(block => block.id !== movedBlock.id);
+
+    // Get all connections from the moved block
+    const connections = movedBlock.getConnections_(true);
+    
+    connections.forEach(connection => {
+        // Skip if already connected
+        if (connection.isConnected()) {
+            return;
+        }
+
+        let closestConnection = null;
+        let shortestDistance = SNAP_RADIUS;
+
+        // Check each other block's connections
+        otherBlocks.forEach(otherBlock => {
+            const otherConnections = otherBlock.getConnections_(true);
+            
+            otherConnections.forEach(otherConnection => {
+                if (otherConnection.isConnected()) {
+                    return;
+                }
+
+                // Check if connection types are compatible
+                if (connection.canConnect(otherConnection)) {
+                    // Get the distance between connections
+                    const distance = Blockly.utils.Coordinate.distance(
+                        connection.x_,
+                        connection.y_,
+                        otherConnection.x_,
+                        otherConnection.y_
+                    );
+
+                    // Update if this is the closest valid connection
+                    if (distance < shortestDistance) {
+                        shortestDistance = distance;
+                        closestConnection = otherConnection;
+                    }
+                }
+            });
+        });
+
+        // If we found a close connection, connect them
+        if (closestConnection) {
+            try {
+                connection.connect(closestConnection);
+                console.log('Connected blocks successfully');
                 
-                switch(e.key) {
-                    case 'ArrowDown':
-                        e.preventDefault();
-                        if (currentIndex < categoryContainers.length - 1) {
-                            categoryContainers[currentIndex + 1]
-                                .querySelector('.blocklyTreeRow')?.focus();
-                        }
-                        break;
-                    case 'ArrowUp':
-                        e.preventDefault();
-                        if (currentIndex > 0) {
-                            categoryContainers[currentIndex - 1]
-                                .querySelector('.blocklyTreeRow')?.focus();
-                        }
-                        break;
-                    case 'Enter':
-                    case ' ':
-                        e.preventDefault();
-                        treeRow.click();
-                        break;
+                // Announce connection to screen reader
+                const sourceBlock = connection.getSourceBlock();
+                const targetBlock = closestConnection.getSourceBlock();
+                announceToScreenReader(`Connected ${getBlockDescription(sourceBlock)} to ${getBlockDescription(targetBlock)}`);
+            } catch (error) {
+                console.error('Failed to connect blocks:', error);
+            }
+        }
+    });
+}
+
+// Helper function to get block description
+function getBlockDescription(block) {
+    try {
+        // Try to get text content from the block
+        const texts = Array.from(block.getSvgRoot().querySelectorAll('.blocklyText'))
+            .map(text => text.textContent)
+            .filter(Boolean);
+        
+        return texts.join(' ') || 'block';
+    } catch (e) {
+        return 'block';
+    }
+}
+
+// Update the setupFlyoutAccessibility function
+function setupFlyoutAccessibility() {
+    console.log('=== SETUP STARTING ===');
+
+    function findParentBlock(element) {
+        let current = element;
+        while (current) {
+            // Check for both draggable blocks and flyout blocks
+            if (current.classList.contains('blocklyDraggable') || 
+                current.classList.contains('blocklyFlyoutBlock')) {
+                console.log('Found parent block:', current);
+                return current;
+            }
+            current = current.parentElement;
+        }
+        return null;
+    }
+
+    function makeBlockClickable(element) {
+        // Make element clickable
+        element.style.pointerEvents = 'auto';
+        element.style.cursor = 'pointer';
+
+        // Set better ARIA attributes
+        if (element.classList.contains('blocklyFlyoutBlock') || 
+            element.classList.contains('blocklyDraggable')) {
+            // For the main block element
+            element.setAttribute('role', 'button');
+            
+            // Get block description
+            const blockText = Array.from(element.querySelectorAll('.blocklyText'))
+                .map(text => text.textContent)
+                .join(' ');
+            
+            element.setAttribute('aria-label', `${blockText} block. Press Enter or Space to add to workspace`);
+        } else if (element.classList.contains('blocklyText')) {
+            // For text elements within blocks
+            element.setAttribute('role', 'button');
+            element.setAttribute('aria-label', `${element.textContent} block. Press Enter or Space to add to workspace`);
+        }
+
+        // Add click handler if not already added
+        if (!element.hasAttribute('data-click-handler')) {
+            element.setAttribute('data-click-handler', 'true');
+            element.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const parentBlock = findParentBlock(e.target);
+                if (parentBlock) {
+                    handleFlyoutBlockClick(parentBlock);
                 }
             });
         }
-    });
+    }
+
+    function processFlyoutBlocks() {
+        console.log('Processing flyout blocks...');
+
+        // Try multiple selectors to find blocks
+        const selectors = [
+            '.blocklyFlyoutBlock',
+            '.blocklyFlyout .blocklyDraggable',
+            '.blocklyFlyout g[data-id]'
+        ];
+
+        let foundBlocks = false;
+        selectors.forEach(selector => {
+            const blocks = document.querySelectorAll(selector);
+            console.log(`Found ${blocks.length} blocks with selector "${selector}"`);
+            
+            blocks.forEach(block => {
+                foundBlocks = true;
+                makeBlockClickable(block);
+                
+                // Also make text elements clickable
+                block.querySelectorAll('.blocklyText').forEach(text => {
+                    makeBlockClickable(text);
+                });
+            });
+        });
+
+        // If no blocks found, try again soon
+        if (!foundBlocks) {
+            setTimeout(processFlyoutBlocks, 100);
+        }
+    }
+
+    // Watch for category clicks to process blocks
+    function setupCategoryObserver() {
+        const toolbox = document.querySelector('.blocklyToolboxDiv');
+        if (!toolbox) {
+            setTimeout(setupCategoryObserver, 100);
+            return;
+        }
+
+        console.log('Setting up category observer');
+        
+        // Make categories clickable
+        const categories = toolbox.querySelectorAll('.blocklyTreeRow');
+        categories.forEach(category => {
+            category.addEventListener('click', () => {
+                console.log('Category clicked, processing blocks...');
+                // Wait a moment for flyout to populate
+                setTimeout(processFlyoutBlocks, 100);
+            });
+        });
+
+        // Also observe the flyout for changes
+        const flyout = document.querySelector('.blocklyFlyout');
+        if (flyout) {
+            const observer = new MutationObserver((mutations) => {
+                console.log('Flyout changed, processing blocks...');
+                processFlyoutBlocks();
+            });
+
+            observer.observe(flyout, {
+                childList: true,
+                subtree: true,
+                attributes: true
+            });
+        }
+    }
+
+    // Start the setup
+    setupCategoryObserver();
 }
 
 // Add this new function
@@ -748,4 +1070,340 @@ function setupWorkspaceAccessibility() {
         verticalScrollbar.setAttribute('aria-orientation', 'vertical');
         verticalScrollbar.setAttribute('tabindex', '0');
     }
+}
+
+// Add block movement and keyboard navigation support
+function setupBlockMovementAccessibility(workspace) {
+    let isDragging = false;
+    let selectedBlock = null;
+    const MOVE_DISTANCE = 20;
+
+    // Add keyboard deletion handler directly to the workspace div
+    const workspaceDiv = document.getElementById('blocklyDiv');
+    if (workspaceDiv) {
+        workspaceDiv.addEventListener('keydown', handleBlockKeyboard);
+    }
+
+    function handleBlockKeyboard(e) {
+        const selectedBlock = Blockly.selected;
+        if (!selectedBlock) return;
+
+        if (e.key === 'Delete' || e.key === 'Backspace') {
+            e.preventDefault();
+            try {
+                // Get block description before deletion
+                const blockDesc = getBlockDescription(selectedBlock);
+                
+                // Delete the block
+                selectedBlock.dispose(true);
+                
+                // Announce deletion
+                announceToScreenReader(`Deleted ${blockDesc}`);
+            } catch (err) {
+                console.error('Error deleting block:', err);
+                announceToScreenReader('Failed to delete block');
+            }
+        }
+    }
+
+    // Make blocks focusable and add keyboard support
+    function makeBlocksFocusable() {
+        const blocks = workspace.getAllBlocks(false);
+        blocks.forEach(block => {
+            const svgRoot = block.getSvgRoot();
+            if (svgRoot) {
+                // Make block interactive
+                svgRoot.setAttribute('tabindex', '0');
+                svgRoot.setAttribute('role', 'button');
+                svgRoot.setAttribute('aria-label', `${getBlockDescription(block)}. Press Space to move, Delete to remove.`);
+                
+                // Add keyboard handler
+                svgRoot.addEventListener('keydown', (e) => {
+                    if (e.key === ' ' || e.key === 'Enter') {
+                        e.preventDefault();
+                        handleBlockInteraction(block);
+                    } else if (e.key === 'Delete' || e.key === 'Backspace') {
+                        e.preventDefault();
+                        const blockDesc = getBlockDescription(block);
+                        block.dispose(true);
+                        announceToScreenReader(`Deleted ${blockDesc}`);
+                    }
+                });
+
+                // Add click handler
+                svgRoot.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    handleBlockInteraction(block);
+                });
+            }
+        });
+    }
+
+    // Handle block interaction (both click and keyboard)
+    function handleBlockInteraction(block) {
+        if (!block) return;
+        
+        // Toggle dragging state
+        isDragging = !isDragging;
+        selectedBlock = isDragging ? block : null;
+        
+        if (isDragging) {
+            // Block is now being moved
+            block.select();
+            announceToScreenReader(`${getBlockDescription(block)} selected. Use arrow keys to move. Press Space again to place block.`);
+            
+            // Add temporary keyboard handler for movement
+            document.addEventListener('keydown', handleMovement);
+        } else {
+            // Block is being placed
+            announceToScreenReader(`${getBlockDescription(block)} placed`);
+            
+            // Remove temporary keyboard handler
+            document.removeEventListener('keydown', handleMovement);
+        }
+    }
+
+    // Handle block movement with arrow keys
+    function handleMovement(e) {
+        if (!selectedBlock || !isDragging) return;
+
+        let dx = 0, dy = 0;
+        switch (e.key) {
+            case 'ArrowUp':
+                dy = -MOVE_DISTANCE;
+                break;
+            case 'ArrowDown':
+                dy = MOVE_DISTANCE;
+                break;
+            case 'ArrowLeft':
+                dx = -MOVE_DISTANCE;
+                break;
+            case 'ArrowRight':
+                dx = MOVE_DISTANCE;
+                break;
+            default:
+                return;
+        }
+
+        if (dx !== 0 || dy !== 0) {
+            e.preventDefault();
+            moveBlock(selectedBlock, dx, dy);
+        }
+    }
+
+    // Move block and announce position
+    function moveBlock(block, dx, dy) {
+        const xy = block.getRelativeToSurfaceXY();
+        block.moveBy(dx, dy);
+        
+        announceToScreenReader(`Moved ${getBlockDescription(block)} ${
+            dx > 0 ? 'right' : dx < 0 ? 'left' : ''
+        } ${
+            dy > 0 ? 'down' : dy < 0 ? 'up' : ''
+        }`);
+    }
+
+    // Get readable block description
+    function getBlockDescription(block) {
+        let desc = block.type.replace(/_/g, ' ');
+        const inputs = block.inputList || [];
+        const inputValues = inputs
+            .map(input => input.fieldRow
+                .map(field => field.getText())
+                .join(' '))
+            .filter(text => text)
+            .join(', ');
+        
+        return inputValues ? `${desc} with values: ${inputValues}` : desc;
+    }
+
+    // Add workspace change listener for new blocks
+    workspace.addChangeListener((event) => {
+        if (event.type === Blockly.Events.BLOCK_CREATE) {
+            setTimeout(makeBlocksFocusable, 100);
+        }
+    });
+
+    // Initial setup
+    setTimeout(makeBlocksFocusable, 1000);
+}
+
+function setupWorkspaceNavigation() {
+    // 1. Skip Links
+    const skipLinks = document.querySelector('.skip-links');
+    if (skipLinks) {
+        skipLinks.querySelectorAll('a').forEach((link, index) => {
+            link.setAttribute('tabindex', '1');
+        });
+    }
+
+    // 2. Main Workspace Area
+    const blocklyDiv = document.querySelector('#blocklyDiv');
+    if (blocklyDiv) {
+        blocklyDiv.setAttribute('tabindex', '10');
+        blocklyDiv.setAttribute('role', 'application');
+        blocklyDiv.setAttribute('aria-label', 'Block programming workspace');
+    }
+
+    // 3. Block Categories Tree
+    const toolbox = document.querySelector('.blocklyToolboxContents');
+    if (toolbox) {
+        toolbox.setAttribute('tabindex', '20');
+        toolbox.setAttribute('role', 'tree');
+        toolbox.setAttribute('aria-label', 'Block categories');
+    }
+
+    // 4. Run Button
+    const runButton = document.getElementById('runCodeBtn');
+    if (runButton) {
+        runButton.setAttribute('tabindex', '30');
+    }
+
+    // 5. Terminal
+    const terminal = document.getElementById('terminal');
+    if (terminal) {
+        terminal.setAttribute('tabindex', '40');
+        terminal.setAttribute('role', 'region');
+        terminal.setAttribute('aria-label', 'Terminal output');
+    }
+
+    // 6. Navigation Menu
+    const navButtons = document.querySelectorAll('.navbar_buttons_list button, .navbar_buttons_list a');
+    navButtons.forEach((button, index) => {
+        button.setAttribute('tabindex', `${50 + index}`);
+    });
+
+    // 7. Workspace Controls (at the end)
+    const controls = {
+        trashcan: document.querySelector('.blocklyTrash'),
+        verticalScroll: document.querySelector('.blocklyScrollbarVertical'),
+        horizontalScroll: document.querySelector('.blocklyScrollbarHorizontal')
+    };
+
+    Object.entries(controls).forEach(([key, element], index) => {
+        if (element) {
+            element.setAttribute('tabindex', `${90 + index}`);
+        }
+    });
+}
+function tryConnectToNearbyBlocks(newBlock, workspace) {
+    console.log('Trying to connect block:', newBlock.type);
+    
+    const SNAP_RADIUS = 50; // Increased radius for easier connections
+    let bestConnection = null;
+    let bestTarget = null;
+    let closestDistance = SNAP_RADIUS;
+
+    // Get all connections from the new block
+    const newBlockConnections = newBlock.getConnections_(true);
+    console.log('Available connections on new block:', 
+        newBlockConnections.map(conn => conn.type).join(', '));
+
+    // Get all other blocks
+    const otherBlocks = workspace.getAllBlocks(false).filter(b => b.id !== newBlock.id);
+    
+    // Try each connection on the new block
+    newBlockConnections.forEach(connection => {
+        // Skip if already connected
+        if (connection.isConnected()) return;
+
+        // Get connection location
+        const connectionXY = connection.x_ + ',' + connection.y_;
+        console.log(`Checking connection at ${connectionXY}`);
+
+        otherBlocks.forEach(otherBlock => {
+            const otherConnections = otherBlock.getConnections_(true);
+            
+            otherConnections.forEach(otherConnection => {
+                // Skip if already connected
+                if (otherConnection.isConnected()) return;
+
+                // Check if these connections are compatible
+                if (connection.canConnect(otherConnection)) {
+                    // Get the distance between connections
+                    const dx = connection.x_ - otherConnection.x_;
+                    const dy = connection.y_ - otherConnection.y_;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    console.log(`Found compatible connection, distance: ${distance}`);
+
+                    // Update if this is the closest valid connection
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        bestConnection = connection;
+                        bestTarget = otherConnection;
+                        console.log('New best connection found, distance:', distance);
+                    }
+                }
+            });
+        });
+    });
+
+    // If we found a valid connection, connect the blocks
+    if (bestConnection && bestTarget) {
+        try {
+            console.log('Attempting to connect blocks...');
+            
+            // Move block to align perfectly with connection
+            const targetBlock = bestTarget.getSourceBlock();
+            const dx = bestTarget.x_ - bestConnection.x_;
+            const dy = bestTarget.y_ - bestConnection.y_;
+            
+            // Move the block to align with the connection
+            newBlock.moveBy(dx, dy);
+            
+            // Make the connection
+            bestConnection.connect(bestTarget);
+
+            // Announce connection
+            const sourceDesc = getBlockDescription(newBlock);
+            const targetDesc = getBlockDescription(targetBlock);
+            announceToScreenReader(`Connected ${sourceDesc} to ${targetDesc}`);
+            
+            console.log('Blocks connected successfully');
+            return true;
+        } catch (err) {
+            console.error('Connection failed:', err);
+            return false;
+        }
+    } else {
+        console.log('No valid connections found');
+        return false;
+    }
+}
+
+// Add this function to continuously check for connections during movement
+function setupConnectionChecking(workspace) {
+    let movingBlock = null;
+    let checkInterval = null;
+
+    workspace.addChangeListener((event) => {
+        if (event.type === Blockly.Events.BLOCK_MOVE) {
+            const block = workspace.getBlockById(event.blockId);
+            
+            if (block) {
+                // Clear existing interval
+                if (checkInterval) {
+                    clearInterval(checkInterval);
+                }
+
+                // Start checking for connections
+                movingBlock = block;
+                checkInterval = setInterval(() => {
+                    if (movingBlock) {
+                        tryConnectToNearbyBlocks(movingBlock, workspace);
+                    }
+                }, 100); // Check every 100ms
+
+                // Stop checking after a short delay when movement stops
+                setTimeout(() => {
+                    if (checkInterval) {
+                        clearInterval(checkInterval);
+                        checkInterval = null;
+                    }
+                    movingBlock = null;
+                }, 500);
+            }
+        }
+    });
 }
