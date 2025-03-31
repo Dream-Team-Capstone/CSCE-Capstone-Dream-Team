@@ -84,8 +84,16 @@ const toolboxConfig = `
   <category name="Variables" categorystyle="variable_category" custom="VARIABLE"></category>
   <category name="Functions" categorystyle="procedure_category" custom="PROCEDURE"></category>
   <category name="Print" colour="160">
-    <block type="custom_print"></block>
+    <block type="text"></block>
+      <block type="text_print">
+        <value name="TEXT">
+          <shadow type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+        </value>
+      </block>
   </category>
+  
 </xml>
 `;
 
