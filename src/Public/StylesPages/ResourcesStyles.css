@@ -127,6 +127,9 @@ body {
     color: #21b0fe;
     font-weight: bold;
     text-decoration: none;
+    display: inline-flex; 
+    align-items: center; 
+    gap: 5px;
 }
 
 .grid-item a:hover {
@@ -135,6 +138,11 @@ body {
 }
 
   
+.link{
+  display: block;
+  width: 15px;
+  height: auto;
+}
   /* !!FOOTER START!! */
   /* Styles the footer buttons */
   .footer_buttons {
