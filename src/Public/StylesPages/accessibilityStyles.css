@@ -385,6 +385,32 @@ body.dark-mode .error_box::after {
     border-left: 10px solid transparent;
     border-right: 10px solid #121212;
   }
+
+/*
+----------------------------------------
+Resources Page
+----------------------------------------
+*/
+
+.dark-mode .resource_card{
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .grid-item{
+    background: #2a2a2a;
+}
+
+.dark-mode .grid-item a{
+    color: #4da8da;
+}
+
+.dark-mode .grid-item a:hover {
+    text-decoration: underline;
+    color: rgb(169, 46, 169);
+}
+
+
 /* ============================================
    HIGH CONTRAST MODE STYLES
    ============================================ */
@@ -854,4 +880,29 @@ input:checked + .slider:before {
     background-color: #fff !important;
     color: #000 !important;
     transition: background-color 0.3s ease, color 0.3s ease; 
+}
+
+/*
+----------------------------------------
+Resources Page
+----------------------------------------
+*/
+
+.high-contrast .resource_card{
+    background-color: black;
+    border: 2px solid yellow;
+}
+
+.high-contrast .grid-item{
+    background: black;
+    border: 2px solid yellow;
+}
+
+.high-contrast .grid-item a{
+    color: yellow;
+    text-decoration: underline;
+}
+
+.high-contrast .grid-item a:hover {
+    color: #F652FF;
 }
