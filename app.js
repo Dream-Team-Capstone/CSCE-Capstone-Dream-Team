@@ -8,6 +8,7 @@ sessions, and manage certain errors.
 // Load environment variables from .env file
 require("dotenv").config();
 
+
 // importing required Modules
 const express = require('express'); // framework to build web applications
 const app = express(); 
@@ -173,6 +174,7 @@ app.get('/api/projectTutorial', async (req, res) => {
     if (!req.session.userId) {
         return res.redirect('/api/login'); // Redirect if not logged in
     }
+
     
     const userId = req.session.userId;
     
@@ -255,6 +257,10 @@ app.get("/api/resources", (req, res) => {
     user: req.session.first_name, // Send user data to the view
     userSettings: res.locals.userSettings, // Send any user settings if necessary
   });
+});
+
+app.get('/api/tutorials', (req, res) => {
+  res.render('TutorialsPage');
 });
 
 
