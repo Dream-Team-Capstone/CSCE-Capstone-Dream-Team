@@ -404,3 +404,28 @@ footer {
   justify-content: space-between; /* Spaces content between left and right */
   align-items: center;
 }
+
+/* Skip links */
+    .skip-links {
+        position: absolute;
+        top: -1000px;
+        left: -1000px;
+        z-index: 9999;
+    }
+
+    .skip-link {
+        background: #fff;
+        border: 2px solid #000;
+        color: #000;
+        padding: 8px 15px;
+        text-decoration: none;
+        display: inline-block;
+        margin: 2px;
+    }
+
+    .skip-link:focus {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        outline: 3px solid #4A90E2;
+    }
