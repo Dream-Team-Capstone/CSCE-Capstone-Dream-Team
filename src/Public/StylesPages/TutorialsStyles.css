@@ -80,26 +80,18 @@ body {
   }
   
   /* Main body Styling */
-  .page_body{
-    position: relative; /* Positions the background image relative to its container */
-    width: 100%; /* Full width of the screen */
-    height: 100vh; /* Full viewport height */
+  body{
+    position: relative;
+    width: 100%;
+    min-height: 100vh; /* Ensure it at least covers the viewport height */
+    margin: 0; /* Remove default margin */
     font-family: 'Trebuchet MS', Helvetica, sans-serif;
-    font-size: xx-large;
-    overflow: hidden; /* Hides overflowed content */
-    display: flex;
-    flex-direction: column; /* Stacks elements vertically */
-    justify-content: center; /* Centers content vertically */
-    align-items: center; /* Centers content horizontally */
-    text-align: center; /* Centers text */
   }
   
   /* Adds a semi-transparent background image to the page */
-  .page_body::before{
+  body::before{
     content: ""; /* Creates an empty content block */
-    position: absolute; /* Positions it relative to the nearest positioned ancestor */
-    top: 0; /* Aligns it to the top of the container */
-    left: 0; /* Aligns it to the left of the container */
+    position: fixed; /* Positions it relative to the nearest positioned ancestor */
     width: 100%; /* Full width */
     height: 100%; /* Full height */
     background-image: url('../ImagesUsed/homepage_backgroud.jpg'); /* Adds background image */
@@ -111,8 +103,22 @@ body {
 
 /* Ensure the section is the containing block */
 
-/* Ensure the section is the containing block */
-tutorials {
+h1{
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  text-align: center;
+  font-size: xx-large;
+}
+h2{
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  font-size: x-large;
+  text-align: center;
+}
+p{
+  font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  font-size: medium;
+  text-align: center;
+}
+.tutorials {
     background-color: #f7f7f7;
     padding: 20px;
     border-radius: 10px;
@@ -122,12 +128,24 @@ tutorials {
     font-family: 'Trebuchet MS', Helvetica, sans-serif; /* Apply font to the tutorials section */
 }
 
+.tutorial_card{
+  background-color: #f7f7f7;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
     text-align: left;
     font-family: 'Trebuchet MS', Helvetica, sans-serif; /* Apply font to the grid container */
+    place-items: center;
 }
 
 .grid-item {
