@@ -35,7 +35,24 @@ app.set("views", path.join(__dirname, "src", "Views"));
 app.set("view engine", "ejs");
 
 // Serve static files
-app.use(express.static(path.join(__dirname, "src", "Public")));
+app.use(express.static(path.join(__dirname, "src", "Public"), {
+    setHeaders: (res, path) => {
+        if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
+        }
+    }
+}));
+
+// Serve Blockly files from node_modules
+app.use('/blockly', express.static(path.join(__dirname, 'node_modules/blockly'), {
+    setHeaders: (res, path) => {
+        if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
+        }
+    }
+}));
+
+// Your other static middleware
 app.use("/node_modules", express.static("node_modules"));
 app.use(express.static(path.join(__dirname, "src", "blocks")));
 app.use(express.static(path.join(__dirname, "src", "generators")));
@@ -109,7 +126,11 @@ app.get("/api/login", redirectIfAuthenticated, (req, res) => {
 
 // Define the play route
 app.get("/api/play", (req, res) => {
-  res.render("PlayPage"); // Renders index.html
+  res.render("PlayPage", {
+    title: "PyBlocks - Play",
+    user: req.session.userId ? req.session.first_name : null,
+    userSettings: res.locals.userSettings
+  });
 });
 
 // Define the settings route
