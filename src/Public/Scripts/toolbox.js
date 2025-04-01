@@ -535,12 +535,12 @@ const toolboxConfig = {
     },
     {
       kind: "category",
-      name: "Custom",
+      name: "Custom Blocks",
       colour: "#5CA699",
       contents: [
         {
           kind: "block",
-          type: "custom_print",
+          type: "text_print",
         },
       ],
     },
