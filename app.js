@@ -8,6 +8,7 @@ sessions, and manage certain errors.
 // Load environment variables from .env file
 require("dotenv").config();
 
+
 // importing required Modules
 const express = require('express'); // framework to build web applications
 const app = express(); 
@@ -34,7 +35,24 @@ app.set("views", path.join(__dirname, "src", "Views"));
 app.set("view engine", "ejs");
 
 // Serve static files
-app.use(express.static(path.join(__dirname, "src", "Public")));
+app.use(express.static(path.join(__dirname, "src", "Public"), {
+    setHeaders: (res, path) => {
+        if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
+        }
+    }
+}));
+
+// Serve Blockly files from node_modules
+app.use('/blockly', express.static(path.join(__dirname, 'node_modules/blockly'), {
+    setHeaders: (res, path) => {
+        if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
+        }
+    }
+}));
+
+// Your other static middleware
 app.use("/node_modules", express.static("node_modules"));
 app.use(express.static(path.join(__dirname, "src", "blocks")));
 app.use(express.static(path.join(__dirname, "src", "generators")));
@@ -108,7 +126,11 @@ app.get("/api/login", redirectIfAuthenticated, (req, res) => {
 
 // Define the play route
 app.get("/api/play", (req, res) => {
-  res.render("PlayPage"); // Renders index.html
+  res.render("PlayPage", {
+    title: "PyBlocks - Play",
+    user: req.session.userId ? req.session.first_name : null,
+    userSettings: res.locals.userSettings
+  });
 });
 
 // Define the settings route
@@ -173,6 +195,7 @@ app.get('/api/projectTutorial', async (req, res) => {
     if (!req.session.userId) {
         return res.redirect('/api/login'); // Redirect if not logged in
     }
+
     
     const userId = req.session.userId;
     
@@ -246,6 +269,19 @@ app.post("/api/run-python", (req, res) => {
     }
     res.json({ output: stdout || "Python code executed successfully." });
   });
+});
+
+// Defining route for the resources page
+app.get("/api/resources", (req, res) => {
+  // You can pass any dynamic data to the view if necessary
+  res.render("ResourcesPage", {
+    user: req.session.first_name, // Send user data to the view
+    userSettings: res.locals.userSettings, // Send any user settings if necessary
+  });
+});
+
+app.get('/api/tutorials', (req, res) => {
+  res.render('TutorialsPage');
 });
 
 

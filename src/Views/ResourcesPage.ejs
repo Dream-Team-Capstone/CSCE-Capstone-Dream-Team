@@ -1,0 +1,153 @@
+<!--TO-DO: 1. work on html/css 2. update route in app.js 3. update nav/footer in all pages 4. update accessibility-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Resources Page -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>PyBlock Resources Page</title>
+        <link href='/StylesPages/ResourcesStyles.css' rel='stylesheet'>
+        <link href='/StylesPages/errorStyles.css' rel='stylesheet'>
+        <script src="/Scripts/settingsHandler.js" defer></script>
+        <!-- Hidden input to indicate if user is logged in -->
+        <input type="hidden" name="isLoggedIn" value="<%= locals.user ? 'true' : 'false' %>">
+        <link rel="stylesheet" href="/StylesPages/accessibilityStyles.css">
+    </head>
+
+    <body>
+        <!-- NAV BAR START -->
+        <header class="navigation" role="banner">
+    
+            <!-- List for the logo on the page -->
+            <nav aria-label="Main Navigation">
+            <ul class="navbar_logo">
+              <li>
+                <a href="/api/home">
+                  <img class = logo src = "/ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo, linking back to home page">
+                </a>
+              </li>
+            </ul>
+    
+            <!-- List for the Buttons on the navigation pane -->
+            <ul class="navbar_buttons_list">
+              <li>
+                <a href ="#contact" aria-label="Contact Us page (Coming soon)">
+                  <button class="Nav_Buttons" aria-disabled="true">Contact Us</button> <!-- TBC in another sprint -->
+                </a>
+              </li>
+              <li>
+                <a href="/api/tutorials" aria-label="Here are tutorials to get you started">
+                  <button class="Nav_Buttons" aria-disabled="true">Tutorials</button> <!-- TBC in another sprint -->
+                </a>
+              </li>
+              <li>
+                <a href = "/api/play">
+                  <button class="Nav_Buttons" aria-label="Start coding by going to the Play page">Play</button>
+                </a>
+              </li>
+              <li>
+                <a href="#courses" aria-label="Courses page (Coming soon)">
+                  <button class="Nav_Buttons" aria-disabled="true">Courses</button> <!-- TBC in another sprint -->
+                </a>
+              </li>
+              <li>
+                <a href="/api/resources" aria-label="Resources page (Coming soon)">
+                  <button class="Nav_Buttons" aria-disabled="true">Resources</button>
+                </a>
+              </li>
+              <li>
+                <% if (locals.user && locals.user !== null) { %>
+                  <a href="/api/dashboard">
+                    <button class="Nav_Buttons" aria-label="Go to dashboard">Dashboard</button>
+                  </a>
+                <% } else { %>
+                  <a href="/api/login">
+                    <button class="Nav_Buttons" aria-label="Sign in to your account">Sign In</button>
+                  </a>
+                <% } %>
+              </li>
+              <li>
+                <a href="/api/register">
+                  <button class="Nav_Buttons">Register</button>
+                </a>
+              </li>
+            </ul>
+            <ul class="Settings_logo">
+              <li>
+              <a href="/api/settings">
+                  <img class="Settings_logo" src="/ImagesUsed/SettingsIcon.png" alt="Settings logo, linking to settings page">
+              </a>
+              </li>
+          </ul>
+          </nav>
+          </header>
+    <!-- NAV BAR END -->
+
+    <!-- BODY WITH LINKS TO RESOURCES -->
+    <h1>Learning Resources for Block Code and Python</h1>
+    <section class="resources_section" aria-labelledby="resources">
+        <div class="resource_card" aria-labelledby="block-guides">
+            <h2>Guides to Block Code</h2>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <a href="https://pencilcode.net/">
+                      Pencil Code
+                      <img class = link src = "/ImagesUsed/link.png" alt = "Image showing that there is a link">
+                    </a>
+                    <p>Pencil Code helps you learn coding by making fun projects like games and drawings. With simple tools and JavaScript, you can see your ideas come to life on the screen!</p>
+                </div>
+                <div class="grid-item">
+                    <a href="https://scratch.mit.edu/">
+                      Scratch
+                      <img class = link src = "/ImagesUsed/link.png" alt = "Image showing that there is a link">
+                    </a>
+                    <p>Scratch lets you create games, stories, and animations by snapping together colorful coding blocks. It's an easy and fun way to learn the basics of programming, even if you're a beginner!</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="resource_card" aria-labelledby="python-guides">
+            <h2>Guides to Learning Python</h2>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <a href="https://www.geeksforgeeks.org/python-programming-language-tutorial/">
+                      Geeks for Geeks
+                      <img class = link src = "/ImagesUsed/link.png" alt = "Image showing that there is a link">
+                    </a>
+                    <p>Geeks for Geeks offers a clear and easy guide to learning Python, with simple examples and explanations. It’s perfect for beginners who want to understand how Python works step by step.</p>
+                </div>
+                <div class="grid-item">
+                    <a href="https://www.w3schools.com/python/python_intro.asp">
+                      w3schools
+                      <img class = link src = "/ImagesUsed/link.png" alt = "Image showing that there is a link">
+                    </a>
+                    <p>w3Schools gives a beginner-friendly introduction to Python, with interactive examples you can try right in your browser. It’s a great way to start learning Python at your own pace!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER START -->
+    <footer role="contentinfo">
+
+        <!-- List for the logo on the page -->
+        <ul class="navbar_logo">
+          <li>
+            <a href="/api/home">
+              <img class = logo src = "/ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo, linking back to home page">
+            </a>
+          </li>
+        </ul>
+  
+        <!-- List for the links in the footer -->
+        <ul class="footer_buttons">
+          <li><a href="/api/resources" aria-label="Resources section (Coming soon)">Resources</a></li>
+          <li><a href="/api/tutorials" aria-label="Tutorials section (Coming soon)">Tutorials</a></li>
+          <li><a href="#editors" aria-label="Open blank editors (Coming soon)">Open Blank Editors</a></li>
+        </ul>
+        <!-- holds links and some navigation, may add more later -->
+      </footer>
+  <!-- FOOTER END -->
+    </body>
+</html>

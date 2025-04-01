@@ -20,7 +20,7 @@
     "@blockly/theme-highcontrast": "^6.0.10",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
-    "blockly": "^11.1.1",
+    "blockly": "^11.2.2",
     "body-parser": "^1.20.3",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",

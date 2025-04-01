@@ -12,9 +12,16 @@
     <link type="text/css" href="/StylesPages/accessibilityStyles.css" rel="stylesheet">
 
     <!-- Use CDN for Blockly resources instead of module imports -->
-    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
-    <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+    <!-- <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="https://unpkg.com/blockly/python_compressed.js"></script> -->
+
+    <!-- Add these lines instead -->
+    <script src="/Scripts/blockly/blockly_compressed.js"></script>
+    <script src="/Scripts/blockly/blocks_compressed.js"></script>
+    <script src="/Scripts/blockly/msg/en.js"></script>
+    <script src="/Scripts/blockly/python_compressed.js"></script>
     <script src="/Scripts/toolbox.js"></script>
+    <script src="/Scripts/PlayPageScript.js" type="module"></script>
     
     <script src="/Guides/projectTutorialGuides.js"></script>
 </head>
@@ -72,7 +79,7 @@
       </a>
     </li>
     <li>
-      <a href="#tutorials" aria-label="Tutorials page (Coming soon)">
+      <a href="/api/tutorials" aria-label="Tutorials page (Coming soon)">
         <button class="Nav_Buttons" aria-disabled="true">Tutorials</button> <!-- TBC in another sprint -->
       </a>
     </li>
@@ -87,7 +94,7 @@
       </a>
     </li>
     <li>
-      <a href="#resources" aria-label="Resources page (Coming soon)">
+      <a href="/api/resources" aria-label="Resources page (Coming soon)">
         <button class="Nav_Buttons" aria-disabled="true">Resources</button> <!-- TBC in another sprint -->
       </a>
     </li>
@@ -225,8 +232,8 @@
   
     <!-- List for the links in the footer -->
     <ul class="footer_buttons">
-      <li><a href="#resources" aria-label="Resources section (Coming soon)">Resources</a></li>
-      <li><a href="#tutorials" aria-label="Tutorials section (Coming soon)">Tutorials</a></li>
+      <li><a href="/api/resources" aria-label="Resources section (Coming soon)">Resources</a></li>
+      <li><a href="/api/tutorials" aria-label="Tutorials section (Coming soon)">Tutorials</a></li>
       <li><a href="#editors" aria-label="Open blank editors (Coming soon)">Open Blank Editors</a></li>
     </ul>
     <!-- holds links and some navigation, may add more later -->

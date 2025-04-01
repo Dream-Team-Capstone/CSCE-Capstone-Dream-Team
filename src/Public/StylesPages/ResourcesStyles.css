@@ -1,0 +1,182 @@
+/* General reset for body and elements */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Helvetica, 'Trebuchet MS', sans-serif;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  /* NAVIGATION BAR STYLES */
+  header {
+    background-color: #21b0fe;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    width: 100%;
+  }
+  
+  nav {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Logo styles */
+  .navbar_logo {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .Settings_logo {
+    list-style: none;
+    margin: -5px;
+    padding: 0;
+    width: 50px; /* Adjust width as needed */
+    height: auto; /* Keeps aspect ratio */
+  }
+  .logo {
+    display: block;
+    width: 200px;
+    height: auto;
+  }
+  
+  /* Navbar buttons list */
+  .navbar_buttons_list {
+    display: flex;
+    list-style: none;
+    margin-left: 20px;
+    padding: 0;
+    align-items: center;
+  }
+  .navbar_buttons_list li{
+    margin-left: -25px;
+  }
+  
+  /* Common style for all navigation buttons */
+  .Nav_Buttons{
+    color: black;
+    width: 108px;
+    padding: 15px;
+    text-align: center;
+    margin: 0 20px;
+    border-radius: 15px;
+    font-weight: bold;
+    border: 2.5px solid #fd3636;
+    background-color: #FFC6C6;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+  }
+  
+  /* Hover effect for all buttons */
+  .Nav_Buttons:hover {
+    background-color: #fd3636;
+    color: white;
+  }
+  /* !! BODY OF PAGE START!! */
+  /* Styles the main content area of the respective page */
+  /* General reset for body and elements */
+
+
+* {
+  box-sizing: border-box;
+}
+
+/* Styling for the resource links section */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Helvetica, 'Trebuchet MS', sans-serif;
+  text-align: center;
+}
+
+.resources_section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.resource_card {
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    width: 80%;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    text-align: left;
+}
+
+.grid-item {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.grid-item a {
+    color: #21b0fe;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-flex; 
+    align-items: center; 
+    gap: 5px;
+}
+
+.grid-item a:hover {
+    text-decoration: underline;
+    color: rgb(169, 46, 169);
+}
+
+  
+.link{
+  display: block;
+  width: 15px;
+  height: auto;
+}
+  /* !!FOOTER START!! */
+  /* Styles the footer buttons */
+  .footer_buttons {
+    display: inline; /* Inline display for footer buttons */
+    list-style: none; /* Removes bullets from the list */
+    margin: 0;
+    padding: 0; 
+    color: black;
+  }
+  
+  /* Styles the individual footer buttons */
+  .footer_buttons li {
+    margin-left: 20px; /* Adds space between footer buttons */
+    padding: 8px; /* Adds padding inside the buttons */
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+  }
+  
+  /* Styles the links inside the footer buttons */
+  .footer_buttons li a {
+    text-decoration: none; /* Removes underline from links */
+    color: black; /* Set the desired text color */
+    font-weight: bold; /* Optionally make the text bold */
+  }
+  
+  
+  /* Styles the footer container */
+  footer {
+    background-color: #FED702;
+    padding: 20px;
+    width: 100%;
+    height: 20%;
+    text-align: right; /* Aligns footer content to the right */
+    display: flex; /* Flexbox layout */
+    justify-content: space-between; /* Spaces content between left and right */
+    align-items: center;
+  }
+  
