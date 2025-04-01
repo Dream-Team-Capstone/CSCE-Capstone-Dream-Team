@@ -53,7 +53,7 @@ export function initializeWorkspace() {
         }
     });
 
-    // Add code generation listener
+    // code generation listener
     workspace.addChangeListener(generateCode);
 
     // Set up all handlers
@@ -64,7 +64,7 @@ export function initializeWorkspace() {
     setupSettingsSynchronization();
     applyFontSizes();
 
-    // Add workspace navigation setup
+    // workspace navigation setup
     setTimeout(() => {
         setupWorkspaceNavigation();
         setupWorkspaceAccessibility();
@@ -72,7 +72,7 @@ export function initializeWorkspace() {
         setupBlockMovementAccessibility(workspace);
     }, 1000);
 
-    // Add movement listener for all blocks
+    // movement listener for all blocks
     workspace.addChangeListener(function(event) {
         if (event.type === Blockly.Events.BLOCK_MOVE) {
             const block = workspace.getBlockById(event.blockId);
@@ -85,7 +85,7 @@ export function initializeWorkspace() {
     // Enable auto-connect for the workspace
     enableAutoConnect(workspace);
 
-    // Add debug logging for block movements
+    // debug logging for block movements
     workspace.addChangeListener(event => {
         if (event.type === Blockly.Events.BLOCK_MOVE) {
             console.log('Block moved:', event.blockId);
@@ -760,20 +760,9 @@ function handleFlyoutBlockClick(event) {
 
     console.log('Found parent block:', blockElement);
 
-    // Try multiple methods to determine block type
-    let blockType = blockElement.getAttribute('data-type') || 
-                    blockElement.getAttribute('type') ||
-                    blockElement.getAttribute('data-id');
-
-    // If still no block type, try to infer from the block's content
-    if (!blockType) {
-        const blockText = blockElement.textContent.toLowerCase();
-        if (blockText.includes('true') || blockText.includes('false')) {
-            blockType = 'logic_boolean';
-        } else if (blockText.includes('if')) {
-            blockType = 'controls_if';
-        }
-    }
+    // Get the actual block type from the Blockly block
+    const blockType = blockElement.getAttribute('type') || 
+                     blockElement.querySelector('.blocklyText')?.getAttribute('data-type');
 
     if (!blockType) {
         console.error('Could not determine block type');
@@ -795,9 +784,6 @@ function handleFlyoutBlockClick(event) {
 
         // Make the block accessible
         makeBlockAccessible(newBlock);
-
-        // Try to connect to nearby blocks
-        tryConnectToNearbyBlocks(newBlock);
 
         announceToScreenReader(`Created new ${getBlockDescription(newBlock)}`);
     } catch (error) {
@@ -825,20 +811,46 @@ function enableAutoConnect(workspace) {
     workspace.addChangeListener(workspace.moveListener);
 }
 
+// Add this helper function to check if connections are compatible
+function canConnect(connection1, connection2) {
+    if (!connection1 || !connection2) return false;
+    
+    try {
+        // First try Blockly's built-in compatibility check if available
+        if (typeof connection1.canConnectWithReason === 'function') {
+            return connection1.canConnectWithReason(connection2) === 0;
+        }
+        
+        // Fallback: Check connection types
+        // Type mapping: 1 = output, 2 = previous, 3 = input, 4 = next
+        const type1 = connection1.type;
+        const type2 = connection2.type;
+        
+        // Valid combinations:
+        // output (1) -> input (3)
+        // input (3) -> output (1)
+        // previous (2) -> next (4)
+        // next (4) -> previous (2)
+        return (
+            (type1 === 1 && type2 === 3) ||
+            (type1 === 3 && type2 === 1) ||
+            (type1 === 2 && type2 === 4) ||
+            (type1 === 4 && type2 === 2)
+        );
+    } catch (err) {
+        console.error('Error checking connection compatibility:', err);
+        return false;
+    }
+}
+
+// Update the connection check in checkAndConnectBlocks
 function checkAndConnectBlocks(movedBlock, workspace) {
-    const SNAP_RADIUS = 30; // Pixels - adjust this value as needed
-
-    // Get all blocks except the moved one
+    const SNAP_RADIUS = 15;
     const otherBlocks = workspace.getAllBlocks().filter(block => block.id !== movedBlock.id);
-
-    // Get all connections from the moved block
     const connections = movedBlock.getConnections_(true);
     
     connections.forEach(connection => {
-        // Skip if already connected
-        if (connection.isConnected()) {
-            return;
-        }
+        if (connection.isConnected()) return;
 
         let closestConnection = null;
         let shortestDistance = SNAP_RADIUS;
@@ -848,24 +860,47 @@ function checkAndConnectBlocks(movedBlock, workspace) {
             const otherConnections = otherBlock.getConnections_(true);
             
             otherConnections.forEach(otherConnection => {
-                if (otherConnection.isConnected()) {
-                    return;
-                }
+                if (otherConnection.isConnected()) return;
 
-                // Check if connection types are compatible
-                if (connection.canConnect(otherConnection)) {
-                    // Get the distance between connections
-                    const distance = Blockly.utils.Coordinate.distance(
-                        connection.x_,
-                        connection.y_,
-                        otherConnection.x_,
-                        otherConnection.y_
-                    );
+                // Use our new canConnect function
+                if (canConnect(connection, otherConnection)) {
+                    // Ensure both connections have valid coordinates
+                    if (typeof connection.x_ === 'number' && 
+                        typeof connection.y_ === 'number' &&
+                        typeof otherConnection.x_ === 'number' &&
+                        typeof otherConnection.y_ === 'number') {
+                        
+                        try {
+                            const distance = Blockly.utils.Coordinate.distance(
+                                connection.x_,
+                                connection.y_,
+                                otherConnection.x_,
+                                otherConnection.y_
+                            );
 
-                    // Update if this is the closest valid connection
-                    if (distance < shortestDistance) {
-                        shortestDistance = distance;
-                        closestConnection = otherConnection;
+                            if (distance < shortestDistance) {
+                                shortestDistance = distance;
+                                closestConnection = otherConnection;
+                            }
+                        } catch (err) {
+                            console.error('Error calculating distance:', err);
+                        }
+                    } else {
+                        // Try to get coordinates from the blocks' positions
+                        const sourcePos = connection.getSourceBlock().getRelativeToSurfaceXY();
+                        const targetPos = otherConnection.getSourceBlock().getRelativeToSurfaceXY();
+                        
+                        if (sourcePos && targetPos) {
+                            const distance = Math.sqrt(
+                                Math.pow(sourcePos.x - targetPos.x, 2) +
+                                Math.pow(sourcePos.y - targetPos.y, 2)
+                            );
+
+                            if (distance < shortestDistance) {
+                                shortestDistance = distance;
+                                closestConnection = otherConnection;
+                            }
+                        }
                     }
                 }
             });
@@ -886,6 +921,85 @@ function checkAndConnectBlocks(movedBlock, workspace) {
             }
         }
     });
+}
+
+// Update the connection check in tryConnectToNearbyBlocks
+function tryConnectToNearbyBlocks(newBlock, workspace) {
+    console.log('Trying to connect block:', newBlock.type);
+    
+    const SNAP_RADIUS = 50;
+    let bestConnection = null;
+    let bestTarget = null;
+    let closestDistance = SNAP_RADIUS;
+
+    const newBlockConnections = newBlock.getConnections_(true);
+    console.log('Available connections on new block:', 
+        newBlockConnections.map(conn => conn.type).join(', '));
+
+    const otherBlocks = workspace.getAllBlocks(false).filter(b => b.id !== newBlock.id);
+    
+    newBlockConnections.forEach(connection => {
+        if (connection.isConnected()) return;
+
+        const connectionXY = connection.x_ + ',' + connection.y_;
+        console.log(`Checking connection at ${connectionXY}`);
+
+        otherBlocks.forEach(otherBlock => {
+            const otherConnections = otherBlock.getConnections_(true);
+            
+            otherConnections.forEach(otherConnection => {
+                if (otherConnection.isConnected()) return;
+
+                // Use our new canConnect function
+                if (canConnect(connection, otherConnection)) {
+                    const dx = connection.x_ - otherConnection.x_;
+                    const dy = connection.y_ - otherConnection.y_;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    console.log(`Found compatible connection, distance: ${distance}`);
+
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        bestConnection = connection;
+                        bestTarget = otherConnection;
+                        console.log('New best connection found, distance:', distance);
+                    }
+                }
+            });
+        });
+    });
+
+    // If we found a valid connection, connect the blocks
+    if (bestConnection && bestTarget) {
+        try {
+            console.log('Attempting to connect blocks...');
+            
+            // Move block to align perfectly with connection
+            const targetBlock = bestTarget.getSourceBlock();
+            const dx = bestTarget.x_ - bestConnection.x_;
+            const dy = bestTarget.y_ - bestConnection.y_;
+            
+            // Move the block to align with the connection
+            newBlock.moveBy(dx, dy);
+            
+            // Make the connection
+            bestConnection.connect(bestTarget);
+
+            // Announce connection
+            const sourceDesc = getBlockDescription(newBlock);
+            const targetDesc = getBlockDescription(targetBlock);
+            announceToScreenReader(`Connected ${sourceDesc} to ${targetDesc}`);
+            
+            console.log('Blocks connected successfully');
+            return true;
+        } catch (err) {
+            console.error('Connection failed:', err);
+            return false;
+        }
+    } else {
+        console.log('No valid connections found');
+        return false;
+    }
 }
 
 // Helper function to get block description
@@ -1220,29 +1334,21 @@ function setupBlockMovementAccessibility(workspace) {
             return;
         }
 
-        console.log('Moving block:', block.type, 'by', dx, dy);
-
-        // Get current position
-        const xy = block.getRelativeToSurfaceXY();
-        
-        // Calculate new position
-        const newX = xy.x + dx;
-        const newY = xy.y + dy;
-        
-        // Use Blockly's moveBy method
-        block.moveBy(dx, dy);
-        
-        // Ensure workspace is updated
-        block.workspace.recordDragTargets();
-        block.workspace.recordDeleteAreas();
-        
-        // Announce movement to screen reader
-        const direction = 
-            dx > 0 ? 'right' :
-            dx < 0 ? 'left' :
-            dy > 0 ? 'down' :
-            'up';
-        announceToScreenReader(`Moved ${getBlockDescription(block)} ${direction}`);
+        try {
+            // Use Blockly's built-in moveBy method
+            block.moveBy(dx, dy);
+            
+            // Announce movement
+            const direction = 
+                dx > 0 ? 'right' :
+                dx < 0 ? 'left' :
+                dy > 0 ? 'down' :
+                'up';
+            announceToScreenReader(`Moved ${getBlockDescription(block)} ${direction}`);
+        } catch (err) {
+            console.error('Move failed:', err);
+            announceToScreenReader('Failed to move block');
+        }
     }
 
     // Get readable block description
@@ -1328,93 +1434,8 @@ function setupWorkspaceNavigation() {
         }
     });
 }
-function tryConnectToNearbyBlocks(newBlock, workspace) {
-    console.log('Trying to connect block:', newBlock.type);
-    
-    const SNAP_RADIUS = 50; // Increased radius for easier connections
-    let bestConnection = null;
-    let bestTarget = null;
-    let closestDistance = SNAP_RADIUS;
 
-    // Get all connections from the new block
-    const newBlockConnections = newBlock.getConnections_(true);
-    console.log('Available connections on new block:', 
-        newBlockConnections.map(conn => conn.type).join(', '));
-
-    // Get all other blocks
-    const otherBlocks = workspace.getAllBlocks(false).filter(b => b.id !== newBlock.id);
-    
-    // Try each connection on the new block
-    newBlockConnections.forEach(connection => {
-        // Skip if already connected
-        if (connection.isConnected()) return;
-
-        // Get connection location
-        const connectionXY = connection.x_ + ',' + connection.y_;
-        console.log(`Checking connection at ${connectionXY}`);
-
-        otherBlocks.forEach(otherBlock => {
-            const otherConnections = otherBlock.getConnections_(true);
-            
-            otherConnections.forEach(otherConnection => {
-                // Skip if already connected
-                if (otherConnection.isConnected()) return;
-
-                // Check if these connections are compatible
-                if (connection.canConnect(otherConnection)) {
-                    // Get the distance between connections
-                    const dx = connection.x_ - otherConnection.x_;
-                    const dy = connection.y_ - otherConnection.y_;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-
-                    console.log(`Found compatible connection, distance: ${distance}`);
-
-                    // Update if this is the closest valid connection
-                    if (distance < closestDistance) {
-                        closestDistance = distance;
-                        bestConnection = connection;
-                        bestTarget = otherConnection;
-                        console.log('New best connection found, distance:', distance);
-                    }
-                }
-            });
-        });
-    });
-
-    // If we found a valid connection, connect the blocks
-    if (bestConnection && bestTarget) {
-        try {
-            console.log('Attempting to connect blocks...');
-            
-            // Move block to align perfectly with connection
-            const targetBlock = bestTarget.getSourceBlock();
-            const dx = bestTarget.x_ - bestConnection.x_;
-            const dy = bestTarget.y_ - bestConnection.y_;
-            
-            // Move the block to align with the connection
-            newBlock.moveBy(dx, dy);
-            
-            // Make the connection
-            bestConnection.connect(bestTarget);
-
-            // Announce connection
-            const sourceDesc = getBlockDescription(newBlock);
-            const targetDesc = getBlockDescription(targetBlock);
-            announceToScreenReader(`Connected ${sourceDesc} to ${targetDesc}`);
-            
-            console.log('Blocks connected successfully');
-            return true;
-        } catch (err) {
-            console.error('Connection failed:', err);
-            return false;
-        }
-    } else {
-        console.log('No valid connections found');
-        return false;
-    }
-}
-
-// Add this function to continuously check for connections during movement
+// function to continuously check for connections during movement
 function setupConnectionChecking(workspace) {
     let movingBlock = null;
     let checkInterval = null;
@@ -1491,7 +1512,7 @@ function setupBlockAccessibility(workspace) {
                 e.preventDefault();
                 e.stopPropagation();
                 console.log('C key pressed, attempting connection for block:', activeBlock.type);
-                tryConnect(activeBlock);
+                tryConnectWithScreenReader(activeBlock);
                 break;
             case 'arrowleft':
                 e.preventDefault();
@@ -1661,216 +1682,150 @@ function setupBlockAccessibility(workspace) {
 
     // Make block accessible
     function makeBlockAccessible(block) {
-        const svg = block.getSvgRoot();
-        if (!svg) return;
-
-        // Set ARIA attributes
-        svg.setAttribute('tabindex', '0');
-        svg.setAttribute('role', 'button');
+        if (!block || !block.getSvgRoot) return;
         
-        // Create a more descriptive label based on block type
-        let ariaLabel = '';
-        if (block.type === 'controls_if') {
-            ariaLabel = 'If block. Use arrow keys to move. Press C to connect with condition block.';
-        } else if (block.type === 'logic_boolean') {
-            const value = block.getFieldValue('BOOL');
-            ariaLabel = `${value ? 'True' : 'False'} block. Use arrow keys to move. Press C to connect with if block.`;
-        } else {
-            ariaLabel = `${block.type.replace(/_/g, ' ')} block. Use arrow keys to move.`;
-        }
-        svg.setAttribute('aria-label', ariaLabel);
-
-        // Add keyboard event listener
-        svg.addEventListener('keydown', (e) => {
-            console.log('Key pressed:', e.key);
+        const svgRoot = block.getSvgRoot();
+        if (!svgRoot) return;
+        
+        // Skip if already processed
+        if (svgRoot.hasAttribute('data-accessible')) return;
+        
+        // Mark as processed
+        svgRoot.setAttribute('data-accessible', 'true');
+        
+        // Make block focusable
+        svgRoot.setAttribute('tabindex', '0');
+        svgRoot.setAttribute('role', 'button');
+        
+        // Create descriptive label
+        let ariaLabel = getBlockDescription(block);
+        ariaLabel += '. Use arrow keys to move, C to connect with nearby blocks.';
+        svgRoot.setAttribute('aria-label', ariaLabel);
+        
+        // Add keyboard handler
+        svgRoot.addEventListener('keydown', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             
             switch (e.key.toLowerCase()) {
-                case 'arrowleft':
-                case 'arrowright':
-                case 'arrowup':
-                case 'arrowdown':
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const distance = 20; // Increased for more noticeable movement
-                    const dx = e.key.toLowerCase() === 'arrowleft' ? -distance : 
-                              e.key.toLowerCase() === 'arrowright' ? distance : 0;
-                    const dy = e.key.toLowerCase() === 'arrowup' ? -distance : 
-                              e.key.toLowerCase() === 'arrowdown' ? distance : 0;
-                    moveSelectedBlock(block, dx, dy);
-                    break;
                 case 'c':
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('Attempting connection for block:', block.type);
-                    tryConnect(block);
+                    tryConnectWithScreenReader(block);
+                    break;
+                case 'arrowleft':
+                    moveBlock(block, -20, 0);
+                    break;
+                case 'arrowright':
+                    moveBlock(block, 20, 0);
+                    break;
+                case 'arrowup':
+                    moveBlock(block, 0, -20);
+                    break;
+                case 'arrowdown':
+                    moveBlock(block, 0, 20);
                     break;
             }
         });
-
-        // Add focus and click handlers
-        svg.addEventListener('focus', () => {
-            selectBlock(block);
-            const message = block.type === 'controls_if' 
-                ? 'If block selected. Use arrow keys to move. Press C to connect with condition.'
-                : block.type === 'logic_boolean'
-                ? `${block.getFieldValue('BOOL') ? 'True' : 'False'} block selected. Use arrow keys to move. Press C to connect with if block.`
-                : `${block.type.replace(/_/g, ' ')} block selected.`;
-            announceToScreenReader(message);
-        });
-        
-        svg.addEventListener('click', () => selectBlock(block));
     }
 
-    function moveSelectedBlock(block, dx, dy) {
-        if (!block) {
-            console.error('No block to move');
-            return;
+    function tryConnectWithScreenReader(block) {
+        if (!block || !block.workspace) return false;
+        
+        console.log('Attempting screen reader connection for block:', block.type);
+        
+        const workspace = block.workspace;
+        const CONNECT_RANGE = 150; // pixels
+        
+        // Get all blocks except the current one
+        const otherBlocks = workspace.getAllBlocks(false).filter(b => b.id !== block.id);
+        
+        let bestDistance = CONNECT_RANGE;
+        let bestConnection = null;
+        let bestTarget = null;
+        let bestTargetBlock = null;
+
+        // Check each possible connection
+        if (block.previousConnection) {
+            otherBlocks.forEach(otherBlock => {
+                if (otherBlock.nextConnection) {
+                    const distance = getConnectionDistance(block, otherBlock);
+                    if (distance < bestDistance) {
+                        bestDistance = distance;
+                        bestConnection = block.previousConnection;
+                        bestTarget = otherBlock.nextConnection;
+                        bestTargetBlock = otherBlock;
+                    }
+                }
+            });
         }
 
-        console.log('Moving block:', block.type, 'by', dx, dy);
+        if (block.nextConnection) {
+            otherBlocks.forEach(otherBlock => {
+                if (otherBlock.previousConnection) {
+                    const distance = getConnectionDistance(block, otherBlock);
+                    if (distance < bestDistance) {
+                        bestDistance = distance;
+                        bestConnection = block.nextConnection;
+                        bestTarget = otherBlock.previousConnection;
+                        bestTargetBlock = otherBlock;
+                    }
+                }
+            });
+        }
 
-        try {
-            // Get current position
-            const currentXY = block.getRelativeToSurfaceXY();
-            
-            // Use translate to move the block
-            const blockGroup = block.getSvgRoot();
-            if (!blockGroup) {
-                console.error('Could not find block SVG');
-                return;
+        // If we found a valid connection, make it
+        if (bestConnection && bestTarget && bestTargetBlock) {
+            try {
+                // Move blocks into position
+                const targetPos = bestTargetBlock.getRelativeToSurfaceXY();
+                const blockPos = block.getRelativeToSurfaceXY();
+                
+                // Calculate the offset needed
+                const dx = targetPos.x - blockPos.x;
+                const dy = targetPos.y - blockPos.y;
+                
+                // Move the block
+                block.moveBy(dx, dy);
+                
+                // Make the connection
+                bestConnection.connect(bestTarget);
+                
+                announceToScreenReader(`Connected ${getBlockDescription(block)} to ${getBlockDescription(bestTargetBlock)}`);
+                return true;
+            } catch (err) {
+                console.error('Failed to connect blocks:', err);
+                announceToScreenReader('Failed to connect blocks');
+                return false;
             }
+        } else {
+            announceToScreenReader('No compatible blocks found nearby. Move blocks closer together.');
+            return false;
+        }
+    }
 
-            // Get current transform
-            const transform = blockGroup.getAttribute('transform');
-            const matches = transform ? transform.match(/translate\(([-\d.]+),\s*([-\d.]+)\)/) : null;
-            
-            // Calculate new position
-            const currentX = matches ? parseFloat(matches[1]) : 0;
-            const currentY = matches ? parseFloat(matches[2]) : 0;
-            const newX = currentX + dx;
-            const newY = currentY + dy;
-            
-            // Apply new transform
-            blockGroup.setAttribute('transform', `translate(${newX}, ${newY})`);
-            
-            // Update block's internal position
-            block.workspace.recordDragTargets();
-            
-            // Announce movement
+    function getConnectionDistance(block1, block2) {
+        const pos1 = block1.getRelativeToSurfaceXY();
+        const pos2 = block2.getRelativeToSurfaceXY();
+        return Math.sqrt(
+            Math.pow(pos1.x - pos2.x, 2) +
+            Math.pow(pos1.y - pos2.y, 2)
+        );
+    }
+
+    // Helper function to move blocks
+    function moveBlock(block, dx, dy) {
+        if (!block) return;
+        
+        try {
+            block.moveBy(dx, dy);
             const direction = 
                 dx > 0 ? 'right' :
                 dx < 0 ? 'left' :
                 dy > 0 ? 'down' :
                 'up';
-            announceToScreenReader(`Moved ${direction}`);
-            
-            console.log('Block moved to:', newX, newY);
-        } catch (error) {
-            console.error('Error moving block:', error);
+            announceToScreenReader(`Moved ${getBlockDescription(block)} ${direction}`);
+        } catch (err) {
+            console.error('Move failed:', err);
             announceToScreenReader('Failed to move block');
-        }
-    }
-
-    function tryConnect(block) {
-        const workspace = block.workspace;
-        
-        // Get all blocks in the workspace
-        const allBlocks = workspace.getAllBlocks(false);
-        
-        if (block.type === 'controls_if') {
-            // Find the input connection on the if block
-            const ifInput = block.getInput('IF0');
-            if (!ifInput || !ifInput.connection) {
-                announceToScreenReader('Cannot find connection point on if block');
-                return;
-            }
-            
-            // Find unconnected boolean blocks
-            const booleanBlocks = allBlocks.filter(b => 
-                b.type === 'logic_boolean' && 
-                b.outputConnection && 
-                !b.outputConnection.isConnected()
-            );
-            
-            if (booleanBlocks.length === 0) {
-                announceToScreenReader('No unconnected true/false blocks found');
-                return;
-            }
-            
-            // Find the closest boolean block
-            const closestBlock = findClosestBlock(block, booleanBlocks);
-            if (closestBlock) {
-                connectBlocks(block, closestBlock);
-            } else {
-                announceToScreenReader('No true/false blocks close enough to connect');
-            }
-        } else if (block.type === 'logic_boolean') {
-            // Find unconnected if blocks
-            const ifBlocks = allBlocks.filter(b => 
-                b.type === 'controls_if' && 
-                b.getInput('IF0') && 
-                !b.getInput('IF0').connection.isConnected()
-            );
-            
-            if (ifBlocks.length === 0) {
-                announceToScreenReader('No unconnected if blocks found');
-                return;
-            }
-            
-            // Find the closest if block
-            const closestBlock = findClosestBlock(block, ifBlocks);
-            if (closestBlock) {
-                connectBlocks(closestBlock, block);
-            } else {
-                announceToScreenReader('No if blocks close enough to connect');
-            }
-        }
-    }
-
-    function findClosestBlock(sourceBlock, targetBlocks) {
-        let closest = null;
-        let minDistance = 150; // Maximum connection distance
-        
-        const sourcePos = sourceBlock.getRelativeToSurfaceXY();
-        
-        targetBlocks.forEach(targetBlock => {
-            const targetPos = targetBlock.getRelativeToSurfaceXY();
-            const distance = Math.sqrt(
-                Math.pow(sourcePos.x - targetPos.x, 2) +
-                Math.pow(sourcePos.y - targetPos.y, 2)
-            );
-            
-            if (distance < minDistance) {
-                minDistance = distance;
-                closest = targetBlock;
-            }
-        });
-        
-        return closest;
-    }
-
-    function connectBlocks(ifBlock, booleanBlock) {
-        try {
-            const ifInput = ifBlock.getInput('IF0').connection;
-            const booleanOutput = booleanBlock.outputConnection;
-            
-            // Position the boolean block near the if block's input
-            const ifPos = ifBlock.getRelativeToSurfaceXY();
-            const targetX = ifPos.x + ifInput.x_;
-            const targetY = ifPos.y + ifInput.y_;
-            
-            const boolPos = booleanBlock.getRelativeToSurfaceXY();
-            booleanBlock.moveBy(
-                targetX - (boolPos.x + booleanOutput.x_),
-                targetY - (boolPos.y + booleanOutput.y_)
-            );
-            
-            // Connect the blocks
-            booleanOutput.connect(ifInput);
-            announceToScreenReader('Blocks connected successfully');
-        } catch (error) {
-            console.error('Connection failed:', error);
-            announceToScreenReader('Failed to connect blocks');
         }
     }
 
@@ -1886,7 +1841,7 @@ function setupBlockAccessibility(workspace) {
     });
 }
 
-// Add this helper function to update block positions after movement
+//helper function to update block positions after movement
 function updateBlockPosition(block) {
     if (!block) return;
     
