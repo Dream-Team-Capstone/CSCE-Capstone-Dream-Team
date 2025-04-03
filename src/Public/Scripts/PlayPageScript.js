@@ -88,14 +88,14 @@ export function initializeWorkspace() {
     // debug logging for block movements
     workspace.addChangeListener(event => {
         if (event.type === Blockly.Events.BLOCK_MOVE) {
-            console.log('Block moved:', event.blockId);
+            // console.log('Block moved:', event.blockId); //debugging
             const block = workspace.getBlockById(event.blockId);
-            if (block) {
+            /*if (block) {
                 console.log('Block position:', {
                     x: block.getRelativeToSurfaceXY().x,
                     y: block.getRelativeToSurfaceXY().y
                 });
-            }
+            }*/ // debug
         }
     });
 
@@ -335,12 +335,12 @@ function setupRunButton() {
 // Add this function to load saved state
 async function loadSavedState(workspace) {
     try {
-        console.log('Starting to load saved state...');
+        // console.log('Starting to load saved state...'); //debugging
         
         // Check if user is logged in
         const isLoggedIn = document.querySelector('input[name="isLoggedIn"]')?.value === 'true';
         if (!isLoggedIn) {
-            console.log('User not logged in, skipping state load');
+            // console.log('User not logged in, skipping state load'); //debugging
             return;
         }
         
@@ -349,20 +349,21 @@ async function loadSavedState(workspace) {
         // Check content type to see if we got HTML instead of JSON
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('text/html')) {
-            console.log('Received HTML response instead of JSON, likely not authenticated');
+            // console.log('Received HTML response instead of JSON, likely not authenticated'); //debugging
             return;
         }
         
         if (!response.ok) {
+            // console.log('Failed to fetch saved state: ' + response.status); //debugging
             throw new Error('Failed to fetch saved state: ' + response.status);
         }
         
         const data = await response.json();
-        console.log('Full data received from server:', data);
+        // console.log('Full data received from server:', data); //debugging
         
         const tutorialId = document.querySelector('input[name="tutorialId"]')?.value;
         if (!tutorialId) {
-            console.log('No tutorial ID provided');
+            // console.log('No tutorial ID provided'); //debugging
             return;
         }
 
@@ -375,14 +376,14 @@ async function loadSavedState(workspace) {
 
         const projectNumber = projectMapping[tutorialId];
         if (!projectNumber) {
-            console.log('Unknown tutorial ID:', tutorialId);
+            // console.log('Unknown tutorial ID:', tutorialId); //debugging
             return;
         }
 
         const progressField = `project${projectNumber}_progress`;
 
         if (data.workspace_state) {
-            console.log('Found workspace state, attempting to load...');
+            // console.log('Found workspace state, attempting to load...'); //debugging
             try {
                 // Clear the workspace
                 workspace.clear();
@@ -416,9 +417,9 @@ async function loadSavedState(workspace) {
                 // Force a complete workspace render
                 workspace.render();
                 
-                console.log('Workspace state loaded successfully');
+                // console.log('Workspace state loaded successfully'); //debugging
             } catch (e) {
-                console.error('Error loading workspace state:', e);
+                console.error('Error loading workspace state:', e); //debugging
             }
         }
 
@@ -438,10 +439,10 @@ function setupTutorial(workspace) {
     const tutorialId = document.querySelector('input[name="tutorialId"]')?.value;
     const isTutorialMode = document.querySelector('input[name="tutorialMode"]')?.value === 'true';
     
-    console.log('Tutorial setup:', { tutorialId, isTutorialMode });
+    // console.log('Tutorial setup:', { tutorialId, isTutorialMode }); //debugging
 
     if (isTutorialMode && tutorialId) {
-        console.log('Initializing tutorial guide');
+        // console.log('Initializing tutorial guide'); //debugging
         // Initialize tutorial guide
         const guide = new TutorialGuide(workspace, tutorialId);
         window.tutorialGuide = guide;
@@ -452,12 +453,12 @@ function setupTutorial(workspace) {
             saveProgressBtn.addEventListener('click', async function() {
                 try {
                     const workspaceState = Blockly.serialization.workspaces.save(workspace);
-                    console.log('Saving workspace state:', workspaceState);
+                    // console.log('Saving workspace state:', workspaceState); //debugging
                     
                     let currentStep = 0;
                     if (window.tutorialGuide) {
                         currentStep = window.tutorialGuide.getCurrentStep() + 1;
-                        console.log('Current tutorial step:', currentStep);
+                        // console.log('Current tutorial step:', currentStep); //debugging
                     }
 
                     const payload = {
@@ -466,7 +467,7 @@ function setupTutorial(workspace) {
                         workspaceState: workspaceState
                     };
 
-                    console.log('Sending payload:', payload);
+                    // console.log('Sending payload:', payload); //debugging
 
                     const response = await fetch('/api/project-tutorials/save', {
                         method: 'POST',
@@ -482,12 +483,12 @@ function setupTutorial(workspace) {
                     }
 
                     const responseData = await response.json();
-                    console.log('Save response:', responseData);
+                    // console.log('Save response:', responseData); //debugging
 
                     if (responseData.status === 'success') {
                         window.location.href = '/api/project-tutorials';
                     } else {
-                        alert('Failed to save progress: ' + (responseData.error || 'Unknown error'));
+                        // alert('Failed to save progress: ' + (responseData.error || 'Unknown error'));
                     }
                 } catch (error) {
                     console.error('Error saving progress:', error);
@@ -525,9 +526,9 @@ function defineCustomBlocks() {
             return code;
         };
         
-        console.log('Custom blocks defined successfully');
+        // console.log('Custom blocks defined successfully'); //debugging
     } else {
-        console.error('Blockly is not loaded!');
+        console.error('Blockly is not loaded!'); //debugging
     }
 }
 
@@ -621,7 +622,7 @@ export { generateCode, applyThemeToBlockly, loadSavedState };
 
 // Update the verifyAndFixAccessibility function
 function verifyAndFixAccessibility() {
-    console.log('Verifying accessibility settings...');
+    // console.log('Verifying accessibility settings...'); //debugging
     
     const toolboxContainer = document.querySelector('.blocklyToolboxContents');
     if (!toolboxContainer) return;
@@ -758,7 +759,7 @@ function handleFlyoutBlockClick(event) {
         return;
     }
 
-    console.log('Found parent block:', blockElement);
+    // console.log('Found parent block:', blockElement); //debugging
 
     // Get the actual block type from the Blockly block
     const blockType = blockElement.getAttribute('type') || 
@@ -769,7 +770,7 @@ function handleFlyoutBlockClick(event) {
         return;
     }
 
-    console.log('Creating block of type:', blockType);
+    // console.log('Creating block of type:', blockType); //debugging
 
     try {
         const workspace = Blockly.getMainWorkspace();
@@ -908,7 +909,7 @@ function checkAndConnectBlocks(movedBlock, workspace) {
         if (closestConnection) {
             try {
                 connection.connect(closestConnection);
-                console.log('Connected blocks successfully');
+                // console.log('Connected blocks successfully'); //debugging
                 
                 // Announce connection to screen reader
                 const sourceBlock = connection.getSourceBlock();
@@ -922,7 +923,7 @@ function checkAndConnectBlocks(movedBlock, workspace) {
 }
 
 function tryConnectToNearbyBlocks(newBlock, workspace) {
-    console.log('Trying to connect block:', newBlock.type);
+    // console.log('Trying to connect block:', newBlock.type); //debugging
     
     const SNAP_RADIUS = 50;
     let bestConnection = null;
@@ -930,8 +931,8 @@ function tryConnectToNearbyBlocks(newBlock, workspace) {
     let bestDistance = SNAP_RADIUS;
 
     const newBlockConnections = newBlock.getConnections_(true);
-    console.log('Available connections on new block:', 
-        newBlockConnections.map(conn => conn.type).join(', '));
+    /*console.log('Available connections on new block:', 
+        newBlockConnections.map(conn => conn.type).join(', '));*/ //debugging
 
     const otherBlocks = workspace.getAllBlocks(false).filter(b => b.id !== newBlock.id);
     
@@ -939,7 +940,7 @@ function tryConnectToNearbyBlocks(newBlock, workspace) {
         if (connection.isConnected()) return;
 
         const connectionXY = connection.x_ + ',' + connection.y_;
-        console.log(`Checking connection at ${connectionXY}`);
+        // console.log(`Checking connection at ${connectionXY}`); //debugging
 
         otherBlocks.forEach(otherBlock => {
             const otherConnections = otherBlock.getConnections_(true);
@@ -952,13 +953,13 @@ function tryConnectToNearbyBlocks(newBlock, workspace) {
                     const dy = connection.y_ - otherConnection.y_;
                     const distance = Math.sqrt(dx * dx + dy * dy);
 
-                    console.log(`Found compatible connection, distance: ${distance}`);
+                    // console.log(`Found compatible connection, distance: ${distance}`); //debugging
 
                     if (distance < bestDistance) {
                         bestDistance = distance;
                         bestConnection = connection;
                         bestTarget = otherConnection;
-                        console.log('New best connection found, distance:', distance);
+                        // console.log('New best connection found, distance:', distance); //debugging
                     }
                 }
             });
@@ -968,7 +969,7 @@ function tryConnectToNearbyBlocks(newBlock, workspace) {
     // valid connection found, connect the blocks
     if (bestConnection && bestTarget) {
         try {
-            console.log('Attempting to connect blocks...');
+            // console.log('Attempting to connect blocks...'); //debugging
             
             // Move block to align perfectly with connection
             const targetBlock = bestTarget.getSourceBlock();
@@ -986,14 +987,14 @@ function tryConnectToNearbyBlocks(newBlock, workspace) {
             const targetDesc = getBlockDescription(targetBlock);
             announceToScreenReader(`Connected ${sourceDesc} to ${targetDesc}`);
             
-            console.log('Blocks connected successfully');
+            // console.log('Blocks connected successfully'); //debugging
             return true;
         } catch (err) {
-            console.error('Connection failed:', err);
+            // console.error('Connection failed:', err); //debugging
             return false;
         }
     } else {
-        console.log('No valid connections found');
+        // console.log('No valid connections found'); //debugging
         return false;
     }
 }
@@ -1015,7 +1016,7 @@ function getBlockDescription(block) {
 }
 
 function setupFlyoutAccessibility() {
-    console.log('=== SETUP STARTING ===');
+    // console.log('=== SETUP STARTING ==='); //debugging
 
     function findParentBlock(element) {
         let current = element;
@@ -1023,7 +1024,7 @@ function setupFlyoutAccessibility() {
             // Check for both draggable blocks and flyout blocks
             if (current.classList.contains('blocklyDraggable') || 
                 current.classList.contains('blocklyFlyoutBlock')) {
-                console.log('Found parent block:', current);
+                // console.log('Found parent block:', current); //debugging
                 return current;
             }
             current = current.parentElement;
@@ -1070,7 +1071,7 @@ function setupFlyoutAccessibility() {
     }
 
     function processFlyoutBlocks() {
-        console.log('Processing flyout blocks...');
+        // console.log('Processing flyout blocks...'); //debugging
 
         // Try multiple selectors to find blocks
         const selectors = [
@@ -1082,7 +1083,7 @@ function setupFlyoutAccessibility() {
         let foundBlocks = false;
         selectors.forEach(selector => {
             const blocks = document.querySelectorAll(selector);
-            console.log(`Found ${blocks.length} blocks with selector "${selector}"`);
+            // console.log(`Found ${blocks.length} blocks with selector "${selector}"`); //debugging
             
             blocks.forEach(block => {
                 foundBlocks = true;
@@ -1109,13 +1110,13 @@ function setupFlyoutAccessibility() {
             return;
         }
 
-        console.log('Setting up category observer');
+        // console.log('Setting up category observer'); //debugging
         
         // Make categories clickable
         const categories = toolbox.querySelectorAll('.blocklyTreeRow');
         categories.forEach(category => {
             category.addEventListener('click', () => {
-                console.log('Category clicked, processing blocks...');
+                // console.log('Category clicked, processing blocks...'); //debugging
                 // Wait a moment for flyout to populate
                 setTimeout(processFlyoutBlocks, 100);
             });
@@ -1125,7 +1126,7 @@ function setupFlyoutAccessibility() {
         const flyout = document.querySelector('.blocklyFlyout');
         if (flyout) {
             const observer = new MutationObserver((mutations) => {
-                console.log('Flyout changed, processing blocks...');
+                // console.log('Flyout changed, processing blocks...'); //debugging     
                 processFlyoutBlocks();
             });
 
@@ -1244,7 +1245,7 @@ function setupBlockMovementAccessibility(workspace) {
                 // Make block interactive
                 svgRoot.setAttribute('tabindex', '0');
                 svgRoot.setAttribute('role', 'button');
-                svgRoot.setAttribute('aria-label', `${getBlockDescription(block)}. Press Space to move, Delete to remove.`);
+                svgRoot.setAttribute('aria-label', `${getBlockDescription(block)}. Move block with arrow keys, if it has inputs, press I to interact with them and enter to confirm, Delete to remove.`);
                 
                 // Add keyboard handler
                 svgRoot.addEventListener('keydown', (e) => {
@@ -1328,10 +1329,21 @@ function setupBlockMovementAccessibility(workspace) {
         }
 
         try {
-            // Use Blockly's built-in moveBy method
+            // Temporarily disable auto-connection during keyboard movement
+            const workspace = block.workspace;
+            const originalAutoConnect = workspace.options.moveOptions && workspace.options.moveOptions.drag;
+            if (workspace.options.moveOptions) {
+                workspace.options.moveOptions.drag = false;
+            }
+            
+            // Move the block
             block.moveBy(dx, dy);
             
-            // Announce movement
+            // Restore auto-connection setting
+            if (workspace.options.moveOptions) {
+                workspace.options.moveOptions.drag = originalAutoConnect;
+            }
+            
             const direction = 
                 dx > 0 ? 'right' :
                 dx < 0 ? 'left' :
@@ -1469,7 +1481,7 @@ function setupBlockAccessibility(workspace) {
     const MOVE_DISTANCE = 10;
 
     function selectBlock(block) {
-        console.log('Selecting block:', block);
+        // console.log('Selecting block:', block); //debugging
         selectedBlock = block;
         
         const svg = block.getSvgRoot();
@@ -1486,12 +1498,12 @@ function setupBlockAccessibility(workspace) {
     }
 
     function handleKeyboard(e, block) {
-        console.log('Keyboard event:', {
+        /*console.log('Keyboard event:', {
             key: e.key,
             keyCode: e.keyCode,
             code: e.code,
             type: e.type
-        });
+        });*/ //debugging
 
         // Ensure we have the correct block
         const activeBlock = block || workspace.selectedBlock;
@@ -1504,7 +1516,7 @@ function setupBlockAccessibility(workspace) {
             case 'c':
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('C key pressed, attempting connection for block:', activeBlock.type);
+                // console.log('C key pressed, attempting connection for block:', activeBlock.type); //debugging
                 tryConnectWithScreenReader(activeBlock);
                 break;
             case 'arrowleft':
@@ -1527,7 +1539,7 @@ function setupBlockAccessibility(workspace) {
     }
 
     function connectBlocks(block) {
-        console.log('Attempting to connect block:', block.type);
+        // console.log('Attempting to connect block:', block.type); //debugging
         
         const workspace = block.workspace;
         const allBlocks = workspace.getAllBlocks(false);
@@ -1548,7 +1560,7 @@ function setupBlockAccessibility(workspace) {
                 b !== block
             );
 
-            console.log('Found boolean blocks:', booleanBlocks.length);
+            // console.log('Found boolean blocks:', booleanBlocks.length); //debugging
 
             if (booleanBlocks.length > 0) {
                 let closestBlock = null;
@@ -1612,7 +1624,7 @@ function setupBlockAccessibility(workspace) {
                 b !== block
             );
 
-            console.log('Found if blocks:', ifBlocks.length);
+            // console.log('Found if blocks:', ifBlocks.length); //debugging
 
             if (ifBlocks.length > 0) {
                 let closestBlock = null;
@@ -1692,7 +1704,7 @@ function setupBlockAccessibility(workspace) {
         
         // Create descriptive label
         let ariaLabel = getBlockDescription(block);
-        ariaLabel += '. Use arrow keys to move, C to connect with nearby blocks.';
+        ariaLabel += '. Move block with arrow keys, if it has inputs, press I to interact with them and enter to confirm, Delete to remove.';
         svgRoot.setAttribute('aria-label', ariaLabel);
         
         // Add keyboard handler
@@ -1703,6 +1715,9 @@ function setupBlockAccessibility(workspace) {
             switch (e.key.toLowerCase()) {
                 case 'c':
                     tryConnectWithScreenReader(block);
+                    break;
+                case 'i':
+                    handleBlockInput(block);
                     break;
                 case 'arrowleft':
                     moveBlock(block, -20, 0);
@@ -1718,6 +1733,59 @@ function setupBlockAccessibility(workspace) {
                     break;
             }
         });
+    }
+
+    function handleBlockInput(block) {
+        if (!block) return;
+        
+        // Get all input fields in the block
+        const inputFields = block.inputList.flatMap(input => input.fieldRow);
+        
+        if (inputFields.length === 0) {
+            announceToScreenReader('This block has no inputs to interact with');
+            return;
+        }
+        
+        // Find the first editable input field
+        const editableField = inputFields.find(field => 
+            field instanceof Blockly.FieldTextInput ||
+            field instanceof Blockly.FieldDropdown ||
+            field instanceof Blockly.FieldNumber
+        );
+        
+        if (editableField) {
+            try {
+                // Focus the input field
+                editableField.showEditor_();
+                
+                // Add keyboard handler for the input field
+                const inputElement = editableField.getEditorElement();
+                if (inputElement) {
+                    inputElement.addEventListener('keydown', (e) => {
+                        if (e.key === 'Escape') {
+                            editableField.hideEditor_();
+                            block.getSvgRoot().focus();
+                        }
+                    });
+                    
+                    // Announce the input field
+                    if (editableField instanceof Blockly.FieldTextInput) {
+                        announceToScreenReader('Text input field. Type your text and press Enter to confirm, Escape to cancel.');
+                    } else if (editableField instanceof Blockly.FieldDropdown) {
+                        announceToScreenReader('Dropdown field. Use arrow keys to select an option and press Enter to confirm, Escape to cancel.');
+                    } else if (editableField instanceof Blockly.FieldNumber) {
+                        announceToScreenReader('Number input field. Type a number and press Enter to confirm, Escape to cancel.');
+                    }
+                    
+                    inputElement.focus();
+                }
+            } catch (error) {
+                console.error('Error handling block input:', error);
+                announceToScreenReader('Error interacting with block input');
+            }
+        } else {
+            announceToScreenReader('No editable inputs found in this block');
+        }
     }
 
     function tryConnectWithScreenReader(block) {
@@ -1740,19 +1808,6 @@ function setupBlockAccessibility(workspace) {
         const blockConnections = block.getConnections_(true);
         const blockPos = block.getRelativeToSurfaceXY();
         
-        // Add detailed logging for math blocks
-        if (block.type.startsWith('math_')) {
-            console.log('Math block connections:', {
-                type: block.type,
-                connections: blockConnections.map(conn => ({
-                    type: conn.type,
-                    name: conn.name,
-                    sourceBlock: conn.getSourceBlock().type,
-                    targetBlock: conn.targetBlock ? conn.targetBlock.type : null
-                }))
-            });
-        }
-        
         // Check each connection on the current block
         blockConnections.forEach(connection => {
             if (connection.isConnected()) return;
@@ -1764,9 +1819,17 @@ function setupBlockAccessibility(workspace) {
                 otherConnections.forEach(otherConnection => {
                     if (otherConnection.isConnected()) return;
                     
-                    // Special handling for math blocks
+                    // Special handling for text and print blocks
                     let canConnect = false;
-                    if (block.type.startsWith('math_')) {
+                    if (block.type === 'text' && otherBlock.type === 'text_print') {
+                        // Text blocks can connect to print blocks
+                        canConnect = (connection.type === Blockly.OUTPUT_VALUE && 
+                                    otherConnection.type === Blockly.INPUT_VALUE);
+                    } else if (block.type === 'text_print' && otherBlock.type === 'text') {
+                        // Print blocks can connect to text blocks
+                        canConnect = (connection.type === Blockly.INPUT_VALUE && 
+                                    otherConnection.type === Blockly.OUTPUT_VALUE);
+                    } else if (block.type.startsWith('math_')) {
                         // Math blocks can connect to:
                         // 1. Other math operations (output to input)
                         // 2. Print blocks (output to input)
@@ -1796,18 +1859,6 @@ function setupBlockAccessibility(workspace) {
                         const dx = (otherBlockPos.x + otherConnPos.x) - (blockPos.x + connPos.x);
                         const dy = (otherBlockPos.y + otherConnPos.y) - (blockPos.y + connPos.y);
                         const distance = Math.sqrt(dx * dx + dy * dy);
-                        
-                        // Add detailed logging for math block connection attempts
-                        if (block.type.startsWith('math_') || otherBlock.type.startsWith('math_')) {
-                            console.log('Math connection attempt:', {
-                                sourceBlock: block.type,
-                                targetBlock: otherBlock.type,
-                                sourceConnType: connection.type,
-                                targetConnType: otherConnection.type,
-                                distance: distance,
-                                canConnect: canConnect
-                            });
-                        }
                         
                         if (distance < bestDistance) {
                             bestDistance = distance;
@@ -1859,7 +1910,10 @@ function setupBlockAccessibility(workspace) {
         if (!block) return;
         
         try {
+            // Use Blockly's built-in moveBy method
             block.moveBy(dx, dy);
+            
+            // Announce movement
             const direction = 
                 dx > 0 ? 'right' :
                 dx < 0 ? 'left' :
