@@ -102,10 +102,10 @@ export function initializeWorkspace() {
     // Set up flyout accessibility
     setupFlyoutAccessibility();
 
-    // Wait a bit longer before setting up accessibility
+    // Wait a bit before setting up accessibility
     setTimeout(setupFlyoutAccessibility, 2000);
 
-    // Add continuous connection checking
+    // continuous connection checking
     setupConnectionChecking(workspace);
 
     // Set up block accessibility
@@ -181,7 +181,7 @@ function setupThemeHandlers() {
     // Apply theme to Blockly workspace
     applyThemeToBlockly();
 
-    // Add event listeners
+    // event listeners
     if (darkModeToggle) {
         darkModeToggle.addEventListener('change', function() {
             handleThemeChange('darkMode', this.checked);
@@ -319,7 +319,7 @@ function setupRunButton() {
         });
     }
 
-    // Add keyboard navigation for the code output
+    // keyboard navigation for the code output
     document.getElementById('output').addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
             // Select all text in the output
@@ -433,7 +433,7 @@ async function loadSavedState(workspace) {
     }
 }
 
-// Update the setupTutorial function
+// setupTutorial function
 function setupTutorial(workspace) {
     const tutorialId = document.querySelector('input[name="tutorialId"]')?.value;
     const isTutorialMode = document.querySelector('input[name="tutorialMode"]')?.value === 'true';
@@ -811,7 +811,7 @@ function enableAutoConnect(workspace) {
     workspace.addChangeListener(workspace.moveListener);
 }
 
-// Add this helper function to check if connections are compatible
+// helper function to check if connections are compatible
 function canConnect(connection1, connection2) {
     if (!connection1 || !connection2) return false;
     
@@ -843,7 +843,6 @@ function canConnect(connection1, connection2) {
     }
 }
 
-// Update the connection check in checkAndConnectBlocks
 function checkAndConnectBlocks(movedBlock, workspace) {
     const SNAP_RADIUS = 15;
     const otherBlocks = workspace.getAllBlocks().filter(block => block.id !== movedBlock.id);
@@ -862,7 +861,6 @@ function checkAndConnectBlocks(movedBlock, workspace) {
             otherConnections.forEach(otherConnection => {
                 if (otherConnection.isConnected()) return;
 
-                // Use our new canConnect function
                 if (canConnect(connection, otherConnection)) {
                     // Ensure both connections have valid coordinates
                     if (typeof connection.x_ === 'number' && 
@@ -923,14 +921,13 @@ function checkAndConnectBlocks(movedBlock, workspace) {
     });
 }
 
-// Update the connection check in tryConnectToNearbyBlocks
 function tryConnectToNearbyBlocks(newBlock, workspace) {
     console.log('Trying to connect block:', newBlock.type);
     
     const SNAP_RADIUS = 50;
     let bestConnection = null;
     let bestTarget = null;
-    let closestDistance = SNAP_RADIUS;
+    let bestDistance = SNAP_RADIUS;
 
     const newBlockConnections = newBlock.getConnections_(true);
     console.log('Available connections on new block:', 
@@ -950,7 +947,6 @@ function tryConnectToNearbyBlocks(newBlock, workspace) {
             otherConnections.forEach(otherConnection => {
                 if (otherConnection.isConnected()) return;
 
-                // Use our new canConnect function
                 if (canConnect(connection, otherConnection)) {
                     const dx = connection.x_ - otherConnection.x_;
                     const dy = connection.y_ - otherConnection.y_;
@@ -958,8 +954,8 @@ function tryConnectToNearbyBlocks(newBlock, workspace) {
 
                     console.log(`Found compatible connection, distance: ${distance}`);
 
-                    if (distance < closestDistance) {
-                        closestDistance = distance;
+                    if (distance < bestDistance) {
+                        bestDistance = distance;
                         bestConnection = connection;
                         bestTarget = otherConnection;
                         console.log('New best connection found, distance:', distance);
@@ -969,7 +965,7 @@ function tryConnectToNearbyBlocks(newBlock, workspace) {
         });
     });
 
-    // If we found a valid connection, connect the blocks
+    // valid connection found, connect the blocks
     if (bestConnection && bestTarget) {
         try {
             console.log('Attempting to connect blocks...');
@@ -1018,7 +1014,6 @@ function getBlockDescription(block) {
     return desc;
 }
 
-// Update the setupFlyoutAccessibility function
 function setupFlyoutAccessibility() {
     console.log('=== SETUP STARTING ===');
 
@@ -1146,7 +1141,6 @@ function setupFlyoutAccessibility() {
     setupCategoryObserver();
 }
 
-// Add this new function
 function setupWorkspaceAccessibility() {
     // Get workspace elements
     const trashcan = document.querySelector('.blocklyTrash');
@@ -1208,13 +1202,12 @@ function setupWorkspaceAccessibility() {
     }
 }
 
-// Add block movement and keyboard navigation support
 function setupBlockMovementAccessibility(workspace) {
     let isDragging = false;
     let selectedBlock = null;
     const MOVE_DISTANCE = 20;
 
-    // Add keyboard deletion handler directly to the workspace div
+    // keyboard deletion handler directly to the workspace div
     const workspaceDiv = document.getElementById('blocklyDiv');
     if (workspaceDiv) {
         workspaceDiv.addEventListener('keydown', handleBlockKeyboard);
@@ -1365,7 +1358,7 @@ function setupBlockMovementAccessibility(workspace) {
         return inputValues ? `${desc} with values: ${inputValues}` : desc;
     }
 
-    // Add workspace change listener for new blocks
+    // workspace change listener for new blocks
     workspace.addChangeListener((event) => {
         if (event.type === Blockly.Events.BLOCK_CREATE) {
             setTimeout(makeBlocksFocusable, 100);
@@ -1738,50 +1731,109 @@ function setupBlockAccessibility(workspace) {
         // Get all blocks except the current one
         const otherBlocks = workspace.getAllBlocks(false).filter(b => b.id !== block.id);
         
-        let bestDistance = CONNECT_RANGE;
         let bestConnection = null;
         let bestTarget = null;
         let bestTargetBlock = null;
+        let bestDistance = CONNECT_RANGE;
 
-        // Check each possible connection
-        if (block.previousConnection) {
-            otherBlocks.forEach(otherBlock => {
-                if (otherBlock.nextConnection) {
-                    const distance = getConnectionDistance(block, otherBlock);
-                    if (distance < bestDistance) {
-                        bestDistance = distance;
-                        bestConnection = block.previousConnection;
-                        bestTarget = otherBlock.nextConnection;
-                        bestTargetBlock = otherBlock;
-                    }
-                }
+        // Get all connections from the current block
+        const blockConnections = block.getConnections_(true);
+        const blockPos = block.getRelativeToSurfaceXY();
+        
+        // Add detailed logging for math blocks
+        if (block.type.startsWith('math_')) {
+            console.log('Math block connections:', {
+                type: block.type,
+                connections: blockConnections.map(conn => ({
+                    type: conn.type,
+                    name: conn.name,
+                    sourceBlock: conn.getSourceBlock().type,
+                    targetBlock: conn.targetBlock ? conn.targetBlock.type : null
+                }))
             });
         }
-
-        if (block.nextConnection) {
+        
+        // Check each connection on the current block
+        blockConnections.forEach(connection => {
+            if (connection.isConnected()) return;
+            
             otherBlocks.forEach(otherBlock => {
-                if (otherBlock.previousConnection) {
-                    const distance = getConnectionDistance(block, otherBlock);
-                    if (distance < bestDistance) {
-                        bestDistance = distance;
-                        bestConnection = block.nextConnection;
-                        bestTarget = otherBlock.previousConnection;
-                        bestTargetBlock = otherBlock;
+                const otherConnections = otherBlock.getConnections_(true);
+                const otherBlockPos = otherBlock.getRelativeToSurfaceXY();
+                
+                otherConnections.forEach(otherConnection => {
+                    if (otherConnection.isConnected()) return;
+                    
+                    // Special handling for math blocks
+                    let canConnect = false;
+                    if (block.type.startsWith('math_')) {
+                        // Math blocks can connect to:
+                        // 1. Other math operations (output to input)
+                        // 2. Print blocks (output to input)
+                        // 3. Variable blocks (output to input)
+                        if (otherBlock.type.startsWith('math_') || 
+                            otherBlock.type === 'text_print' || 
+                            otherBlock.type.startsWith('variables_')) {
+                            canConnect = (connection.type === Blockly.OUTPUT_VALUE && 
+                                        otherConnection.type === Blockly.INPUT_VALUE);
+                        }
+                    } else if (otherBlock.type.startsWith('math_')) {
+                        // Other blocks can connect to math blocks if they have input connections
+                        canConnect = (connection.type === Blockly.INPUT_VALUE && 
+                                    otherConnection.type === Blockly.OUTPUT_VALUE);
+                    } else {
+                        // Use Blockly's connection checker for other blocks
+                        const checker = workspace.connectionChecker;
+                        canConnect = checker && checker.canConnect(connection, otherConnection, false);
                     }
-                }
+                    
+                    if (canConnect) {
+                        // Get connection positions
+                        const connPos = connection.getOffsetInBlock();
+                        const otherConnPos = otherConnection.getOffsetInBlock();
+                        
+                        // Calculate distance between connection points
+                        const dx = (otherBlockPos.x + otherConnPos.x) - (blockPos.x + connPos.x);
+                        const dy = (otherBlockPos.y + otherConnPos.y) - (blockPos.y + connPos.y);
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        // Add detailed logging for math block connection attempts
+                        if (block.type.startsWith('math_') || otherBlock.type.startsWith('math_')) {
+                            console.log('Math connection attempt:', {
+                                sourceBlock: block.type,
+                                targetBlock: otherBlock.type,
+                                sourceConnType: connection.type,
+                                targetConnType: otherConnection.type,
+                                distance: distance,
+                                canConnect: canConnect
+                            });
+                        }
+                        
+                        if (distance < bestDistance) {
+                            bestDistance = distance;
+                            bestConnection = connection;
+                            bestTarget = otherConnection;
+                            bestTargetBlock = otherBlock;
+                        }
+                    }
+                });
             });
-        }
+        });
 
-        // If we found a valid connection, make it
+        // valid connection found, make it
         if (bestConnection && bestTarget && bestTargetBlock) {
             try {
                 // Move blocks into position
                 const targetPos = bestTargetBlock.getRelativeToSurfaceXY();
                 const blockPos = block.getRelativeToSurfaceXY();
                 
-                // Calculate the offset needed
-                const dx = targetPos.x - blockPos.x;
-                const dy = targetPos.y - blockPos.y;
+                // Get connection positions
+                const connPos = bestConnection.getOffsetInBlock();
+                const otherConnPos = bestTarget.getOffsetInBlock();
+                
+                // Calculate the offset needed to align the connections
+                const dx = (targetPos.x + otherConnPos.x) - (blockPos.x + connPos.x);
+                const dy = (targetPos.y + otherConnPos.y) - (blockPos.y + connPos.y);
                 
                 // Move the block
                 block.moveBy(dx, dy);
@@ -1796,19 +1848,10 @@ function setupBlockAccessibility(workspace) {
                 announceToScreenReader('Failed to connect blocks');
                 return false;
             }
-        } else {
-            announceToScreenReader('No compatible blocks found nearby. Move blocks closer together.');
-            return false;
         }
-    }
-
-    function getConnectionDistance(block1, block2) {
-        const pos1 = block1.getRelativeToSurfaceXY();
-        const pos2 = block2.getRelativeToSurfaceXY();
-        return Math.sqrt(
-            Math.pow(pos1.x - pos2.x, 2) +
-            Math.pow(pos1.y - pos2.y, 2)
-        );
+        
+        announceToScreenReader('No compatible blocks found nearby. Move blocks closer together.');
+        return false;
     }
 
     // Helper function to move blocks
@@ -1863,7 +1906,7 @@ function updateBlockPosition(block) {
     });
 }
 
-// Add this function to handle block creation
+// function to handle block creation
 function handleBlockCreation(workspace, block) {
     // Make the new block accessible
     makeBlockAccessible(block);
