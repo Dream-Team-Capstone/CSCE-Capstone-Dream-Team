@@ -1,20 +1,15 @@
-describe('User Registration', () => {
-    it('should submit the registration form and redirect to dashboard', () => {
-      cy.visit('http://localhost:4000/api/register');  // Visit the registration page
-      
-      const uniqueEmail = `testuser${Date.now()}@example.com`;  // Create a unique email using the current timestamp
-      
-      // Fill in the registration form
-      cy.get('input[name="first_name"]').type('testuser'); 
-      cy.get('input[name="last_name"]').type('testuser'); 
-      cy.get('input[name="email"]').type(uniqueEmail);  // Use the unique email
-      cy.get('input[name="password"]').type('password123');
-      
-      // Submit the form
-      cy.get('form').submit();
-      
-      // Check if the user is redirected to the login
-      cy.url().should('include', 'http://localhost:4000/api/login');
-    });
+describe("User Registration", () => {
+  it("should submit the registration form and redirect to login", () => {
+    cy.visit("/api/register");
+
+    const uniqueEmail = `testuser${Date.now()}@example.com`;
+
+    cy.get("[data-cy=first-name-input]").type("testuser");
+    cy.get("[data-cy=last-name-input]").type("testuser");
+    cy.get("[data-cy=email-input]").type(uniqueEmail);
+    cy.get("[data-cy=password-input]").type("password123");
+    cy.get("[data-cy=register-button]").click();
+
+    cy.url().should("include", "/api/login");
   });
-  
+});

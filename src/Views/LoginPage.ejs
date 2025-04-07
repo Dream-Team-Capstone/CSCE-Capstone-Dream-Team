@@ -106,8 +106,13 @@
                 <!-- EMAIL INPUT -->
                 <div class="Form_Group">
                   <label for="Email">Email:</label>
-                  <input type="email" name="email" id="Email" placeholder="Email" aria-required="true"
-                        class="<%= errors && errors.some(e => e.param === 'email') ? 'error' : '' %>">
+                  <input type="email" 
+                         name="email" 
+                         id="Email" 
+                         placeholder="Email" 
+                         data-cy="email-input" 
+                         aria-required="true"
+                         class="<%= errors && errors.some(e => e.param === 'email') ? 'error' : '' %>">
                   <% if (errors && errors.some(e => e.param === 'email')) { %>
                     <div class="error_box">
                       <p class="error_popup_text"><%= errors.find(e => e.param === 'email').msg %></p>
@@ -118,8 +123,13 @@
                 <!-- PASSWORD INPUT -->
                 <div class="Form_Group">
                   <label for="Password">Password:</label>
-                  <input type="password" name="password" id="Password" placeholder="Password" aria-required="true"
-                        class="<%= errors && errors.some(e => e.param === 'password') ? 'error' : '' %>">
+                  <input type="password" 
+                         name="password" 
+                         id="Password" 
+                         placeholder="Password" 
+                         data-cy="password-input" 
+                         aria-required="true"
+                         class="<%= errors && errors.some(e => e.param === 'password') ? 'error' : '' %>">
                   <% if (errors && errors.some(e => e.param === 'password')) { %>
                     <div class="error_box">
                       <p class="error_popup_text"><%= errors.find(e => e.param === 'password').msg %></p>
@@ -129,7 +139,10 @@
     
                 <!-- REGISTER BUTTON -->
                 <div class="Form_Group Button_Center">
-                    <button type="submit" class="Register_Button" aria-label="Sign in to your account">Sign In</button>
+                    <button type="submit" 
+                            class="Register_Button" 
+                            data-cy="login-button"
+                            aria-label="Sign in to your account">Sign In</button>
                 </div>
               </fieldset>
             </form>

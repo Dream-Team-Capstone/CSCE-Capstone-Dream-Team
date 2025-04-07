@@ -73,26 +73,49 @@
             <legend id="registerForm" class="visually-hidden">Register Form</legend>
             <div class="Form_Group">
               <label for="FName">First Name:</label>
-              <input type="text" name="first_name" id="FName" placeholder="First Name" aria-required="true"
-                    class="<%= errors && errors.some(e => e.param === 'first_name') ? 'error' : '' %>">
+              <input type="text" 
+                     name="first_name" 
+                     id="FName" 
+                     placeholder="First Name" 
+                     data-cy="first-name-input" 
+                     aria-required="true"
+                     class="<%= errors && errors.some(e => e.param === 'first_name') ? 'error' : '' %>">
             </div>
             <div class="Form_Group">
               <label for="LName">Last Name:</label>
-              <input type="text" name="last_name" id="LName" placeholder="Last Name" aria-required="true"
-                    class="<%= errors && errors.some(e => e.param === 'last_name') ? 'error' : '' %>">
+              <input type="text" 
+                     name="last_name" 
+                     id="LName" 
+                     placeholder="Last Name" 
+                     data-cy="last-name-input" 
+                     aria-required="true"
+                     class="<%= errors && errors.some(e => e.param === 'last_name') ? 'error' : '' %>">
             </div>
             <div class="Form_Group">
               <label for="Email">Email:</label>
-              <input type="email" name="email" id="Email" placeholder="Email" aria-required="true"
-                    class="<%= errors && errors.some(e => e.param === 'email') ? 'error' : '' %>">
+              <input type="email" 
+                     name="email" 
+                     id="Email" 
+                     placeholder="Email" 
+                     data-cy="email-input" 
+                     aria-required="true"
+                     class="<%= errors && errors.some(e => e.param === 'email') ? 'error' : '' %>">
             </div>
             <div class="Form_Group">
               <label for="Password">Password:</label>
-              <input type="password" name="password" id="Password" placeholder="Password" aria-required="true"
-                    class="<%= errors && errors.some(e => e.param === 'password') ? 'error' : '' %>">
+              <input type="password" 
+                     name="password" 
+                     id="Password" 
+                     placeholder="Password" 
+                     data-cy="password-input" 
+                     aria-required="true"
+                     class="<%= errors && errors.some(e => e.param === 'password') ? 'error' : '' %>">
             </div>
             <div class="Form_Group Button_Center">
-              <button type="submit" class="Register_Button" aria-label="Register to create an account">Register</button>
+              <button type="submit" 
+                      class="Register_Button" 
+                      data-cy="register-button"
+                      aria-label="Register to create an account">Register</button>
             </div>
         </fieldset>
     </form>

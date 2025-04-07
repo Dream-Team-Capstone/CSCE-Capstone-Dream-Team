@@ -14,13 +14,18 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import "./commands";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
-Cypress.on('uncaught:exception', (err, runnable) => {
-    console.error(err); // Log the error for debugging
-    return false; // Prevent Cypress from failing the test
-  });
-  
+// Set default baseUrl if not configured
+Cypress.config(
+  "baseUrl",
+  Cypress.config("baseUrl") || "http://localhost:4000/api"
+);
+
+Cypress.on("uncaught:exception", (err, runnable) => {
+  console.error(err); // Log the error for debugging
+  return false; // Prevent Cypress from failing the test
+});
