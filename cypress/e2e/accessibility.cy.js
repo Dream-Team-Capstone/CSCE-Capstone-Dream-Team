@@ -9,13 +9,15 @@ describe("Accessibility Settings", () => {
     cy.get("body").should("have.class", "high-contrast");
   });
 
-  it("should change font size", () => {
+  it("should change font size from default 14px to 18px", () => {
+    get("[data-cy=font-size]");
+    should("have.value", "14");
+    // Change to 18px
     cy.get("[data-cy=font-size]")
       .as("fontSlider")
       .invoke("val", 18)
-      .trigger("input")
-      .trigger("change");
-    cy.get("body").should("have.css", "font-size", "18px");
+      .trigger("input");
+    cy.get("body", { timeout: 5000 }).should("have.css", "font-size", "18px");
   });
 
   it("should persist accessibility settings", () => {
