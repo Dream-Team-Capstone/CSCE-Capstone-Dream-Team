@@ -1,6 +1,6 @@
 describe("User Management", () => {
   beforeEach(() => {
-    cy.visit("/api/login");
+    cy.visit("/login");
   });
 
   it("should register a new user", () => {
