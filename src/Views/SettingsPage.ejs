@@ -95,7 +95,10 @@
             <!-- Color Contrast Toggle -->
             <div class="Form_Group">
                 <label for="colorContrastToggle">Color Contrast:</label>
-                <input type="checkbox" id="colorContrastToggle" aria-label="Toggle high contrast mode">
+                <input type="checkbox" 
+                       id="colorContrastToggle" 
+                       data-cy="high-contrast"
+                       aria-label="Toggle high contrast mode">
             </div>
 
             <!-- Dark Mode Toggle -->
@@ -107,7 +110,13 @@
             <!-- Font Size Setting -->
             <div class="Form_Group">
                 <label for="fontSizeSetting">Font Size:</label>
-                <input type="range" id="fontSizeSetting" min="12" max="24" step="2" aria-label="Adjust font size">
+                <input type="range" 
+                       id="fontSizeSetting" 
+                       data-cy="font-size"
+                       min="12" 
+                       max="24" 
+                       step="2" 
+                       aria-label="Adjust font size">
             </div>
             
             <div class="Form_Group Button_Center">
