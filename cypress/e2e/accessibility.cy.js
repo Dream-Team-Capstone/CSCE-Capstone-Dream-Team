@@ -10,7 +10,11 @@ describe("Accessibility Settings", () => {
   });
 
   it("should change font size", () => {
-    cy.get("[data-cy=font-size]").invoke("val", 18).trigger("change");
+    cy.get("[data-cy=font-size]")
+      .as("fontSlider")
+      .invoke("val", 18)
+      .trigger("input")
+      .trigger("change");
     cy.get("body").should("have.css", "font-size", "18px");
   });
 
