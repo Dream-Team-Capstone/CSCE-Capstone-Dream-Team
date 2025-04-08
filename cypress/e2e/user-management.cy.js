@@ -17,12 +17,12 @@ describe("User Management", () => {
     cy.get("[data-cy=email-input]").type("testuser@example.com");
     cy.get("[data-cy=password-input]").type("password123");
     cy.get("[data-cy=login-button]").click();
-    cy.url().should("include", "/play");
+    cy.url().should("include", "/api/dashboard"); // Updated redirect
   });
 
   it("should remove a user account", () => {
     cy.login("testuser@example.com", "password123");
-    cy.visit("/settings");
+    cy.visit("/api/settings"); // Updated path
     cy.get("[data-cy=delete-account]").click();
     cy.get("[data-cy=confirm-delete]").click();
     cy.url().should("eq", `${Cypress.config().baseUrl}/api/login`);
