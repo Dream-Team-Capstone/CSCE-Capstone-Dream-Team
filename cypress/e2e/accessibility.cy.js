@@ -10,8 +10,8 @@ describe("Accessibility Settings", () => {
   });
 
   it("should change font size from default 14px to 18px", () => {
-    get("[data-cy=font-size]");
-    should("have.value", "14");
+    cy.get("[data-cy=font-size]");
+    cy.should("have.value", "14");
     // Change to 18px
     cy.get("[data-cy=font-size]")
       .as("fontSlider")
