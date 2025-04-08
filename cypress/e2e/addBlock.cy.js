@@ -1,6 +1,6 @@
 describe("Add Block", () => {
   it("adds a block to the workspace", () => {
-    cy.visit("http://localhost:4000/api/play");
+    cy.visit("/play");
 
     // Retry until Blockly is available on the window
     cy.window()
