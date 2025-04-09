@@ -1,6 +1,6 @@
 --DROP SCHEMA IF EXISTS pyblocks CASCADE;
 --CREATE SCHEMA pyblocks;
-SET SEARCH_PATH TO pyblocks;
+--SET SEARCH_PATH TO pyblocks;
 
 -- User information table
 CREATE TABLE user_info(

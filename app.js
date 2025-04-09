@@ -8,24 +8,25 @@ sessions, and manage certain errors.
 // Load environment variables from .env file
 require("dotenv").config();
 
-
 // importing required Modules
-const express = require('express'); // framework to build web applications
-const app = express(); 
-const bodyParser = require('body-parser'); // Import body-parser
-const path = require('path'); // to work with file and directory paths
-const sessionConfig = require('./src/Config/config_session'); // imported from config_session file
-const { connectToDatabase, pool } = require('./src/Config/dbh'); // imported from dbh file
-const registerRoutes = require('./src/Routes/registerRoutes'); // routes for user registration functionality
-const loginRoutes = require('./src/Routes/loginRoutes'); // routes for user login functionality
-const deleteRoutes = require('./src/Routes/deleteRoutes');
-const projectTutorialRoutes = require('./src/Routes/ProjectTutorialsRoutes');
-const deleteController = require('./src/Controllers/deleteController');
-const PORT = process.env.PORT || 4000; 
-const ejs = require('ejs'); // ejs is a templating engine for rendering HTML
-const cookieParser = require('cookie-parser'); 
-const { clearUserProgress } = require('./src/Controllers/clearProgressController');
-const settingsController = require('./src/Controllers/settingsController');
+const express = require("express"); // framework to build web applications
+const app = express();
+const bodyParser = require("body-parser"); // Import body-parser
+const path = require("path"); // to work with file and directory paths
+const sessionConfig = require("./src/Config/config_session"); // imported from config_session file
+const { connectToDatabase, pool } = require("./src/Config/dbh"); // imported from dbh file
+const registerRoutes = require("./src/Routes/registerRoutes"); // routes for user registration functionality
+const loginRoutes = require("./src/Routes/loginRoutes"); // routes for user login functionality
+const deleteRoutes = require("./src/Routes/deleteRoutes");
+const projectTutorialRoutes = require("./src/Routes/ProjectTutorialsRoutes");
+const deleteController = require("./src/Controllers/deleteController");
+const PORT = process.env.PORT || 4000;
+const ejs = require("ejs"); // ejs is a templating engine for rendering HTML
+const cookieParser = require("cookie-parser");
+const {
+  clearUserProgress,
+} = require("./src/Controllers/clearProgressController");
+const settingsController = require("./src/Controllers/settingsController");
 const { exec } = require("child_process");
 const fs = require("fs");
 
@@ -35,22 +36,27 @@ app.set("views", path.join(__dirname, "src", "Views"));
 app.set("view engine", "ejs");
 
 // Serve static files
-app.use(express.static(path.join(__dirname, "src", "Public"), {
+app.use(
+  express.static(path.join(__dirname, "src", "Public"), {
     setHeaders: (res, path) => {
-        if (path.endsWith('.js')) {
-            res.setHeader('Content-Type', 'application/javascript');
-        }
-    }
-}));
+      if (path.endsWith(".js")) {
+        res.setHeader("Content-Type", "application/javascript");
+      }
+    },
+  })
+);
 
 // Serve Blockly files from node_modules
-app.use('/blockly', express.static(path.join(__dirname, 'node_modules/blockly'), {
+app.use(
+  "/blockly",
+  express.static(path.join(__dirname, "node_modules/blockly"), {
     setHeaders: (res, path) => {
-        if (path.endsWith('.js')) {
-            res.setHeader('Content-Type', 'application/javascript');
-        }
-    }
-}));
+      if (path.endsWith(".js")) {
+        res.setHeader("Content-Type", "application/javascript");
+      }
+    },
+  })
+);
 
 // Your other static middleware
 app.use("/node_modules", express.static("node_modules"));
@@ -69,34 +75,96 @@ app.use(cookieParser());
 // Set up session configuration
 sessionConfig(app);
 
-// Connect to the database
-connectToDatabase();
-
 // Middleware to load user settings if available
 app.use(async (req, res, next) => {
   if (req.session && req.session.userId) {
     try {
       const result = await pool.query(
-        'SELECT dark_mode, high_contrast, font_size FROM user_settings WHERE user_id = $1',
+        "SELECT dark_mode, high_contrast, font_size FROM user_settings WHERE user_id = $1",
         [req.session.userId]
       );
-      
+
       if (result.rows.length > 0) {
         res.locals.userSettings = {
           darkMode: result.rows[0].dark_mode,
           highContrast: result.rows[0].high_contrast,
-          fontSize: result.rows[0].font_size
+          fontSize: result.rows[0].font_size,
         };
       }
     } catch (error) {
-      console.error('Error loading user settings:', error);
+      console.error("Error loading user settings:", error);
     }
   }
-  
+
   // Make user data available to all views
   res.locals.user = req.session.userId ? req.session.first_name : null;
   next();
 });
+
+// Move this near the top, after the middleware setup but before routes
+let dbConnected = false;
+
+const initializeServer = async () => {
+  try {
+    await connectToDatabase();
+    dbConnected = true;
+    console.log("\n🟢 Database connection successful - all features enabled");
+  } catch (err) {
+    console.error("\n🔴 Database connection failed:", err.message);
+    console.warn(
+      "⚠️  Starting server with limited functionality - database features disabled"
+    );
+    dbConnected = false;
+  }
+
+  // Add middleware to check database state
+  app.use((req, res, next) => {
+    if (!dbConnected && req.path.startsWith("/api/")) {
+      const protectedRoutes = [
+        "/api/register",
+        "/api/login",
+        "/api/dashboard",
+        "/api/settings",
+        "/api/project-tutorials",
+      ];
+
+      if (protectedRoutes.includes(req.path)) {
+        return res.render("ErrorPage", {
+          error:
+            "Database services are currently unavailable. Please try again later.",
+          user: null,
+        });
+      }
+    }
+    next();
+  });
+
+  // Start server
+  const server = app.listen(PORT, () => {
+    console.log(`\n🚀 Server is running at: http://localhost:${PORT}/api/home`);
+    if (!dbConnected) {
+      console.log("⚠️  Running in limited mode - database features disabled");
+    }
+  });
+
+  return server;
+};
+
+// Start the server
+const startApp = async () => {
+  try {
+    const server = await initializeServer();
+    if (!server) {
+      throw new Error("Server failed to start");
+    }
+  } catch (err) {
+    console.error("Server initialization error:", err.message);
+    // Don't exit, let the app run in limited mode
+  }
+};
+
+// Start the application
+startApp();
 
 // Define the home route
 app.get("/api/home", (req, res) => {
@@ -129,7 +197,7 @@ app.get("/api/play", (req, res) => {
   res.render("PlayPage", {
     title: "PyBlocks - Play",
     user: req.session.userId ? req.session.first_name : null,
-    userSettings: res.locals.userSettings
+    userSettings: res.locals.userSettings,
   });
 });
 
@@ -137,7 +205,7 @@ app.get("/api/play", (req, res) => {
 app.get("/api/settings", (req, res) => {
   res.render("SettingsPage", {
     user: req.session.userId ? req.session.first_name : null,
-    userSettings: res.locals.userSettings
+    userSettings: res.locals.userSettings,
   });
 });
 
@@ -191,63 +259,70 @@ app.get("/api/confirmDelete", (req, res) => {
 app.post("/api/delete", deleteController.deleteAccount);
 
 // Define the project tutorial route
-app.get('/api/projectTutorial', async (req, res) => {
-    if (!req.session.userId) {
-        return res.redirect('/api/login'); // Redirect if not logged in
-    }
+app.get("/api/projectTutorial", async (req, res) => {
+  if (!req.session.userId) {
+    return res.redirect("/api/login"); // Redirect if not logged in
+  }
 
-    
-    const userId = req.session.userId;
-    
-    try {
-        // Fetch progress data with default values
-        const result = await pool.query(
-            `SELECT COALESCE(project1_progress, 0) as project1_progress,
+  const userId = req.session.userId;
+
+  try {
+    // Fetch progress data with default values
+    const result = await pool.query(
+      `SELECT COALESCE(project1_progress, 0) as project1_progress,
                     COALESCE(project2_progress, 0) as project2_progress,
                     COALESCE(project3_progress, 0) as project3_progress
              FROM user_progress 
              WHERE user_id = $1`,
-            [userId]
-        );
+      [userId]
+    );
 
-        const user_progress = result.rows[0] || {
-            project1_progress: 0,
-            project2_progress: 0,
-            project3_progress: 0
-        };
+    const user_progress = result.rows[0] || {
+      project1_progress: 0,
+      project2_progress: 0,
+      project3_progress: 0,
+    };
 
-        res.render('ProjectsPage', {
-            user: req.session.first_name,
-            user_progress: user_progress
-        });
-    } catch (err) {
-        console.error('Error fetching progress:', err);
-        res.status(500).send('Server error while fetching progress');
-    }
+    res.render("ProjectsPage", {
+      user: req.session.first_name,
+      user_progress: user_progress,
+    });
+  } catch (err) {
+    console.error("Error fetching progress:", err);
+    res.status(500).send("Server error while fetching progress");
+  }
 });
-app.post('/api/project-tutorials/clear-progress', async (req, res) => {
-    const userId = req.session.userId;
-    if (!userId) {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
+app.post("/api/project-tutorials/clear-progress", async (req, res) => {
+  const userId = req.session.userId;
+  if (!userId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
 
-    try {
-        const result = await clearUserProgress(userId);
-        res.json(result);
-    } catch (err) {
-        res.status(500).json({ 
-            error: err.message,
-            details: err.message,
-            code: err.code
-        });
-    }
+  try {
+    const result = await clearUserProgress(userId);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({
+      error: err.message,
+      details: err.message,
+      code: err.code,
+    });
+  }
 });
 
 // Define the settings route
-app.post("/api/save-settings", ensureAuthenticated, settingsController.saveSettings);
+app.post(
+  "/api/save-settings",
+  ensureAuthenticated,
+  settingsController.saveSettings
+);
 
 // Add route to fetch user settings
-app.get("/api/settings/fetch", ensureAuthenticated, settingsController.fetchSettings);
+app.get(
+  "/api/settings/fetch",
+  ensureAuthenticated,
+  settingsController.fetchSettings
+);
 
 // Define the route for Python execution
 app.post("/api/run-python", (req, res) => {
@@ -280,10 +355,9 @@ app.get("/api/resources", (req, res) => {
   });
 });
 
-app.get('/api/tutorials', (req, res) => {
-  res.render('TutorialsPage');
+app.get("/api/tutorials", (req, res) => {
+  res.render("TutorialsPage");
 });
-
 
 // API routes
 app.use("/api", registerRoutes);
@@ -291,18 +365,30 @@ app.use("/api", loginRoutes);
 app.use("/api", deleteRoutes);
 app.use("/api", projectTutorialRoutes);
 
-// Error handling middleware
+// Add error handling for static files
 app.use((err, req, res, next) => {
-  console.error("Error occurred:", err);
-  res
-    .status(err.status || 500)
-    .json({ error: err.message || "Something broke!" });
+  if (err.code === "ENOENT") {
+    res.status(404).json({ error: "File not found" });
+  } else {
+    next(err);
+  }
 });
 
-const startServer = () => {
-  app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}/api/home`);
-  });
-};
+// Error handling middleware - Keep at the end of app.js
+app.use((err, req, res, next) => {
+  console.error("Error occurred:", err);
 
-startServer();
+  // Check if it's a database error
+  if ((err.code && err.code.startsWith("23")) || err.code.startsWith("28")) {
+    return res.render("ErrorPage", {
+      error:
+        "Database service is currently unavailable. Please try again later.",
+      user: null,
+    });
+  }
+
+  res.status(err.status || 500).render("ErrorPage", {
+    error: err.message || "Something went wrong!",
+    user: null,
+  });
+});

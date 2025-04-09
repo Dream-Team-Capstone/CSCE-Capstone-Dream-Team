@@ -6,12 +6,10 @@ const path = require("path");
 // Define test environment
 const isTestEnvironment = process.env.NODE_ENV === "test";
 
-// Database configuration
+// Database configuration from .env
 const dbConfig = {
   host: process.env.DB_HOST,
-  database: isTestEnvironment
-    ? `${process.env.DB_NAME}_test`
-    : process.env.DB_NAME,
+  database: process.env.DB_NAME, // Use database name directly from .env
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT || 5432,
@@ -30,32 +28,34 @@ pool.on("error", (err, client) => {
 const connectToDatabase = async () => {
   try {
     const client = await pool.connect();
-    console.log("Connected to the database successfully");
+    console.log(`Connected to database '${dbConfig.database}' successfully`);
 
-    // Check if tables exist
+    // Check if required tables exist
     const tablesExist = await client.query(`
       SELECT EXISTS (
         SELECT FROM information_schema.tables 
-        WHERE table_schema = 'pyblocks' 
-        AND table_name = 'user_info'
+        WHERE table_schema = 'public' 
+        AND table_name IN ('user_info', 'user_progress', 'user_settings')
       );
     `);
-
-    // Only create tables if they don't exist
+    // Check if tables exist in the database
     if (!tablesExist.rows[0].exists) {
       console.log("Creating database tables...");
       const schemaPath = path.join(__dirname, "..", "Database", "schema.sql");
       const schema = fs.readFileSync(schemaPath, "utf8");
       await client.query(schema);
       console.log("Database tables created successfully");
-    } else {
-      console.log("Database tables already exist");
     }
 
     client.release();
+    return true;
   } catch (err) {
-    console.error("Connection to the database failed:", err);
-    process.exit(-1);
+    console.error("Database connection error:", err.message);
+    console.error("Please check your .env file configuration:");
+    console.error(`Database: ${process.env.DB_NAME}`);
+    console.error(`Host: ${process.env.DB_HOST}`);
+    console.error(`Port: ${process.env.DB_PORT}`);
+    throw err; // Throw error instead of exiting
   }
 };
 
