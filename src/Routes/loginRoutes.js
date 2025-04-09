@@ -80,7 +80,6 @@ router.post(
         errors.push({ msg: "Invalid email or password." });
         return res.status(400).render("Login0age", { errors });
       }
-      res.redirect("/api/dashboard");
     } catch (error) {
       console.error("Login error:", error);
       errors.push({ msg: "Login failed. Please try again." });
