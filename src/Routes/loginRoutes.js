@@ -78,7 +78,7 @@ router.post(
         }, 2000); // 2 second delay
       } else {
         errors.push({ msg: "Invalid email or password." });
-        return res.status(400).render("Login0age", { errors });
+        return res.status(400).render("LoginPage", { errors });
       }
     } catch (error) {
       console.error("Login error:", error);
