@@ -10,13 +10,14 @@ body {
   
   /* NAVIGATION BAR STYLES */
   header {
-    background-color: #21b0fe;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    width: 100%;
-  }
+  flex-wrap: wrap;
+  background-color: #21b0fe;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  width: 100%;
+}
   
   nav {
     display: flex;
@@ -47,6 +48,7 @@ body {
   /* Navbar buttons list */
   .navbar_buttons_list {
     display: flex;
+    flex-wrap: wrap;
     list-style: none;
     margin-left: 20px;
     padding: 0;
@@ -54,24 +56,25 @@ body {
   }
   
   .navbar_buttons_list li {
-    margin-left: -25px;
+    margin-left: 10px;
   }
   
   /* Common style for all navigation buttons */
-  .Nav_Buttons {
-    color: black;
-    width: 110px;
-    padding: 15px;
-    text-align: center;
-    margin: 0 20px;
-    border-radius: 15px;
-    font-weight: bold;
-    border: 2.5px solid #fd3636;
-    background-color: #FFC6C6;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    text-decoration: none;
-  }
+  .Nav_Buttons{
+  width: clamp(100px, 10vw, 150px);
+  color: black;
+  width: 108px;
+  padding: 15px;
+  text-align: center;
+  margin: 0 20px;
+  border-radius: 15px;
+  font-weight: bold;
+  border: 2.5px solid #fd3636;
+  background-color: #FFC6C6;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-decoration: none;
+}
   
   /* Hover effect for all buttons */
   .Nav_Buttons:hover {
@@ -204,3 +207,59 @@ footer {
   justify-content: space-between; /* Spaces content between left and right */
   align-items: center;
 }
+
+
+@media screen and (max-width: 4000px) {
+  .navbar_buttons_list {
+    justify-content: center;
+  }
+
+  .Nav_Buttons {
+    width: clamp(90px, 12vw, 125px);
+    padding: 10px;
+  }
+
+  .logo {
+    width: 150px;
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  nav {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .navbar_buttons_list {
+    flex-direction: column;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .navbar_buttons_list li {
+    width: 100%;
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .Nav_Buttons {
+    width: 90%; /* Adjusts to screen width */
+    max-width: 300px;
+  }
+
+  .Settings_logo {
+    margin-top: 10px;
+    width: 50px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+  }
+}
+

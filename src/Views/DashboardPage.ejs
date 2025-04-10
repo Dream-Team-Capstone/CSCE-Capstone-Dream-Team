@@ -14,7 +14,6 @@
 <!-- NAV BAR START -->
 <header class="navigation" role="banner">
     <nav aria-label="Main Navigation">
-        <!-- Logo -->
         <ul class="navbar_logo">
             <li>
                 <a href="/api/home">
@@ -23,34 +22,45 @@
             </li>
         </ul>
 
-        <!-- Navigation Buttons -->
         <ul class="navbar_buttons_list">
-            <li><a href="#contact"><button class="Nav_Buttons" aria-disabled="true" aria-label="Contact Us page (Coming soon)">Contact Us</button></a></li>
-            <li><a href="/api/tutorials"><button class="Nav_Buttons" aria-disabled="true" aria-label="Tutorials page (Coming soon)">Tutorials</button></a></li>
-            <li><a href="/api/play"><button class="Nav_Buttons" aria-label="Start coding by going to the Play page">Play</button></a></li>
-            <li><a href="#courses"><button class="Nav_Buttons" aria-disabled="true" aria-label="Courses page (Coming soon)">Courses</button></a></li>
-            <li><a href="/api/resources"><button class="Nav_Buttons" aria-label="Access resources">Resources</button></a></li>
             <li>
-                <% if (locals.user && locals.user !== null) { %>
-                  <a href="/api/dashboard">
-                    <button class="Nav_Buttons" aria-label="Go to dashboard">Dashboard</button>
-                  </a>
-                <% } else { %>
-                  <a href="/api/login">
-                    <button class="Nav_Buttons" aria-label="Sign in to your account">Sign In</button>
-                  </a>
-                <% } %>
-              </li>
-            <li><a href="/api/register"><button class="Nav_Buttons" aria-label="Register for a new account">Register</button></a></li>
-        </ul>
-
-        <!-- Settings Icon -->
-        <ul class="Settings_logo">
-            <li>
-                <a href="/api/settings">
-                    <img class="Settings_logo" src="/ImagesUsed/SettingsIcon.png" alt="Settings logo, linking to settings page">
+                <a href="/api/tutorials" aria-label="Tutorials page">
+                    <button class="Nav_Buttons">Tutorials</button>
                 </a>
             </li>
+            <li>
+                <a href="/api/play">
+                    <button class="Nav_Buttons" aria-label="Start coding by going to the Play page">Play</button>
+                </a>
+            </li>
+            <li>
+                <a href="/api/resources" aria-label="Resources page">
+                    <button class="Nav_Buttons">Resources</button>
+                </a>
+            </li>
+            <li>
+                <% if (locals.user && locals.user !== null) { %>
+                    <a href="/api/dashboard">
+                        <button class="Nav_Buttons" aria-label="Go to dashboard">Dashboard</button>
+                    </a>
+                <% } else { %>
+                    <a href="/api/login">
+                        <button class="Nav_Buttons" aria-label="Sign in to your account">Sign In</button>
+                    </a>
+                <% } %>
+            </li>
+            <li>
+                <a href="/api/register">
+                    <button class="Nav_Buttons">Register</button>
+                </a>
+            </li>
+            <ul class="Settings_logo">
+                <li>
+                    <a href="/api/settings">
+                        <img class="Settings_logo" src="/ImagesUsed/SettingsIcon.png" alt="Settings logo, linking to settings page">
+                    </a>
+                </li>
+            </ul>
         </ul>
     </nav>
 </header>
@@ -67,7 +77,7 @@
             </a>
             <div class="off_screen_menu" id="menu" role="menu" aria-label="User menu">
                 <ul role="menubar">
-                    <li role="menuitem"><a href="#Account_Details" aria-label="Account Details page (Coming soon)">Account Details</a></li>
+                    <li role="menuitem"><a href="#Account_Details" aria-label="Account Details page  ">Account Details</a></li>
                     <li role="menuitem">
                         <form action="/api/logout" method="POST">
                             <button class="menu_button" type="submit" aria-label="Log out of your account">Logout</button>
@@ -137,7 +147,7 @@
     <ul class="footer_buttons">
         <li><a href="/api/resources" aria-label="Access resources">Resources</a></li>
         <li><a href="/api/tutorials" aria-label="Access tutorials">Tutorials</a></li>
-        <li><a href="#editors" aria-label="Open blank editors (Coming soon)">Open Blank Editors</a></li>
+        <li><a href="/api/play" aria-label="Open blank editors  ">Open Blank Editors</a></li>
     </ul>
 </footer>
 <!-- FOOTER END -->

@@ -12,73 +12,60 @@
         <link rel="stylesheet" href="/StylesPages/accessibilityStyles.css">
     </head>    
     <body>
-    <!-- NAV BAR START -->
-          <header class="navigation" role="banner">
-    
-            <!-- List for the logo on the page -->
-            <nav aria-label="Main Navigation">
-            <ul class="navbar_logo">
-              <li>
+<!-- NAV BAR START -->
+<header class="navigation" role="banner">
+    <nav aria-label="Main Navigation">
+        <ul class="navbar_logo">
+            <li>
                 <a href="/api/home">
-                  <img class = logo src = "/ImagesUsed/pyBlocks_Updated.png" alt = "PyBlocks logo, linking back to home page">
+                    <img class="logo" src="/ImagesUsed/pyBlocks_Updated.png" alt="PyBlocks logo, linking back to home page">
                 </a>
-              </li>
-            </ul>
-    
-            <!-- List for the Buttons on the navigation pane -->
-            <ul class="navbar_buttons_list">
-              <li>
-                <a href ="#contact" aria-label="Contact Us page (Coming soon)">
-                  <button class="Nav_Buttons" aria-disabled="true">Contact Us</button> <!-- TBC in another sprint -->
+            </li>
+        </ul>
+
+        <ul class="navbar_buttons_list">
+            <li>
+                <a href="/api/tutorials" aria-label="Tutorials page">
+                    <button class="Nav_Buttons">Tutorials</button>
                 </a>
-              </li>
-              <li>
-                <a href="/api/tutorials" aria-label="Tutorials page (Coming soon)">
-                  <button class="Nav_Buttons" aria-disabled="true">Tutorials</button> <!-- TBC in another sprint -->
+            </li>
+            <li>
+                <a href="/api/play">
+                    <button class="Nav_Buttons" aria-label="Start coding by going to the Play page">Play</button>
                 </a>
-              </li>
-              <li>
-                <a href = "/api/play">
-                  <button class="Nav_Buttons" aria-label="Start coding by going to the Play page">Play</button>
+            </li>
+            <li>
+                <a href="/api/resources" aria-label="Resources page">
+                    <button class="Nav_Buttons">Resources</button>
                 </a>
-              </li>
-              <li>
-                <a href="#courses" aria-label="Courses page (Coming soon)">
-                  <button class="Nav_Buttons" aria-disabled="true">Courses</button> <!-- TBC in another sprint -->
-                </a>
-              </li>
-              <li>
-                <a href="/api/resources" aria-label="Resources page (Coming soon)">
-                  <button class="Nav_Buttons" aria-disabled="true">Resources</button> <!-- TBC in another sprint -->
-                </a>
-              </li>
-              <li>
+            </li>
+            <li>
                 <% if (locals.user && locals.user !== null) { %>
-                  <a href="/api/dashboard">
-                    <button class="Nav_Buttons" aria-label="Go to dashboard">Dashboard</button>
-                  </a>
+                    <a href="/api/dashboard">
+                        <button class="Nav_Buttons" aria-label="Go to dashboard">Dashboard</button>
+                    </a>
                 <% } else { %>
-                  <a href="/api/login">
-                    <button class="Nav_Buttons" aria-label="Sign in to your account">Sign In</button>
-                  </a>
+                    <a href="/api/login">
+                        <button class="Nav_Buttons" aria-label="Sign in to your account">Sign In</button>
+                    </a>
                 <% } %>
-              </li>
-              <li>
+            </li>
+            <li>
                 <a href="/api/register">
-                  <button class="Nav_Buttons">Register</button>
+                    <button class="Nav_Buttons">Register</button>
                 </a>
-              </li>
-            </ul>
+            </li>
             <ul class="Settings_logo">
-              <li>
-              <a href="/api/settings">
-                  <img class="Settings_logo" src="/ImagesUsed/SettingsIcon.png" alt="Settings logo, linking to settings page">
-              </a>
-              </li>
-          </ul>
-          </nav>
-          </header>
-    <!-- NAV BAR END -->
+                <li>
+                    <a href="/api/settings">
+                        <img class="Settings_logo" src="/ImagesUsed/SettingsIcon.png" alt="Settings logo, linking to settings page">
+                    </a>
+                </li>
+            </ul>
+        </ul>
+    </nav>
+</header>
+<!-- NAV BAR END -->
     
     <!-- BODY START -->
           <main class="page_body">
@@ -163,9 +150,9 @@
 
       <!-- List for the links in the footer -->
       <ul class="footer_buttons">
-        <li><a href="/api/resources" aria-label="Resources section (Coming soon)">Resources</a></li>
-        <li><a href="/api/tutorials" aria-label="Tutorials section (Coming soon)">Tutorials</a></li>
-        <li><a href="#editors" aria-label="Open blank editors (Coming soon)">Open Blank Editors</a></li>
+        <li><a href="/api/resources" aria-label="Resources section  ">Resources</a></li>
+        <li><a href="/api/tutorials" aria-label="Tutorials section  ">Tutorials</a></li>
+        <li><a href="/api/play" aria-label="Open blank editors  ">Open Blank Editors</a></li>
       </ul>
       <!-- holds links and some navigation, may add more later -->
     </footer>
