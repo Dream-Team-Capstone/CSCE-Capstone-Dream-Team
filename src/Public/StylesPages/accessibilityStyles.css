@@ -62,7 +62,9 @@ body.dark-mode .dashboard-button,
 body.dark-mode .Delete_Button,
 body.dark-mode .play_button,
 body.dark-mode .Save_Button,
-body.dark-mode .Register_Button {
+body.dark-mode .Register_Button,
+body.dark-mode .delete-account-btn,
+body.dark-mode .confirm-delete-btn {
     background-color: #444 !important;
     color: #f0f0f0 !important;
     border: 1px solid #666 !important;
@@ -77,7 +79,9 @@ body.dark-mode .dashboard-button:hover,
 body.dark-mode .Delete_Button:hover,
 body.dark-mode .play_button:hover,
 body.dark-mode .Save_Button:hover,
-body.dark-mode .Register_Button:hover {
+body.dark-mode .Register_Button:hover,
+body.dark-mode .delete-account-btn:hover,
+body.dark-mode .confirm-delete-btn:hover  {
     background-color: #fff !important;
     color: #000 !important;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -468,7 +472,9 @@ body.high-contrast .project-button,
 body.high-contrast .clearProgressButton,
 body.high-contrast .modal-btn,
 body.high-contrast .dashboard-button,
-body.high-contrast .Nav_Buttons {
+body.high-contrast .Nav_Buttons,
+body.high-contrast .delete-account-btn,
+body.high-contrast .confirm-delete-btn  {
     background-color: #000 !important;
     color: #fbff12 !important;
     border: 2px solid #fbff12 !important;
@@ -483,7 +489,9 @@ body.high-contrast .project-button:hover,
 body.high-contrast .clearProgressButton:hover,
 body.high-contrast .modal-btn:hover,
 body.high-contrast .dashboard-button:hover,
-body.high-contrast .Nav_Buttons:hover {
+body.high-contrast .Nav_Buttons:hover,
+body.high-contrast .delete-account-btn:hover,
+body.high-contrast .confirm-delete-btn:hover  {
     background-color: #fff !important;
     color: #000 !important;
     transition: background-color 0.3s ease, color 0.3s ease;
