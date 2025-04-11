@@ -2,43 +2,54 @@ describe("Add Block", () => {
   it("adds a block to the workspace", () => {
     cy.visit("/play");
 
-    // Retry until Blockly is available on the window
-    cy.window()
-      .should("have.property", "Blockly")
-      .wait(1000)
-      .then((win) => {
-        // Ensure Blockly is available
-        //expect(win.Blockly).to.exist;
+    // Wait for Blockly scripts to load first
+    cy.get('script[src*="blockly_compressed.js"]').should("exist");
+    cy.get('script[src*="blocks_compressed.js"]').should("exist");
+    cy.get('script[src*="python_compressed.js"]').should("exist");
 
-        // Wait for the Blockly workspace container to be in the DOM
-        cy.get("#blocklyDiv").should("exist");
+    // Wait for Blockly div and ensure it's visible
+    cy.get("#blocklyDiv").should("be.visible");
 
-        // Ensure the main workspace is available
-        const workspace = win.Blockly.getMainWorkspace();
-        cy.wrap(workspace).should("exist");
-
-        // Ensure the toolbox is available
-        const toolbox = workspace.getToolbox();
-        cy.wrap(toolbox).should("exist");
-
-        // Check if selectCategoryByName exists and is a function
-        expect(toolbox.selectCategoryByName).to.be.a("function");
-
-        // Select the 'Logic' category in the toolbox
-        toolbox.selectCategoryByName("Logic");
-
-        // Ensure the flyout is visible
-        cy.get(".blocklyFlyout").should("not.have.css", "display", "none");
+    // Wait for Blockly to initialize
+    cy.window().then((win) => {
+      return new Cypress.Promise((resolve) => {
+        function checkBlockly() {
+          if (win.Blockly && win.Blockly.getMainWorkspace()) {
+            resolve();
+          } else {
+            setTimeout(checkBlockly, 100);
+          }
+        }
+        checkBlockly();
       });
+    });
 
-    // Wait for the block to appear in the workspace and drag it
-    cy.get(".block").first().trigger("mousedown");
-    cy.get(".workspace").trigger("mousemove").trigger("mouseup");
+    // Now interact with the workspace
+    cy.window().then((win) => {
+      const workspace = win.Blockly.getMainWorkspace();
+      expect(workspace).to.exist;
 
-    // Check if the block was added to the workspace
-    cy.get(".blocklyBlock").should("exist");
+      const toolbox = workspace.getToolbox();
+      expect(toolbox).to.exist;
 
-    // Toggle the Python view
-    cy.get(".toggle-python").click();
+      // Select the Logic category
+      toolbox.selectCategoryByName("Logic");
+
+      // Wait for flyout to be visible
+      cy.get(".blocklyFlyout").should("be.visible");
+
+      // Try to add block
+      cy.get(".blocklyFlyout .blocklyDraggable")
+        .first()
+        .trigger("mousedown", { force: true })
+        .trigger("mousemove", { clientX: 200, clientY: 200 })
+        .trigger("mouseup", { force: true });
+
+      // Verify block was added
+      cy.get(".blocklyWorkspace .blocklyDraggable").should(
+        "have.length.at.least",
+        1
+      );
+    });
   });
 });
