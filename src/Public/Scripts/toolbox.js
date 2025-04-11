@@ -328,29 +328,30 @@ const toolboxConfig = {
           kind: "block",
           type: "text",
           fields: {
-            TEXT: ""
-          }
+            TEXT: "",
+          },
         },
         {
           kind: "block",
           type: "text_print",
+          "data-cy": "print-block",
           inputs: {
             TEXT: {
               shadow: {
                 type: "text",
                 fields: {
-                  TEXT: "abc"
-                }
-              }
-            }
-          }
+                  TEXT: "abc",
+                },
+              },
+            },
+          },
         },
         {
           kind: "block",
           type: "text_join",
           extraState: {
-            itemCount: 2
-          }
+            itemCount: 2,
+          },
         },
         {
           kind: "block",
@@ -360,11 +361,11 @@ const toolboxConfig = {
               shadow: {
                 type: "text",
                 fields: {
-                  TEXT: "abc"
-                }
-              }
-            }
-          }
+                  TEXT: "abc",
+                },
+              },
+            },
+          },
         },
         {
           kind: "block",
@@ -374,11 +375,11 @@ const toolboxConfig = {
               shadow: {
                 type: "text",
                 fields: {
-                  TEXT: ""
-                }
-              }
-            }
-          }
+                  TEXT: "",
+                },
+              },
+            },
+          },
         },
         {
           kind: "block",
@@ -388,19 +389,19 @@ const toolboxConfig = {
               shadow: {
                 type: "text",
                 fields: {
-                  TEXT: "Hello World"
-                }
-              }
+                  TEXT: "Hello World",
+                },
+              },
             },
             FIND: {
               shadow: {
                 type: "text",
                 fields: {
-                  TEXT: "World"
-                }
-              }
-            }
-          }
+                  TEXT: "World",
+                },
+              },
+            },
+          },
         },
         {
           kind: "block",
@@ -410,13 +411,13 @@ const toolboxConfig = {
               shadow: {
                 type: "text",
                 fields: {
-                  TEXT: "abc"
-                }
-              }
-            }
-          }
-        }
-      ]
+                  TEXT: "abc",
+                },
+              },
+            },
+          },
+        },
+      ],
     },
     {
       kind: "category",
@@ -533,7 +534,7 @@ const toolboxConfig = {
       categorystyle: "procedure_category",
       custom: "PROCEDURE",
     },
-    {
+    /*{
       kind: "category",
       name: "Custom Blocks",
       colour: "#5CA699",
@@ -543,7 +544,7 @@ const toolboxConfig = {
           type: "text_print",
         },
       ],
-    },
+    },*/
   ],
 };
 
