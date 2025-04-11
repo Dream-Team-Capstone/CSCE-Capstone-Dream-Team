@@ -1,6 +1,6 @@
 describe("Blockly Workspace", () => {
   beforeEach(() => {
-    cy.visit("/api/play");
+    cy.visit("/play");
 
     // Wait for Blockly to initialize
     cy.get("#blocklyDiv").should("be.visible");
