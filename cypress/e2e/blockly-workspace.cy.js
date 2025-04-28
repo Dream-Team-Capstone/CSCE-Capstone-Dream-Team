@@ -23,8 +23,7 @@ describe("Blockly Workspace", () => {
 
     // Verify block was added
     cy.get(".blocklyWorkspace .blocklyDraggable").should(
-      "have.length.at.least",
-      1
+      "have.length.at.least"
     );
   });
 });

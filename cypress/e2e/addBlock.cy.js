@@ -2,54 +2,51 @@ describe("Add Block", () => {
   it("adds a block to the workspace", () => {
     cy.visit("/play");
 
-    // Wait for Blockly scripts to load first
+    // Wait for Blockly scripts to load
     cy.get('script[src*="blockly_compressed.js"]').should("exist");
     cy.get('script[src*="blocks_compressed.js"]').should("exist");
     cy.get('script[src*="python_compressed.js"]').should("exist");
 
-    // Wait for Blockly div and ensure it's visible
+    // Wait for Blockly div
     cy.get("#blocklyDiv").should("be.visible");
 
-    // Wait for Blockly to initialize
-    cy.window().then((win) => {
-      return new Cypress.Promise((resolve) => {
-        function checkBlockly() {
-          if (win.Blockly && win.Blockly.getMainWorkspace()) {
-            resolve();
-          } else {
-            setTimeout(checkBlockly, 100);
-          }
-        }
-        checkBlockly();
-      });
-    });
+    // Wait for toolbox to be ready
+    cy.get(".blocklyToolboxContents").should("be.visible");
 
-    // Now interact with the workspace
-    cy.window().then((win) => {
+    // Now check Blockly initialization
+    cy.window().should((win) => {
       const workspace = win.Blockly.getMainWorkspace();
       expect(workspace).to.exist;
+    });
 
-      const toolbox = workspace.getToolbox();
-      expect(toolbox).to.exist;
+    // Click Logic category after everything is ready
+    cy.get(".blocklyTreeLabel").contains("Logic").click();
+    cy.get(".blocklyTreeLabel").contains("Logic").parent();
+    cy.wait(1000); // Wait for flyout to open
 
-      // Select the Logic category
-      toolbox.selectCategoryByName("Logic");
+    // Wait for flyout
+    cy.get(".blocklyFlyout").should("be.visible");
+    cy.get(".blocklyFlyoutBackground").should("be.visible");
 
-      // Wait for flyout to be visible
-      cy.get(".blocklyFlyout").should("be.visible");
+    // Try to add block
+    cy.window().then((win) => {
+      const workspace = win.Blockly.getMainWorkspace();
+      const metrics = workspace.getMetrics();
 
-      // Try to add block
       cy.get(".blocklyFlyout .blocklyDraggable")
         .first()
         .trigger("mousedown", { force: true })
-        .trigger("mousemove", { clientX: 200, clientY: 200 })
+        .trigger("mousemove", {
+          clientX: metrics.viewWidth / 2,
+          clientY: metrics.viewHeight / 2,
+          force: true,
+        })
         .trigger("mouseup", { force: true });
 
       // Verify block was added
-      cy.get(".blocklyWorkspace .blocklyDraggable").should(
-        "have.length.at.least",
-        1
-      );
+      cy.get(".blocklyWorkspace .blocklyDraggable")
+        .should("be.visible")
+        .should("have.length.at.least", 1);
     });
   });
 });
